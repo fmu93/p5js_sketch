@@ -25,7 +25,7 @@ function setup() {
   for (var i = 0; i < numSpots; i++) {
     var x = dia/2 + i*dia;
     var y = random(dia/2.0, height-dia/2.0);
-    var rate = random(0.2, 2.0)*(round(random(0.0, 1.0))-0.5)*2;
+    var rate = random(1, 4)*(round(random(0.0, 1.0))-0.5)*2;
      // Create each object
     spots[i] = new Spot(x, y, dia, rate);
   }
