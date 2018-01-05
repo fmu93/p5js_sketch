@@ -10,22 +10,23 @@ var bSpeed;
 
 function setup() {
     // assign
-    play = true;
+    play = false;
     chosen_spot = 1;
     is_magic = false;
-    numSpots = 20; // Number of objects
+    numSpots = 12; // Number of objects
     spots = []; 
     j = 0;
     bSpeed = 0.5;
+    var magic_chance = 5;
     // setup
-  createCanvas(800, 400);
-  var magic_chance = 7;
+  createCanvas(1200, 800);
+  frameRate(200);
   var dia = width/2/numSpots; // Calculate diameter
 //  spots = new Spot[numSpots]; // Create array
   for (var i = 0; i < numSpots; i++) {
     var x = dia/2 + i*dia;
     var y = random(dia/2.0, height-dia/2.0);
-    var rate = random(1, 4)*(round(random(0.0, 1.0))-0.5)*2;
+    var rate = random(0.5, 4.0)*(round(random(0.0, 1.0))-0.5)*2;
      // Create each object
     spots[i] = new Spot(x, y, dia, rate);
   }
@@ -33,6 +34,12 @@ function setup() {
   if (random(0, magic_chance) < 1) {
     is_magic = true;
   }
+
+  fill(0);
+  rect(0, 0, width/2, height);
+  noFill();
+  stroke(0);
+  rect(0, 0, width-1, height-1);
   noStroke();
 
 }
@@ -40,17 +47,27 @@ function setup() {
 function draw() {
   if (play == true) {
     fill(0, 12);
-    stroke (255);
+    noStroke();
     rect(0, 0, width/2, height);
-      j = (j % height) + bSpeed;
+    j = (j % height) + bSpeed;
+  }else{
+      noFill();
+      stroke(0);
+      rect(0, 0, width/2, height);
+      fill(255);
+      textSize(100);
+      text("PLAY", width/4, height/2);
   }
-    line(0,height/2,width/2,height/2);
+    stroke(255);
+    noFill();
+    rect(0+1,height/2-1,width/2-1,3);
     noStroke();
   for (var i=0; i < spots.length; i++) {
     if (play == true) {
-      fill(255/numSpots*i,255/numSpots*i-130,255);
+      noFill();
+      stroke(255,255,255);
       if (i == chosen_spot && is_magic){
-        fill(255,0,0);
+        stroke(255, 0, 0);
       }
       spots[i].move(); // Move each object
       spots[i].display(); // Display each object
