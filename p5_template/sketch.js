@@ -19,7 +19,7 @@ function setup() {
     bSpeed = 0.5;
     var magic_chance = 5;
     // setup
-  createCanvas(1200, 800);
+  createCanvas(1200, 600);
   frameRate(200);
   var dia = width/2/numSpots; // Calculate diameter
 //  spots = new Spot[numSpots]; // Create array
@@ -73,8 +73,9 @@ function draw() {
       spots[i].display(); // Display each object
       
       // make panelB
-      panelB = get(0, height/2,width/2,1);
-      image(panelB, width/2, j);
+      panelB = get(1, height/2,width/2-1,1);
+//      blend(panelB, 1, height/2,width/2-1,1, width/2, j, width/2, 1, BURN);
+      image(panelB, width/2+1, j);
       //copy(0,height/2,width/2,1, width/2,0,width/2,height);
     }
   }
