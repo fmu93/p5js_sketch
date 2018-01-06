@@ -19,7 +19,7 @@ function setup() {
     bSpeed = 0.5;
     var magic_chance = 5;
     // setup
-  createCanvas(1200, 600);
+  createCanvas(100, 500);
 //  frameRate(200);
   var dia = width/2/numSpots; // Calculate diameter
 //  spots = new Spot[numSpots]; // Create array
