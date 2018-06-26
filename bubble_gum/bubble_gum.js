@@ -1,3 +1,5 @@
+p5.disableFriendlyErrors = true; // performance
+
 var n; 
 var k;
 var back;
