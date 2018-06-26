@@ -25,6 +25,7 @@ function setup() {
 function draw() {
 	background(back);
 
+	// deal with each particle
 	for (var i=0; i < particles.length; i++) {
 		particles[i].wobble();
 		particles[i].pointer();
@@ -50,7 +51,6 @@ function draw() {
   strokeWeight(1);
 
   // show framerate
-
   if ((k+1) % 50 == 0){
   	var fps = frameRate();
   	fill(255);
@@ -59,6 +59,12 @@ function draw() {
   	text("FPS: " + fps.toFixed(0), 10, height - 10);
   }
   k++;
+
+  	// clicl me! text
+	fill(255);
+  	stroke(0);
+  	textSize(16);
+  	text("Click around!", 20, 12);
   
 }
 
