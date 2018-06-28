@@ -79,7 +79,7 @@ class Particle {
 		this.c = color(random(100, 255), random(100, 255), random(100, 255));
 		this.pos = createVector(random(width), random(height));
 		this.speed = createVector(0,0);
-		this.size = int(width*random(0.01,0.03));
+		this.size = int(width*random(0.002,0.01));
 		this.friction = 0.967; 
 		this.s = 0.08; // strength of pull
 		this.w = 0.1; // wobblyness
