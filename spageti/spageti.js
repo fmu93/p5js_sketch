@@ -66,11 +66,7 @@ function draw() {
 }
 
 
-function mousePressed(MouseEvent evt) {
-	if (evt.getCount() == 2) {
-		doubleClicked();
-		return
-	}
+function mousePressed() {
 	for (var i=0; i < particles.length; i++) {
 		particles[i].s = particles[i].s * -1;
 	}
