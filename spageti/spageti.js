@@ -72,6 +72,13 @@ function mousePressed() {
 	}
 }
 
+void doubleClicked() {
+  background(back);
+}
+
+public void mouseClicked(MouseEvent evt) {
+  if (evt.getCount() == 2)doubleClicked();
+}
 
 class Particle {
 
