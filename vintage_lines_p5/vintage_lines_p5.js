@@ -21,7 +21,7 @@ var lineStroke = 120;
 function setup() {
   background(20);
   createCanvas(windowWidth-8, windowHeight-8);
-  Z = height/3;
+  Z = (height+width)/5;
 }
 
 function draw() {
