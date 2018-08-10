@@ -57,5 +57,5 @@ function doubleClicked() {
 }
 
 function explosion() {
-  systems.push(new ParticleSystem(40));
+  systems.push(new ParticleSystem(randomGaussian() + 25));
 }
