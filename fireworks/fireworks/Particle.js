@@ -2,9 +2,9 @@
 class Particle {
   
   constructor() {
-    this.pos = new PVector(mouseX, mouseY);
-    this.vel = new PVector(0, 0);
-    this.acc = new PVector(0, 0);
+    this.pos = createVector(mouseX, mouseY);
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
     
     this.explosion = 2;
     this.c = color(255, 100 + 150*random(1), 150 + random(20, 100));
@@ -23,14 +23,14 @@ class Particle {
   }
   
   applyForce(force) {
-    var f = PVector.div(force, this.mass);
+    var f = p5.Vector.div(force, this.mass);
     this.acc.add(f);
   }
   
   update() {
-    fade();
-    this.vel.add(acc);
-    this.pos.add(vel);
+    this.fade();
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
     this.acc.mult(0);
     this.lifeSpan -= 2;
   }
@@ -43,7 +43,7 @@ class Particle {
   display() {
     noStroke();
     fill(this.c);
-    star(this.pos.x, this.pos.y, this.size, this.size/3, this.spikes);
+    this.star(this.pos.x, this.pos.y, this.size, this.size/3, this.spikes);
   }
   
   star(x, y, radius1, radius2, npoints) {

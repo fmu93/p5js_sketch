@@ -18,7 +18,10 @@ function setup() {
 }
 
 function draw() {
-  if (backOn) background(0);
+
+  if (backOn) {
+    background(0);
+  }
   // glitter is what follows the mouse
   
   
@@ -27,7 +30,7 @@ function draw() {
     var ps = systems[i];
     ps.run();
     if (ps.isDead()) {
-     systems.remove(i);
+     systems.splice(i, 1);
     }
   }
 

@@ -1,9 +1,8 @@
 class ParticleSystem {
   
-  ParticleSystem(n) {
-    
-    println("heeey");
-    this.gravity = new PVector(0, 0.02);
+  constructor(n) {
+
+    this.gravity = createVector(0, 0.02);
     this.particles = [];
     for(var i = 0; i < n; i++) {
       this.particles.push(new Particle());
@@ -11,7 +10,7 @@ class ParticleSystem {
   }
   
   explosion(p) {
-    var ex = new PVector(randomGaussian()*0.5, randomGaussian()*0.5);
+    var ex = createVector(randomGaussian()*0.5, randomGaussian()*0.5);
     p.applyForce(ex);
   }
   
@@ -20,18 +19,18 @@ class ParticleSystem {
     var p = this.particles[i];
     
     p.applyForce(this.gravity.mult(p.mass));
-    explosion(p);
+    this.explosion(p);
     p.update();
     p.display();
     
     if (p.isDead()) {
-     this.particles.remove(i);
+     this.particles.splice(i, 1);
     }
    }  
   }
   
   isDead() {
-   if (this.particles.size() == 0) {
+   if (this.particles.length == 0) {
     return true; 
    } else {
      return false;
