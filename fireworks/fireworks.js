@@ -5,14 +5,14 @@ var back = 0;
 var backOn = true;
 
 var k = 0;
+var sound1;
 
-// SoundFile sound1;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(back);
-  // sound1 = new SoundFile(this, "firework_sound.mp3");
-  // sound1.amp(1);
+
+  sound1 = loadSound('/data/firework_sound');
 
   systems = [];
 }
@@ -48,7 +48,7 @@ function keyPressed() {
 
 function mousePressed() {
   explosion();
-  // sound1.play();
+  sound1.play();
 }
 
 function doubleClicked() {
