@@ -20,7 +20,7 @@ var lineStroke = 120;
 
 function setup() {
   background(20);
-  createCanvas(windowWidth-8, windowHeight-8);
+  createCanvas(windowWidth, windowHeight);
   Z = (height+width)/8;
 }
 

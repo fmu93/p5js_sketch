@@ -37,13 +37,15 @@ function draw() {
   // display current key
   textSize(18);
   fill(255);
-  text("space bar and double click!", width/2 - 60, 30); 
+  textAlign(CENTER);
+  rectMode(CENTER);
+  text("space bar and double click!", width/2, 30, 400, 30); 
 }
 
 function keyPressed() {
-  // if (key == " "){  
+  if (key == " "){  
     background(back);
-  // }
+  }
 }
 
 function mousePressed() {
