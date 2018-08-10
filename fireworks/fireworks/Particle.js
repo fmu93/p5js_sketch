@@ -1,72 +1,58 @@
-import java.util.Random;
-
-Random gen = new Random();
-
 
 class Particle {
-  PVector pos;
-  PVector vel;
-  PVector acc;
   
-  color c;
-  int spikes;
-  float mass;
-  float size;
-  float explosion = 2;
-  float lifeSpan;
-  
-  Particle() {
-    pos = new PVector(mouseX, mouseY);
-    vel = new PVector(0, 0);
-    acc = new PVector(0, 0);
-    acc.mult(explosion);
+  constructor() {
+    this.pos = new PVector(mouseX, mouseY);
+    this.vel = new PVector(0, 0);
+    this.acc = new PVector(0, 0);
     
-    c = color(255, 100 + 150*random(1), 150 + random(20, 100));
-    spikes = (int) random(4, 8);
-    lifeSpan = (float) gen.nextGaussian()*20 + 255;
-    size = lifeSpan*0.2;
-    mass = size/200;
+    this.explosion = 2;
+    this.c = color(255, 100 + 150*random(1), 150 + random(20, 100));
+    this.spikes = 4 + random(4);
+    this.lifeSpan = randomGaussian()*20 + 255;
+    this.size = this.lifeSpan*0.2;
+    this.mass = this.size/200;
   }
   
-  boolean isDead() {
-    if (lifeSpan <= 0) {
+  isDead() {
+    if (this.lifeSpan <= 0) {
       return true;
     } else {
       return false;
     }
   }
   
-  void applyForce(PVector force) {
-    PVector f = PVector.div(force, mass);
-    acc.add(f);
+  applyForce(force) {
+    var f = PVector.div(force, this.mass);
+    this.acc.add(f);
   }
   
-  void update() {
+  update() {
     fade();
-    vel.add(acc);
-    pos.add(vel);
-    acc.mult(0);
-    lifeSpan -= 2;
+    this.vel.add(acc);
+    this.pos.add(vel);
+    this.acc.mult(0);
+    this.lifeSpan -= 2;
   }
   
-  void fade() {
-    size = lifeSpan*0.2;
+  fade() {
+    this.size = this.lifeSpan*0.2;
     //mass = size/200; // actually more realistic but small bits fly too fast
   }
   
-  void display() {
+  display() {
     noStroke();
-    fill(c);
-    star(pos.x, pos.y, size, size/3, spikes);
+    fill(this.c);
+    star(this.pos.x, this.pos.y, this.size, this.size/3, this.spikes);
   }
   
-  void star(float x, float y, float radius1, float radius2, int npoints) {
-    float angle = TWO_PI / npoints;
-    float halfAngle = angle/2.0;
+  star(x, y, radius1, radius2, npoints) {
+    var angle = TWO_PI / npoints;
+    var halfAngle = angle/2.0;
     beginShape();
-    for (float a = 0; a < TWO_PI; a += angle) {
-      float sx = x + cos(a) * radius2;
-      float sy = y + sin(a) * radius2;
+    for (var a = 0; a < TWO_PI; a += angle) {
+      var sx = x + cos(a) * radius2;
+      var sy = y + sin(a) * radius2;
       vertex(sx, sy);
       sx = x + cos(a+halfAngle) * radius1;
       sy = y + sin(a+halfAngle) * radius1;

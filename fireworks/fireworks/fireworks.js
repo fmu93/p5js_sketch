@@ -1,30 +1,30 @@
-import processing.sound.*;
-ArrayList<ParticleSystem> systems;
-color back = color(0);
-boolean backOn = true;
+// import processing.sound.*;
 
-ArrayList<Particle> glitter = new ArrayList<Particle>();
-int k = 0;
+var systems;
+var back = 0;
+var backOn = true;
 
-SoundFile sound1;
+var k = 0;
 
-void setup() {
-  size(1600, 1000);
+// SoundFile sound1;
+
+function setup() {
+  createCanvas(1600, 1000);
   background(0);
-  sound1 = new SoundFile(this, "firework_sound.mp3");
-  sound1.amp(1);
+  // sound1 = new SoundFile(this, "firework_sound.mp3");
+  // sound1.amp(1);
 
-  systems = new ArrayList<ParticleSystem>();
+  systems = [];
 }
 
-void draw() {
+function draw() {
   if (backOn) background(0);
   // glitter is what follows the mouse
   
   
   // manage explosions
-  for(int i = systems.size() - 1; i >= 0; i--) {
-    ParticleSystem ps = systems.get(i);
+  for(var i = systems.length - 1; i >= 0; i--) {
+    var ps = systems[i];
     ps.run();
     if (ps.isDead()) {
      systems.remove(i);
@@ -37,25 +37,25 @@ void draw() {
   text("space bar and double click!", 10, 30); 
 }
 
-void keyPressed() {
+function keyPressed() {
   if (key == ' '){  
     background(back);
   }
 }
 
-void mousePressed() {
+function mousePressed() {
   explosion();
-  sound1.play();
+  // sound1.play();
 }
 
-void doubleClicked() {
+function doubleClicked() {
+  background(back);
+}
+
+function doubleClicked() {
   backOn = !backOn;
 }
 
-public void mouseClicked(MouseEvent evt) {
-  if (evt.getCount() == 2)doubleClicked();
-}
-
-void explosion() {
-  systems.add(new ParticleSystem(40));
+function explosion() {
+  systems.push(new ParticleSystem(40));
 }

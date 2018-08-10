@@ -1,37 +1,37 @@
-class ParticleSystem{
-  ArrayList<Particle> particles;
+class ParticleSystem {
   
-  PVector gravity = new PVector(0, 0.02);
-  
-  ParticleSystem(int n) {
-    particles = new ArrayList<Particle>();
-    for(int i = 0; i < n; i++) {
-      particles.add(new Particle());
+  ParticleSystem(n) {
+    
+    println("heeey");
+    this.gravity = new PVector(0, 0.02);
+    this.particles = [];
+    for(var i = 0; i < n; i++) {
+      this.particles.push(new Particle());
     }
   }
   
-  void explosion(Particle p) {
-    PVector ex = new PVector(((float) gen.nextGaussian()*0.5), ((float) gen.nextGaussian()*0.5));
+  explosion(p) {
+    var ex = new PVector(randomGaussian()*0.5, randomGaussian()*0.5);
     p.applyForce(ex);
   }
   
-  void run() {
-   for (int i=particles.size() - 1; i >= 0; i--) {
-    Particle p = particles.get(i);
+  run() {
+   for (var i = this.particles.length - 1; i >= 0; i--) {
+    var p = this.particles[i];
     
-    p.applyForce(gravity.mult(p.mass));
+    p.applyForce(this.gravity.mult(p.mass));
     explosion(p);
     p.update();
     p.display();
     
     if (p.isDead()) {
-     particles.remove(i);
+     this.particles.remove(i);
     }
    }  
   }
   
-  boolean isDead() {
-   if (particles.size() == 0) {
+  isDead() {
+   if (this.particles.size() == 0) {
     return true; 
    } else {
      return false;
