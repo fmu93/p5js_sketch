@@ -11,6 +11,7 @@ class ParticleSystem {
   
   explosion(p) {
     var ex = createVector(randomGaussian()*0.5, randomGaussian()*0.5);
+    ex.mult(0.5);
     p.applyForce(ex);
   }
   

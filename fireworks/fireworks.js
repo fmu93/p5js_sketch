@@ -9,8 +9,8 @@ var k = 0;
 // SoundFile sound1;
 
 function setup() {
-  createCanvas(1600, 1000);
-  background(0);
+  createCanvas(windowWidth, windowHeight);
+  background(back);
   // sound1 = new SoundFile(this, "firework_sound.mp3");
   // sound1.amp(1);
 
@@ -20,7 +20,7 @@ function setup() {
 function draw() {
 
   if (backOn) {
-    background(0);
+    background(back);
   }
   // glitter is what follows the mouse
   
@@ -35,15 +35,15 @@ function draw() {
   }
 
   // display current key
-  textSize(32);
+  textSize(18);
   fill(255);
-  text("space bar and double click!", 10, 30); 
+  text("space bar and double click!", width/2 - 60, 30); 
 }
 
 function keyPressed() {
-  if (key == ' '){  
+  // if (key == " "){  
     background(back);
-  }
+  // }
 }
 
 function mousePressed() {
@@ -52,11 +52,8 @@ function mousePressed() {
 }
 
 function doubleClicked() {
-  background(back);
-}
-
-function doubleClicked() {
   backOn = !backOn;
+  print("dsadas");
 }
 
 function explosion() {
