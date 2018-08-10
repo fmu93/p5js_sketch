@@ -14,7 +14,7 @@ function setup() {
 	pixelate = 8;
 	pixelateOn = false;
 
-  createCanvas(1000, 600);           // set size to that of the image
+  createCanvas(windowWidth, windowHeight);           // set size to that of the image
   colorMode(HSB, 255);               // allows us to access the brightness of a color
   background(back);
 
