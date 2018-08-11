@@ -9,7 +9,7 @@ class Particle {
     this.explosion = 2;
     this.c = color(255, 100 + 150*random(1), 150 + random(20, 100));
     this.spikes = 4 + Math.floor(random(4));
-    this.lifeSpan = randomGaussian()*30 + 250;
+    this.lifeSpan = randomGaussian(60, 40) + 250;
     this.size = this.lifeSpan*0.1;
     this.mass = this.size/50; 
   }
@@ -36,7 +36,8 @@ class Particle {
   }
   
   fade() {
-    this.size = this.lifeSpan*0.2;
+    this.size = this.lifeSpan*0.2; //*(noise(lifeSpan));
+    this.c = color(red(this.c), green(this.c), blue(this.c), alpha(this.c) - 0.5)
     //mass = size/200; // actually more realistic but small bits fly too fast
   }
   

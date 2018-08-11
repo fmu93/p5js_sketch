@@ -2,9 +2,9 @@ class ParticleSystem {
   
   constructor(n) {
 
-    this.gravity = createVector(0, 0.02);
-    this.exMean = 2;
-    this.exStDev = 1;
+    this.gravity = createVector(0, 2);
+    this.exMean = 1.2;
+    this.exStDev = 0.4;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
@@ -14,7 +14,7 @@ class ParticleSystem {
   }
   
   explosion(p) {
-    var ex = createVector(randomGaussian(this.exMean, this.exStDev), 0);
+    var ex = createVector(0.5 + randomGaussian(this.exMean, this.exStDev), 0);
     ex.rotate(random(TWO_PI));
     p.applyForce(ex);
   }
