@@ -2,9 +2,10 @@ class ParticleSystem {
   
   constructor(n) {
 
-    this.gravity = createVector(0, 2);
-    this.exMean = 1.2;
+    this.gravity = createVector(0, 0.008);
+    this.exMean = 2;
     this.exStDev = 0.4;
+    this.dragCoeff = 0.002;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
@@ -14,17 +15,33 @@ class ParticleSystem {
   }
   
   explosion(p) {
-    var ex = createVector(0.5 + randomGaussian(this.exMean, this.exStDev), 0);
+    var ex = createVector(randomGaussian(this.exMean, this.exStDev), 0);
     ex.rotate(random(TWO_PI));
     p.applyForce(ex);
+  }
+
+  drag(p) {
+    // drag
+    var drag = p.vel.copy();
+    drag.normalize();
+    drag.mult(-1 * this.dragCoeff * p.vel.magSq() * p.mass);
+    p.applyForce(drag);
+  }
+
+  gravityApply(p) {
+    // gravity force
+    var g = this.gravity.copy();
+    g.mult(p.mass);
+    p.applyForce(g);
   }
   
   run() {
    for (var i = this.particles.length - 1; i >= 0; i--) {
     var p = this.particles[i];
-    
-    p.applyForce(this.gravity.mult(p.mass));
-    // this.explosion(p);
+    this.gravityApply(p);
+    // drag force
+    this.drag(p);
+    // update
     p.update();
     p.display();
     

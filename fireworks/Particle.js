@@ -32,11 +32,11 @@ class Particle {
     this.vel.add(this.acc);
     this.pos.add(this.vel);
     this.acc.mult(0);
-    this.lifeSpan -= 2;
+    this.lifeSpan -= 0.5 + 2*noise(this.lifeSpan*this.spikes);
   }
   
   fade() {
-    this.size = this.lifeSpan*0.2; //*(noise(lifeSpan));
+    this.size = this.lifeSpan*0.2;
     this.c = color(red(this.c), green(this.c), blue(this.c), alpha(this.c) - 0.5)
     //mass = size/200; // actually more realistic but small bits fly too fast
   }
