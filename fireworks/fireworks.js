@@ -5,14 +5,14 @@ var back = 0;
 var backOn = true;
 
 var k = 0;
-// var sound1;
+var sound1;
 
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(back);
 
-  // sound1 = loadSound('data/firework_sound.mp3');
+  sound1 = loadSound('data/firework_sound.mp3');
 
   systems = []; 
   // createP('_____ Frank Croket > fco.muro2 (at) gmail.com');
@@ -51,7 +51,7 @@ function keyPressed() {
 
 function mousePressed() {
   explosion();
-  // sound1.play();
+  sound1.play();
 }
 
 function doubleClicked() {
