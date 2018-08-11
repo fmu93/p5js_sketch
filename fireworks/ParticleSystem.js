@@ -2,14 +2,12 @@ class ParticleSystem {
   
   constructor(n) {
 
-    this.gravity = createVector(0, 0.008);
-    this.exMean = 2;
-    this.exStDev = 0.4;
-    this.dragCoeff = 0.002;
+
+    this.gravity = createVector(0, 0.02);
+    this.explosionCoeff = 0.5;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
-      this.explosion(p);
       this.particles.push(p);
     }
   }
@@ -42,6 +40,8 @@ class ParticleSystem {
     // drag force
     this.drag(p);
     // update
+
+    this.explosion(p);
     p.update();
     p.display();
     
@@ -58,7 +58,6 @@ class ParticleSystem {
      return false;
    }
   }
-  
   
   
 }
