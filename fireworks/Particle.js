@@ -10,8 +10,8 @@ class Particle {
     this.c = color(255, 100 + 150*random(1), 150 + random(20, 100));
     this.spikes = 4 + Math.floor(random(4));
     this.lifeSpan = randomGaussian()*30 + 250;
-    this.size = this.lifeSpan*0.2;
-    this.mass = this.size/200;
+    this.size = this.lifeSpan*0.1;
+    this.mass = this.size/50;
   }
   
   isDead() {

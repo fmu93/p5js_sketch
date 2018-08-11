@@ -12,9 +12,10 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   background(back);
 
-  sound1 = loadSound('/data/firework_sound');
+  sound1 = loadSound('data/firework_sound.mp3');
 
-  systems = [];
+  systems = []; 
+  // createP('_____ Frank Croket > fco.muro2 (at) gmail.com');
 }
 
 function draw() {
