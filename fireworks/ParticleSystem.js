@@ -3,11 +3,10 @@ class ParticleSystem {
   constructor(n) {
 
     this.gravity = createVector(0, 0.02);
-    this.explosionCoeff = 0.0005;
+    this.explosionCoeff = 0.5;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
-      explosion(p);
       this.particles.push(p);
     }
   }
@@ -23,7 +22,7 @@ class ParticleSystem {
     var p = this.particles[i];
     
     p.applyForce(this.gravity.mult(p.mass));
-    // this.explosion(p);
+    this.explosion(p);
     p.update();
     p.display();
     
