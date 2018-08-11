@@ -11,7 +11,7 @@ class Particle {
     this.spikes = 4 + Math.floor(random(4));
     this.lifeSpan = randomGaussian()*30 + 250;
     this.size = this.lifeSpan*0.1;
-    this.mass = this.size/50;
+    this.mass = this.size/50; 
   }
   
   isDead() {

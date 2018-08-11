@@ -56,7 +56,6 @@ function mousePressed() {
 
 function doubleClicked() {
   backOn = !backOn;
-  print("dsadas");
 }
 
 function explosion() {
