@@ -4,7 +4,9 @@ class ParticleSystem {
 
 
     this.gravity = createVector(0, 0.02);
-    this.explosionCoeff = 0.5;
+    this.exMean = 2;
+    this.exStDev = 0.4;
+    this.dragCoeff = 0.002;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
