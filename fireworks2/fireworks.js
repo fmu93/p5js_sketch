@@ -66,5 +66,5 @@ function doubleClicked() {
 }
 
 function explosion() {
-  systems.push(new ParticleSystem(randomGaussian() + 40));
+  systems.push(new ParticleSystem(randomGaussian(10) + 40));
 }

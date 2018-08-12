@@ -2,22 +2,29 @@ class ParticleSystem {
   
   constructor(n) {
 
-    this.gravity = createVector(0, 0.01);
-    this.exMean = 2.5;
+    this.gravity = createVector(0, 0.007);
+    this.exMean = 1;
     this.exStDev = 0.4;
     this.dragCoeff = 0.003;
+    this.torqueCoeff = 0.01;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
       this.explosion(p);
+      this.randomTorque(p);
       this.particles.push(p);
     }
   }
   
   explosion(p) {
-    var ex = createVector(randomGaussian(this.exMean, this.exStDev), 0);
+    var ex = createVector(0.1 + randomGaussian(this.exMean, this.exStDev), 0);
     ex.rotate(random(TWO_PI));
     p.applyForce(ex);
+  }
+
+  randomTorque(p) {
+    var t = randomGaussian(0.5)*this.torqueCoeff;
+    p.applyTorque(t);
   }
 
   drag(p) {
