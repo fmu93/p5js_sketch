@@ -12,11 +12,16 @@ class Particle {
     
     this.zoom = (width+height)*0.00005;
     this.explosion = 2;
-    this.c = color(255, 100 + 150*random(1), 150 + random(20, 100));
+    this.c = this.randomGold();
     this.spikes = 4 + Math.floor(random(4));
     this.lifeSpan = randomGaussian(60, 40) + 250;
     this.size = this.lifeSpan*this.zoom;
     this.mass = this.lifeSpan*0.003; 
+  }
+
+  randomGold() {
+  	this.c = color(210 + randomGaussian(20, 10), 180 + randomGaussian(50, 10), 50 + randomGaussian(100, 100));
+  	return this.c;
   }
   
   isDead() {
@@ -51,7 +56,8 @@ class Particle {
   
   fade() {
     this.size = this.lifeSpan*this.zoom;
-    this.c = color(red(this.c), green(this.c), blue(this.c), alpha(this.c) - 0.5)
+    this.randomGold();
+    this.c = color(red(this.c), green(this.c), blue(this.c), (this.lifeSpan) + randomGaussian(50, 100))
     //mass = size/200; // actually more realistic but small bits fly too fast
   }
   
