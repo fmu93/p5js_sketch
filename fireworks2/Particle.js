@@ -6,13 +6,13 @@ class Particle {
     this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
     
-    this.zoom = (width+height)*0.00007;
+    this.zoom = (width+height)*0.00003;
     this.explosion = 2;
     this.c = color(255, 100 + 150*random(1), 150 + random(20, 100));
     this.spikes = 4 + Math.floor(random(4));
     this.lifeSpan = randomGaussian(60, 40) + 250;
-     this.size = this.lifeSpan*this.zoom;
-    this.mass = this.lifeSpan*0.002; 
+    this.size = this.lifeSpan*this.zoom;
+    this.mass = this.lifeSpan*0.003; 
   }
   
   isDead() {

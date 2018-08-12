@@ -2,10 +2,10 @@ class ParticleSystem {
   
   constructor(n) {
 
-    this.gravity = createVector(0, 0.008);
-    this.exMean = 2;
+    this.gravity = createVector(0, 0.01);
+    this.exMean = 2.5;
     this.exStDev = 0.4;
-    this.dragCoeff = 0.002;
+    this.dragCoeff = 0.003;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
