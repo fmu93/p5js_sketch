@@ -2,7 +2,7 @@
 
 var systems;
 var back = 0;
-var backOn = true;
+var backOn = false;
 
 var k = 0;
 var sound1;
