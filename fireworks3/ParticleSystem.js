@@ -3,7 +3,7 @@ class ParticleSystem {
   constructor(n) {
 
     this.gravity = createVector(0, 0.007);
-    this.exMean = 1;
+    this.exMean = 1.2;
     this.exStDev = 0.4;
     this.dragCoeff = 0.003;
     this.torqueCoeff = 0.01;
