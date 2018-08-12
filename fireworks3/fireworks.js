@@ -1,4 +1,3 @@
-// import processing.sound.*;
 
 var systems;
 var glitter;
