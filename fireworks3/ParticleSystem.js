@@ -10,21 +10,25 @@ class ParticleSystem {
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
-      this.explosion(p);
-      this.randomTorque(p);
       this.particles.push(p);
     }
   }
   
-  explosion(p) {
-    var ex = createVector(0.1 + randomGaussian(this.exMean, this.exStDev), 0);
-    ex.rotate(random(TWO_PI));
-    p.applyForce(ex);
+  explosion() {
+  	for (var i = this.particles.length - 1; i >= 0; i--) {
+      var p = this.particles[i];
+      var ex = createVector(0.1 + randomGaussian(this.exMean, this.exStDev), 0);
+      ex.rotate(random(TWO_PI));
+      p.applyForce(ex);
+    }
   }
 
-  randomTorque(p) {
-    var t = randomGaussian(0.5)*this.torqueCoeff;
-    p.applyTorque(t);
+  randomTorque() {
+  	for (var i = this.particles.length - 1; i >= 0; i--) {
+  	  var p = this.particles[i];
+      var t = randomGaussian(0.5)*this.torqueCoeff;
+      p.applyTorque(t);
+    }
   }
 
   drag(p) {

@@ -1,6 +1,7 @@
 // import processing.sound.*;
 
 var systems;
+var glitter;
 var back = 0;
 var backOn = false;
 
@@ -15,7 +16,7 @@ function setup() {
   sound1 = loadSound('data/firework_sound.mp3');
 
   systems = []; 
-  // createP('_____ Frank Croket > fco.muro2 (at) gmail.com');
+  glitter = [];
 }
 
 function draw() {
@@ -28,6 +29,16 @@ function draw() {
     rect(0, 0, width*2, height*2);
   }
   // glitter is what follows the mouse
+  var glitterParticle = new GlitterParticle();
+  glitter.push(glitterParticle);
+  for(var i = glitter.length - 1; i >= 0; i--) {
+  	var p = glitter[i];
+    p.update();
+    p.display();
+    if (p.isDead()) {
+     glitter.splice(i, 1);
+    }
+  }
   
   
   // manage explosions
@@ -66,5 +77,8 @@ function doubleClicked() {
 }
 
 function explosion() {
-  systems.push(new ParticleSystem(randomGaussian(10) + 40));
+  var ps = new ParticleSystem(randomGaussian(10) + 40);
+  ps.explosion();
+  ps.randomTorque();
+  systems.push(ps);
 }

@@ -12,7 +12,7 @@ class Particle {
     
     this.zoom = (width+height)*0.00005;
     this.explosion = 2;
-    this.c = this.randomGold();
+    this.c = color(0, 0);
     this.spikes = 4 + Math.floor(random(4));
     this.lifeSpan = randomGaussian(60, 40) + 250;
     this.size = this.lifeSpan*this.zoom;
