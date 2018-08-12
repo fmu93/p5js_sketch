@@ -8,6 +8,7 @@ class ParticleSystem {
     this.exStDev = 0.4;
     this.dragCoeff = 0.005;
     this.frictionCoeff = 0.05;
+    this.torqueCoeff = 0.001;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
@@ -38,6 +39,11 @@ class ParticleSystem {
 
   }
 
+  randomTorque(p) {
+    var t = randomGaussian()*this.torqueCoeff;
+    p.applyTorque(t);
+  }
+
   gravityApply(p) {
     // gravity force
     var g = this.gravity.copy();
@@ -52,6 +58,7 @@ class ParticleSystem {
     // drag & friction force
     this.drag(p);
     this.friction(p);
+    this.randomTorque(p);
     // update
 
     this.explosion(p);
