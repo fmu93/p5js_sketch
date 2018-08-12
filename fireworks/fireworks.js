@@ -24,7 +24,7 @@ function draw() {
     background(back);
   } else {
     noStroke();
-    fill(0, 3);
+    fill(0, 10);
     rect(0, 0, width*2, height*2);
   }
   // glitter is what follows the mouse

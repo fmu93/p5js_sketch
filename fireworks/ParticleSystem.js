@@ -4,9 +4,10 @@ class ParticleSystem {
 
 
     this.gravity = createVector(0, 0.02);
-    this.exMean = 2;
+    this.exMean = 1;
     this.exStDev = 0.4;
-    this.dragCoeff = 0.002;
+    this.dragCoeff = 0.005;
+    this.frictionCoeff = 0.05;
     this.particles = [];
     for(var i = 0; i < n; i++) {
       var p = new Particle();
@@ -28,6 +29,15 @@ class ParticleSystem {
     p.applyForce(drag);
   }
 
+  friction(p) {
+    var friction = p.vel.copy();
+    friction.normalize();
+    var c = -this.frictionCoeff;
+    friction.mult(c);
+    p.applyForce(friction);
+
+  }
+
   gravityApply(p) {
     // gravity force
     var g = this.gravity.copy();
@@ -39,8 +49,9 @@ class ParticleSystem {
    for (var i = this.particles.length - 1; i >= 0; i--) {
     var p = this.particles[i];
     this.gravityApply(p);
-    // drag force
+    // drag & friction force
     this.drag(p);
+    this.friction(p);
     // update
 
     this.explosion(p);
