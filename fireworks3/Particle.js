@@ -94,13 +94,14 @@ class GlitterParticle extends Particle {
 	}
 
 	glitterColor() {
-		this.c = color(210 + randomGaussian(20, 50), 20 + randomGaussian(50, 50), 50 + randomGaussian(30, 50));
+		this.c = color(210 + randomGaussian(20, 50), 20 + randomGaussian(50, 50), 50 + randomGaussian(30, 50), 200);
 		this.spikes = 4 + Math.floor(random(4));
+		this.angle = random(TWO_PI);
 	}
 
 	update() {
     this.fade();
-    this.lifeSpan -= 1 + 4*noise(this.lifeSpan*this.spikes);
+    this.lifeSpan -= 2 + 4*noise(this.lifeSpan*this.spikes);
   }
 
     fade() {
