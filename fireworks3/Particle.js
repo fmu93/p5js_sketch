@@ -10,7 +10,7 @@ class Particle {
     this.aVel = 0;
     this.angle = 0;
     
-    this.zoom = (width+height)*0.00005;
+    this.zoom = (width+height)*0.00006;
     this.explosion = 2;
     this.c = color(0, 0);
     this.spikes = 4 + Math.floor(random(4));
@@ -86,29 +86,4 @@ class Particle {
   }
 }
 
-class GlitterParticle extends Particle {
-	
-	constructor() {
-	  super();
-	  this.lifeSpan = randomGaussian(60, 40) + 200;
-	}
 
-	glitterColor() {
-		this.c = color(210 + randomGaussian(20, 50), 20 + randomGaussian(50, 50), 50 + randomGaussian(30, 50), 200);
-		this.spikes = 4 + Math.floor(random(4));
-		this.angle = random(TWO_PI);
-	}
-
-	update() {
-    this.fade();
-    this.lifeSpan -= 2 + 4*noise(this.lifeSpan*this.spikes);
-  }
-
-    fade() {
-    this.size = this.lifeSpan*this.zoom*0.7;
-    this.glitterColor();
-  }
-
-
-
-}
