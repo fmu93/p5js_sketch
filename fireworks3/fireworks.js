@@ -9,7 +9,7 @@ var sound1;
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight, P2D);
   background(back);
 
   sound1 = loadSound('data/firework_sound.mp3');
@@ -22,7 +22,9 @@ function draw() {
 
   if (backOn) {
     background(back);
+    blendMode(BLEND);
   } else {
+  	blendMode(BLEND);
     noStroke();
     fill(0, 3);
     rect(0, 0, width*2, height*2);
