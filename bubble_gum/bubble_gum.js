@@ -1,4 +1,14 @@
-p5.disableFriendlyErrors = true; // performance
+// p5.disableFriendlyErrors = true; // performance
+
+// module aliases
+var Engine = Matter.Engine,
+    // Render = Matter.Render, // don't need it
+    World = Matter.World,
+    Bodies = Matter.Bodies;
+
+    // create an engine
+var engine;
+var world;
 
 var n; 
 var k;
@@ -6,6 +16,9 @@ var back;
 var particles;
 
 function setup() {
+
+	engine = Engine.create();
+	world = engine.world;
 
 	k = 0;
 	n = 420;
@@ -62,14 +75,13 @@ function draw() {
   }
   k++;
 
-  	// clicl me! text
-	fill(255);
-  	stroke(0);
-  	textSize(16);
-  	text("Click around!", 20, 12);
+ //  	// clicl me! text
+	// fill(255);
+ //  	stroke(0);
+ //  	textSize(16);
+ //  	text("Click around!", 20, 12);
   
 }
-
 
 function mousePressed() {
 	for (var i=0; i < particles.length; i++) {
