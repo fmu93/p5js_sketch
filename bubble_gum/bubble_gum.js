@@ -1,4 +1,3 @@
-// p5.disableFriendlyErrors = true; // performance
 
 // module aliases
 var Engine = Matter.Engine,
@@ -11,6 +10,9 @@ var engine;
 var world;
 
 var n; 
+var bubbles = [];
+var forceCoeff = 0.000002
+
 var k;
 var back;
 var particles;
@@ -19,51 +21,68 @@ function setup() {
 
 	engine = Engine.create();
 	world = engine.world;
+	world.gravity.y = 0;
 
 	k = 0;
-	n = 420;
+	n = 100;
 	back = 0;	
 	particles = [];
 	pixelate = 8;
 	pixelateOn = false;
 
   createCanvas(windowWidth, windowHeight);           // set size to that of the image
-  colorMode(HSB, 255);               // allows us to access the brightness of a color
+  // colorMode(HSB, 255);               // allows us to access the brightness of a color
   background(back);
 
   // Start particles
   for (var i = 0; i < n; i++) {
-  	particles.push(new Particle());
+  	var bubble = new Bubble(random(width), random(height));
+  	bubbles.push(bubble);
   }
+
+  // add all of the bodies to the world
+  World.add(world, bubbles);
+  Engine.run(engine);
 }
 
 function draw() {
+	// blendMode(LIGHTEST);
 	background(back);
 
-	// deal with each particle
-	for (var i=0; i < particles.length; i++) {
-		particles[i].wobble();
-		particles[i].pointer();
-   		// reaction among particles
-	    for (var j=i+1; j < particles.length; j++) {
-	   		particles[i].checkCollisionOther(particles[j]);
-	    }
-		particles[i].move();
-	    particles[i].walls();
-	   	particles[i].display(); 
+	// draw circles
+	for (var i=0; i < bubbles.length; i++) {
+		var bubble = bubbles[i];
+		var from = Matter.Vector.create(mouseX, mouseY);
+		var force = Matter.Vector.create(-(bubble.body.position.x - mouseX)*forceCoeff, -(bubble.body.position.y - mouseY)*forceCoeff);
+		Matter.Body.applyForce(bubble.body, from, force);
+		bubble.show();
 	}
 
+
+	// deal with each particle
+	// for (var i=0; i < particles.length; i++) {
+	// 	particles[i].wobble();
+	// 	particles[i].pointer();
+ //   		// reaction among particles
+	//     for (var j=i+1; j < particles.length; j++) {
+	//    		particles[i].checkCollisionOther(particles[j]);
+	//     }
+	// 	particles[i].move();
+	//     particles[i].walls();
+	//    	particles[i].display(); 
+	// }
+
   // influence area
-  noFill();
-  stroke(back, 80);
-  ellipse(mouseX, mouseY, height/2, height/2);
+  // noFill();
+  // stroke(back, 80);
+  // ellipse(mouseX, mouseY, height/2, height/2);
   
   // frame
-  strokeWeight(30);
-  stroke(back);
-  noFill();
-  rect(0,0,width,height);
-  strokeWeight(1);
+  // strokeWeight(30);
+  // stroke(back);
+  // noFill();
+  // rect(0,0,width,height);
+  // strokeWeight(1);
 
   // show framerate
   if ((k+1) % 50 == 0){
@@ -83,7 +102,11 @@ function draw() {
   
 }
 
-function mousePressed() {
+function mouseDragged() {
+
+	  	var bubble = new Bubble(mouseX, mouseY);
+  	bubbles.push(bubble);
+
 	for (var i=0; i < particles.length; i++) {
 		particles[i].s = particles[i].s * -1;
 	}
