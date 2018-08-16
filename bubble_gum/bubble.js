@@ -1,7 +1,7 @@
 function Bubble(x, y) {
 	var options = {
 		friction: 0.3, 
-		restitution: 0.2,
+		restitution: 0.9,
 		frictionAir: 0.02
 	}
 	this.r = randomGaussian(12, 3);

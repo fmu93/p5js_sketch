@@ -9,13 +9,11 @@ Bodies = Matter.Bodies;
 var engine;
 var world;
 
-var n = 120; 
+var n = 250; 
 var bubbles = [];
-var forceCoeff = 0.000002
+var forceCoeff = 2
 var back = 0;
 
-var blendModes = ['BLEND', 'DARKEST', 'LIGHTEST', 'DIFFERENCE', 'MULTIPLY', 'EXCLUSION', 'SCREEN', 'REPLACE', 'OVERLAY', 'HARD_LIGHT', 'SOFT_LIGHT', 'DODGE', 'BURN', 'ADD', 'NORMAL'];
-var b = 0;
 
 function setup() {
 
@@ -40,25 +38,27 @@ function setup() {
 }
 
 function draw() {
-	// blendMode(NORMAL);
+	// blendMode(ADD);
 	background(back);
 
+	var from = Matter.Vector.create(mouseX, mouseY);		
 	// draw circles
 	for (var i=0; i < bubbles.length; i++) {
 		var bubble = bubbles[i];
-		var from = Matter.Vector.create(mouseX, mouseY);
-		var force = Matter.Vector.create(-(bubble.body.position.x - mouseX)*forceCoeff, -(bubble.body.position.y - mouseY)*forceCoeff);
-		Matter.Vector.mult(force, bubble.body.mass);
-		Matter.Body.applyForce(bubble.body, from, force);
-		bubble.show();
+		var force = Matter.Vector.sub(bubble.body.position, from);
+		if (Matter.Vector.magnitude(force) > bubble.r) {
+			var forceMag = 1/Matter.Vector.magnitudeSquared(force);
+			force = Matter.Vector.normalise(force);
+			force = Matter.Vector.mult(force, -forceCoeff*forceMag*bubble.body.mass);
+			Matter.Body.applyForce(bubble.body, from, force);
+		}
+		bubble.show();	
 	}
   
 }
 
 function mousePressed() {
 	forceCoeff *= -1;
-	console.log(b);
-	b = (b+1)/blendModes.lenght;
 }
 
 function mouseDragged() {
