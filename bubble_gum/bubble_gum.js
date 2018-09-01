@@ -9,7 +9,7 @@ Bodies = Matter.Bodies;
 var engine;
 var world;
 
-var n = 250; 
+var n = 150; 
 var bubbles = [];
 var forceCoeff = 2
 var back = 0;
