@@ -12,7 +12,7 @@ function Particle() {
 	this.color = this.colors[this.type1];
 	this.stroke = [0, 20];
 	this.size = this.sizes[this.type2];	
-	this.maxspeed = 5*sqrt(sqrt(1/this.size));
+	this.maxspeed = 7*sqrt(sqrt(1/this.size));
 	this.maxforce = (this.type2 + 1) ;
 	this.pos = createVector(random() * width, random() * height);
 	this.vel = createVector(this.maxspeed, 0);
