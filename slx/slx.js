@@ -10,7 +10,7 @@ var isvSLX = false;
 var nclicks = 0;
 
 function setup() {
-	createCanvas(800, 400);
+	createCanvas(windowWidth, windowHeight);
 	background(225);
 
 	for (var i = 0; i < nParticles; i++) {
