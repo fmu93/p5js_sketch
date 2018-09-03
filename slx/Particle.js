@@ -9,6 +9,7 @@ function Particle() {
 	[0, 133, 174]];
 	this.sizes = [5, 10, 15, 20];
 	this.color = this.colors[this.type1];
+	this.stroke = [0, 20];
 	this.size = this.sizes[this.type2];	
 	this.maxspeed = 5*sqrt(sqrt(1/this.size));
 	this.maxforce = (this.type2 + 1) ;
@@ -98,7 +99,7 @@ function Particle() {
 
 	this.display = function() {
 		fill(this.color);
-		stroke(0, 20);
+		stroke(this.stroke);
 		strokeWeight(1);
 		ellipse(this.pos.x, this.pos.y, this.size, this.size);
 	}
