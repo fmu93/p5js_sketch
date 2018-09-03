@@ -1,5 +1,5 @@
 var particles = [];
-var nParticles = 600;
+var nParticles = 1010;
 var flowField;
 var hpaths = [];
 var nhPaths = 4;
@@ -15,7 +15,13 @@ function setup() {
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
+		if (i%100 == 0) {
+			particles[i].color = [0, 0];
+			particles[i].stroke = [0, 0];
+		}
 	}
+	
+	
 
 	flowField = new FlowField();
 	flowField.init();
