@@ -49,7 +49,7 @@ function draw() {
   strokeWeight(30);
   stroke(back);
   noFill();
-  rect(0,0,width,height);
+  rect(1,1,width-1,height-1);
   strokeWeight(1);
 
   // show framerate
