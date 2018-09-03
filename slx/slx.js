@@ -1,15 +1,16 @@
 var particles = [];
-var nParticles = 1000;
+var nParticles = 600;
 var flowField;
 var hpaths = [];
 var nhPaths = 4;
 var vpaths = [];
 var nvPaths = 4;
-var ishSLX = true;
-var isvSLX = true;
+var ishSLX = false;
+var isvSLX = false;
+var nclicks = 0;
 
 function setup() {
-	createCanvas(800, 800);
+	createCanvas(800, 400);
 	background(220);
 
 	for (var i = 0; i < nParticles; i++) {
@@ -40,6 +41,14 @@ function draw() {
 	// for (var j = 0; j < hpaths.length; j++) {
 	// 	hpaths[j].display();
 	// }
+	
+	// SLX text
+	fill(200);
+	rectMode(CENTER)
+	textSize(120);
+	textStyle(BOLD);
+	textAlign(CENTER);
+	text("SLX", width/2, height/2);
 
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
@@ -76,22 +85,26 @@ function draw() {
 		particles[i].run();
 	}
 
-
-	// SLX text
-	fill(200);
-	rectMode(CENTER)
-	textSize(120);
-	textStyle(BOLD);
-	textAlign(CENTER);
-	text("SLX", width/2, height/2);
-
 	// move flowField
 	flowField.timeStep();
 }
 
 function mouseClicked() {
-	ishSLX = !ishSLX;
-	isvSLX = !isvSLX;
+	if (nclicks == 0) {
+		ishSLX = true;
+		isvSLX = false;
+	} else if (nclicks == 1) {
+		ishSLX = true;
+		isvSLX = false;
+	} else if (nclicks == 2) {
+		ishSLX = true;
+		isvSLX = true;	
+	} else if (nclicks == 3) {
+		ishSLX = false;
+		isvSLX = false;	
+	}
+	
+	nclicks = (nclicks+ 1)%4
 
 	for (var i = particles.length - 1; i > 0; i--) {
 		particles[i].applyForce(createVector(random(-10, 10), random(-10, 10)));
