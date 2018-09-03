@@ -1,9 +1,10 @@
 function Bubble(x, y) {
 	var options = {
-		friction: 0, 
-		restitution: 0.95
+		friction: 0.3, 
+		restitution: 0.9,
+		frictionAir: 0.02
 	}
-	this.r = randomGaussian(12, 2);
+	this.r = randomGaussian(12, 3);
 	this.body = Bodies.circle(x, y, this.r, options);
 	this.c = color(random(90, 230), random(90, 230), random(90, 230));
 	World.add(world, this.body);
