@@ -3,10 +3,11 @@ function Particle() {
 
 	this.type1 = floor(random(0, 4)); // color
 	this.type2 = floor(random(0, 4)); // size
-	this.colors = ['#56b2af',
-	'#008E8C', 
-	'#006283', 
-	'#00495E'];
+	this.colors = ['#56b2af', // lightest
+        '#008E8C',
+	'#008997', 
+	'#006283'] 
+// 	'#00495E']; // darkest
 	this.sizes = [5, 10, 15, 20];
 	this.color = this.colors[this.type1];
 	this.stroke = [0, 20];
