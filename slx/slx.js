@@ -49,12 +49,12 @@ function draw() {
 	// }
 	
 	// SLX text
-	fill(200);
+	fill(300);
 	rectMode(CENTER)
 	textSize(120);
 	textStyle(BOLD);
 	textAlign(CENTER);
-	text("SLX", width/2, height/2);
+	text("SILEXICA", width/2, height*3/5);
 
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
