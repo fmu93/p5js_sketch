@@ -94,8 +94,8 @@ function mouseClicked() {
 		ishSLX = true;
 		isvSLX = false;
 	} else if (nclicks == 1) {
-		ishSLX = true;
-		isvSLX = false;
+		ishSLX = false;
+		isvSLX = true;
 	} else if (nclicks == 2) {
 		ishSLX = true;
 		isvSLX = true;	
