@@ -56,7 +56,7 @@ function draw() {
 	// SLX text
 	fill(190);
 	rectMode(CENTER)
-	textSize(160);
+	textSize(width/4);
 	textStyle(BOLD);
 	textFont(fontBold);
 	textAlign(CENTER);
