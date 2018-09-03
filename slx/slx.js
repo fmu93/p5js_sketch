@@ -11,7 +11,7 @@ var nclicks = 0;
 
 function setup() {
 	createCanvas(800, 400);
-	background(220);
+	background(225);
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
@@ -38,7 +38,7 @@ function setup() {
 }
 
 function draw() {
-	background(220);
+	background(225);
 	// flowField.display();
 	// show paths			
 	// for (var j = 0; j < vpaths.length; j++) {
@@ -49,12 +49,12 @@ function draw() {
 	// }
 	
 	// SLX text
-	fill(200);
+	fill(190);
 	rectMode(CENTER)
-	textSize(180);
+	textSize(160);
 	textStyle(BOLD);
 	textAlign(CENTER);
-	text("SILEXICA", width/2, height*4/7);
+	text("SILEXICA", width/2, height*4/6);
 
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
