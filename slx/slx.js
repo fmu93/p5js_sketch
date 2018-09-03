@@ -9,6 +9,11 @@ var ishSLX = false;
 var isvSLX = false;
 var nclicks = 0;
 
+function preload() {
+//   fontLight = loadFont('assets/Lato-Light.ttf');
+  fontBold = loadFont('assets/Lato-Bold.ttf');
+}
+
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(225);
@@ -53,8 +58,9 @@ function draw() {
 	rectMode(CENTER)
 	textSize(160);
 	textStyle(BOLD);
+	textFont(fontBold);
 	textAlign(CENTER);
-	text("SILEXICA", width/2, height*4/6);
+	text("SILEXICA", width/2, height*5/8);
 
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
