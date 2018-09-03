@@ -55,7 +55,7 @@ function Particle() {
     // Find target point a little further ahead of normal
     var dir = p5.Vector.sub(b, a);
     dir.normalize();
-    dir.mult(10);  // This could be based on velocity instead of just an arbitrary 10 pixels
+    dir.mult(this.vel.mag()); 
     var target = p5.Vector.add(normalPoint, dir);
 
     // How far away are we from the path?
