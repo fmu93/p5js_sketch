@@ -12,8 +12,8 @@ function Particle() {
 	this.color = this.colors[this.type1];
 	this.stroke = [0, 20];
 	this.size = this.sizes[this.type2];	
-	this.maxspeed = map(this.type2, 0, 3, 4, 2);
-	this.maxforce = map(this.type1, 0, 3, 4, 1);
+	this.maxspeed = map(this.type2, 0, 3, 4.5, 2.5);
+	this.maxforce = map(this.type1, 0, 3, 5, 1);
 	this.pos = createVector(random() * width, random() * height);
 	this.vel = createVector(this.maxspeed, 0);
 	this.acc = createVector(0, 0);
