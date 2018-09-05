@@ -65,30 +65,32 @@ function draw() {
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
 		particles[i].applyForce(createVector(random(-0.15, 0.15), random(-0.15, 0.15)));
-		particles[i].applyForce(flowField.lookup(particles[i].pos));
-
-		if (isvSLX) {
-			// vertical lines (size)
-			if (particles[i].type2 == 0) {
-				particles[i].follow(vpaths[0]);
-			} else if (particles[i].type2 == 1) {
-				particles[i].follow(vpaths[1]);
-			} else if (particles[i].type2 == 2) {
-				particles[i].follow(vpaths[2]);
-			} else if (particles[i].type2 == 3) {
-				particles[i].follow(vpaths[3]);
+		if (!ishSLX && !isvSLX) {
+			particles[i].applyForce(flowField.lookup(particles[i].pos));
+		} else {
+			if (isvSLX) {
+				// vertical lines (size)
+				if (particles[i].type2 == 0) {
+					particles[i].follow(vpaths[0]);
+				} else if (particles[i].type2 == 1) {
+					particles[i].follow(vpaths[1]);
+				} else if (particles[i].type2 == 2) {
+					particles[i].follow(vpaths[2]);
+				} else if (particles[i].type2 == 3) {
+					particles[i].follow(vpaths[3]);
+				}
 			}
-		}
-		if (ishSLX) {
-			// horizontal lines (color)
-			if (particles[i].type1 == 0) {
-				particles[i].follow(hpaths[0]);
-			} else if (particles[i].type1 == 1) {
-				particles[i].follow(hpaths[1]);
-			} else if (particles[i].type1 == 2) {
-				particles[i].follow(hpaths[2]);
-			} else if (particles[i].type1 == 3) {
-				particles[i].follow(hpaths[3]);
+			if (ishSLX) {
+				// horizontal lines (color)
+				if (particles[i].type1 == 0) {
+					particles[i].follow(hpaths[0]);
+				} else if (particles[i].type1 == 1) {
+					particles[i].follow(hpaths[1]);
+				} else if (particles[i].type1 == 2) {
+					particles[i].follow(hpaths[2]);
+				} else if (particles[i].type1 == 3) {
+					particles[i].follow(hpaths[3]);
+				}
 			}
 		}
 		
