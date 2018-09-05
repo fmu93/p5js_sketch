@@ -52,10 +52,11 @@ function Particle() {
     // Get the normal point to that line
     var normalPoint = this.getNormalPoint(predictpos, a, b);
 
-    // Find target point a little further ahead of normal
+    // Find target point further ahead of normal depending on distance to line
+    var normalVector = p5.Vector.sub(normalPoint, this.pos); 
     var dir = p5.Vector.sub(b, a);
     dir.normalize();
-    dir.mult(this.vel.mag()); 
+    dir.mult(normalVector.mag()/2); 
     var target = p5.Vector.add(normalPoint, dir);
 
     // How far away are we from the path?
