@@ -10,7 +10,7 @@ function Particle() {
 // 	'#00495E']; // darkest
 	this.sizes = [5, 10, 15, 20];
 	this.color = this.colors[this.type1];
-	this.stroke = [0, 20];
+	this.stroke = [0, 12];
 	this.size = this.sizes[this.type2];	
 	this.maxspeed = map(this.type2, 0, 3, 4.5, 2.5);
 	this.maxforce = map(this.type1, 0, 3, 5, 1);
@@ -56,7 +56,7 @@ function Particle() {
     var normalVector = p5.Vector.sub(normalPoint, this.pos); 
     var dir = p5.Vector.sub(b, a);
     dir.normalize();
-    dir.mult(normalVector.mag()/2); 
+    dir.mult(sqrt(normalVector.mag())); 
     var target = p5.Vector.add(normalPoint, dir);
 
     // How far away are we from the path?
