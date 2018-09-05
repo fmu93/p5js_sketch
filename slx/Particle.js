@@ -56,7 +56,7 @@ function Particle() {
     var normalVector = p5.Vector.sub(normalPoint, this.pos); 
     var dir = p5.Vector.sub(b, a);
     dir.normalize();
-    dir.mult(sqrt(normalVector.mag())); 
+    dir.mult(sqrt(normalVector.mag())*this.vel.mag()); 
     var target = p5.Vector.add(normalPoint, dir);
 
     // How far away are we from the path?
