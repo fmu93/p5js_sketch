@@ -80,7 +80,7 @@ function draw() {
 		} else {
 			var target = createVector(vpaths[particles[i].type2].start.x, hpaths[particles[i].type1].start.y);
 			var toTarget = p5.Vector.sub(target, particles[i].pos);
-			if (toTarget.mag() > (20 + particles[i].size)) {
+			if (toTarget.mag() > (20 + particles[i].size*1.5)) {
 				particles[i].seek(target);	
 			}
 		}
