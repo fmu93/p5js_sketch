@@ -1,6 +1,5 @@
 function Particle() {
 
-
 	this.type1 = floor(random(0, 4)); // color
 	this.type2 = floor(random(0, 4)); // size
 	this.colors = ['#56b2af', // lightest
@@ -8,11 +7,11 @@ function Particle() {
 	'#008997', 
 	'#006283'] 
 // 	'#00495E']; // darkest
-	this.sizes = [5, 10, 15, 20];
+	this.sizes = [6, 10, 15, 19];
 	this.color = this.colors[this.type1];
 	this.stroke = [0, 12];
-	this.size = this.sizes[this.type2];	
-	this.maxspeed = map(this.type2, 0, 3, 4.5, 2.5);
+	this.size = this.sizes[this.type2]*random(0.85, 1.15);	
+	this.maxspeed = map(this.size, 5, 20, 4.5, 2.5);
 	this.maxforce = map(this.type1, 0, 3, 5, 1);
 	this.pos = createVector(random() * width, random() * height);
 	this.vel = createVector(this.maxspeed, 0);
@@ -36,8 +35,8 @@ function Particle() {
 	}
 
 	  // This function implements Craig Reynolds' path following algorithm
-  // http://www.red3d.com/cwr/steer/PathFollow.html
-  this.follow = function(p) {
+    // http://www.red3d.com/cwr/steer/PathFollow.html
+    this.follow = function(p) {
 
     // Predict position 50 (arbitrary choice) frames ahead
     var predict = this.vel.copy();
