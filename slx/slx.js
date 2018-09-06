@@ -9,6 +9,8 @@ var ishSLX = false;
 var isvSLX = false;
 var nclicks = 0;
 var debug = false;
+var mouseForceRadius = 80;
+var maxMouseForce = -20;
 
 function preload() {
 //   fontLight = loadFont('assets/Lato-Light.ttf');
@@ -66,9 +68,22 @@ function draw() {
 	textAlign(CENTER);
 	text("SILEXICA", width/2, height*5/8);
 
+	// current mouse position
+	var mousePos = createVector(mouseX, mouseY);
+
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
+		// random force
 		particles[i].applyForce(createVector(random(-0.15, 0.15), random(-0.15, 0.15)));
+
+		// mouse force if within range
+		var particleToMouse = p5.Vector.sub(mousePos, particles[i].pos);
+		if (particleToMouse.mag() < mouseForceRadius) {
+			particleToMouse.setMag(map(particleToMouse.mag(), 0, mouseForceRadius, maxMouseForce, 0));
+			particles[i].applyForce(particleToMouse);
+		}
+
+		// flowfield, line or seek force
 		if (!ishSLX && !isvSLX) {
 			particles[i].applyForce(flowField.lookup(particles[i].pos));
 		} else if (isvSLX && !ishSLX) {
@@ -84,7 +99,6 @@ function draw() {
 				particles[i].seek(target);	
 			}
 		}
-		
 		particles[i].run();
 	}
 
