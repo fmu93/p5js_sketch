@@ -8,6 +8,7 @@ var nvPaths = 4;
 var ishSLX = false;
 var isvSLX = false;
 var nclicks = 0;
+var debug = false;
 
 function preload() {
 //   fontLight = loadFont('assets/Lato-Light.ttf');
@@ -44,17 +45,20 @@ function setup() {
 
 function draw() {
 	background(225);
-	// flowField.display();
-	// show paths			
-	// for (var j = 0; j < vpaths.length; j++) {
-	// 	vpaths[j].display();
-	// }
-	// for (var j = 0; j < hpaths.length; j++) {
-	// 	hpaths[j].display();
-	// }
+	if (debug) {
+		flowField.display();
+		//show paths			
+		for (var j = 0; j < vpaths.length; j++) {
+			vpaths[j].display();
+		}
+		for (var j = 0; j < hpaths.length; j++) {
+			hpaths[j].display();
+		}
+	}
 	
 	// SLX text
 	fill(190);
+	noStorke();
 	rectMode(CENTER)
 	textSize(width/6);
 	textStyle(BOLD);
@@ -67,30 +71,17 @@ function draw() {
 		particles[i].applyForce(createVector(random(-0.15, 0.15), random(-0.15, 0.15)));
 		if (!ishSLX && !isvSLX) {
 			particles[i].applyForce(flowField.lookup(particles[i].pos));
+		} else if (isvSLX && !ishSLX) {
+			// vertical lines (size)
+			particles[i].follow(vpaths[particles[i].type2]);
+		} else if (ishSLX && !isvSLX) {
+			// horizontal lines (color)
+			particles[i].follow(hpaths[particles[i].type1]);
 		} else {
-			if (isvSLX) {
-				// vertical lines (size)
-				if (particles[i].type2 == 0) {
-					particles[i].follow(vpaths[0]);
-				} else if (particles[i].type2 == 1) {
-					particles[i].follow(vpaths[1]);
-				} else if (particles[i].type2 == 2) {
-					particles[i].follow(vpaths[2]);
-				} else if (particles[i].type2 == 3) {
-					particles[i].follow(vpaths[3]);
-				}
-			}
-			if (ishSLX) {
-				// horizontal lines (color)
-				if (particles[i].type1 == 0) {
-					particles[i].follow(hpaths[0]);
-				} else if (particles[i].type1 == 1) {
-					particles[i].follow(hpaths[1]);
-				} else if (particles[i].type1 == 2) {
-					particles[i].follow(hpaths[2]);
-				} else if (particles[i].type1 == 3) {
-					particles[i].follow(hpaths[3]);
-				}
+			var target = createVector(vpaths[particles[i].type2].start.x, hpaths[particles[i].type1].start.y);
+			var toTarget = p5.Vector.sub(target, particles[i].pos);
+			if (toTarget.mag() > 20) {
+				particles[i].seek(target);	
 			}
 		}
 		
