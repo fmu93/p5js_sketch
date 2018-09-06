@@ -58,7 +58,7 @@ function draw() {
 	
 	// SLX text
 	fill(190);
-	noStorke();
+	noStroke();
 	rectMode(CENTER)
 	textSize(width/6);
 	textStyle(BOLD);
