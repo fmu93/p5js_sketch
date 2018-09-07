@@ -9,8 +9,8 @@ var ishSLX = false;
 var isvSLX = false;
 var nclicks = 0;
 var debug = false;
-var mouseForceRadius = 80;
-var maxMouseForce = -10;
+var mouseForceRadius = 120;
+var maxMouseForce = -20;
 
 function preload() {
 //   fontLight = loadFont('assets/Lato-Light.ttf');
