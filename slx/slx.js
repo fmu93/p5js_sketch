@@ -79,7 +79,7 @@ function draw() {
 		// mouse force if within range
 		var particleToMouse = p5.Vector.sub(mousePos, particles[i].pos);
 		if (particleToMouse.mag() < mouseForceRadius) {
-			particleToMouse.setMag(map(particleToMouse.mag(), 0, mouseForceRadius, maxMouseForce, 0));
+			particleToMouse.setMag(maxMouseForce*pow(map(particleToMouse.mag(), mouseForceRadius, 0, 0, 1)), 2);
 			particles[i].applyForce(particleToMouse);
 		}
 
