@@ -10,7 +10,7 @@ var isvSLX = false;
 var nclicks = 0;
 var debug = false;
 var mouseForceRadius = 80;
-var maxMouseForce = 20;
+var maxMouseForce = -10;
 
 function preload() {
 //   fontLight = loadFont('assets/Lato-Light.ttf');
@@ -78,8 +78,10 @@ function draw() {
 
 		// mouse force if within range
 		var particleToMouse = p5.Vector.sub(mousePos, particles[i].pos);
-		if (particleToMouse.mag() < mouseForceRadius) {
-			particleToMouse.setMag(maxMouseForce*pow(map(particleToMouse.mag(), mouseForceRadius, 0, 0, 1)), 2);
+		var mag = particleToMouse.mag();
+		if (mag < mouseForceRadius) {
+			particleToMouse.normalize();
+			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1)), 2);
 			particles[i].applyForce(particleToMouse);
 		}
 
