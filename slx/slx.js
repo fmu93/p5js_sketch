@@ -81,7 +81,7 @@ function draw() {
 		var mag = particleToMouse.mag();
 		if (mag < mouseForceRadius) {
 			particleToMouse.normalize();
-			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1)), 2);
+			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1), 2));
 			particles[i].applyForce(particleToMouse);
 		}
 
