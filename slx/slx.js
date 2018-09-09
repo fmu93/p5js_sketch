@@ -9,8 +9,9 @@ var ishSLX = false;
 var isvSLX = false;
 var nclicks = 0;
 var debug = false;
-var mouseForceRadius = 120;
-var maxMouseForce = -20;
+var mouseForceRadius = 200;
+var maxMouseForce = -1;
+var scaler;
 
 function preload() {
 //   fontLight = loadFont('assets/Lato-Light.ttf');
@@ -20,6 +21,8 @@ function preload() {
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(225);
+	frameRate(60);
+	scaler = (width+height)/2;
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
@@ -56,6 +59,9 @@ function draw() {
 		for (var j = 0; j < hpaths.length; j++) {
 			hpaths[j].display();
 		}
+		// mouse force
+		noFill();
+		ellipse(mouseX, mouseY, mouseForceRadius, mouseForceRadius);
 	}
 	
 	// SLX text
@@ -81,7 +87,7 @@ function draw() {
 		var mag = particleToMouse.mag();
 		if (mag < mouseForceRadius) {
 			particleToMouse.normalize();
-			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1), 2));
+			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1), 3));
 			particles[i].applyForce(particleToMouse);
 		}
 
@@ -97,7 +103,7 @@ function draw() {
 		} else {
 			var target = createVector(vpaths[particles[i].type2].start.x, hpaths[particles[i].type1].start.y);
 			var toTarget = p5.Vector.sub(target, particles[i].pos);
-			if (toTarget.mag() > (20 + particles[i].size*1.5)) {
+			if (toTarget.mag() > (30 + particles[i].size)) {
 				particles[i].seek(target);	
 			}
 		}

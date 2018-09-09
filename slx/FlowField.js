@@ -16,7 +16,7 @@ function FlowField() {
       var yoffB = 5;
       for (var j = 0; j < this.rows; j++) {
         var theta = map(noise(xoff, yoff, this.toff), 0, 1, 0, TWO_PI);
-        var mag = map(noise(xoffB, yoffB, this.toff), 0, 1, 0, 0.4);
+        var mag = map(noise(xoffB, yoffB, this.toff), 0, 1, 0.05, 0.4);
         
         var v = p5.Vector.fromAngle(theta);
         v.setMag(mag);
