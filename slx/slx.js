@@ -9,8 +9,9 @@ var ishSLX = false;
 var isvSLX = false;
 var nclicks = 0;
 var debug = false;
-var mouseForceRadius = 200;
-var maxMouseForce = -1;
+var mouseForceRadius;
+var maxMouseForce;
+var originalScale = 2000;
 var scaler;
 
 function preload() {
@@ -22,7 +23,9 @@ function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(225);
 	frameRate(60);
-	scaler = (width+height)/2;
+	scaler = (2*width+height)/2/originalScale;
+	mouseForceRadius = 150*scaler;
+	maxMouseForce = -1*scaler;
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
@@ -31,19 +34,17 @@ function setup() {
 			particles[i].stroke = [0, 0];
 		}
 	}
-	
-	
 
 	flowField = new FlowField();
 	flowField.init();
 
 	// create vertical lines
 	for (var j = 0; j < nvPaths; j++) {
-		vpaths[j] = new Path(createVector(width/(nvPaths+1)*(j+1), 0), createVector(width/(nvPaths+1)*(j+1), height));
+		vpaths[j] = new Path(createVector(width/(nvPaths)*(j+0.5), 0), createVector(width/(nvPaths)*(j+0.5), height));
 	}
 	// create horizontal lines
 	for (var k = 0; k < nhPaths; k++) {
-		hpaths[k] = new Path(createVector(0, height/(nhPaths+1)*(k+1)), createVector(width, height/(nhPaths+1)*(k+1)));
+		hpaths[k] = new Path(createVector(0, height/(nhPaths)*(k+0.5)), createVector(width, height/(nhPaths)*(k+0.5)));
 	}
 
 }
@@ -87,7 +88,7 @@ function draw() {
 		var mag = particleToMouse.mag();
 		if (mag < mouseForceRadius) {
 			particleToMouse.normalize();
-			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1), 3));
+			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1), 2));
 			particles[i].applyForce(particleToMouse);
 		}
 
@@ -103,7 +104,7 @@ function draw() {
 		} else {
 			var target = createVector(vpaths[particles[i].type2].start.x, hpaths[particles[i].type1].start.y);
 			var toTarget = p5.Vector.sub(target, particles[i].pos);
-			if (toTarget.mag() > (30 + particles[i].size)) {
+			if (toTarget.mag() > (30 + particles[i].size)*scaler) {
 				particles[i].seek(target);	
 			}
 		}

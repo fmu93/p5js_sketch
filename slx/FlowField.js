@@ -1,6 +1,6 @@
 function FlowField() {
   this.field = [];
-  this.resolution = 50;
+  this.resolution = 50*scaler;
   this.cols = width/this.resolution + 1;
   this.rows = height/this.resolution + 1;;
   this.toff = 0;
