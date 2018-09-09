@@ -4,7 +4,7 @@ function Path(start, end) {
   this.start = start;
   this.end = end;
   // A path has a radius, i.e how far is it ok for the boid to wander off
-  this.radius = 30*scaler;
+  this.radius = 40*scaler;
 
 
   // Draw the path
