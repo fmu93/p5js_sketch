@@ -10,7 +10,6 @@ var isvSLX = false;
 var nclicks = 0;
 var debug = false;
 var mouseForceRadius;
-var maxMouseForce;
 var originalScale = 2000;
 var scaler;
 
@@ -24,8 +23,7 @@ function setup() {
 	background(225);
 	frameRate(60);
 	scaler = (2*width+height)/2/originalScale;
-	mouseForceRadius = 150*scaler;
-	maxMouseForce = -1*scaler;
+	mouseForceRadius = 130*scaler;
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
@@ -88,7 +86,7 @@ function draw() {
 		var mag = particleToMouse.mag();
 		if (mag < mouseForceRadius) {
 			particleToMouse.normalize();
-			particleToMouse.mult(maxMouseForce*pow(map(mag, mouseForceRadius, 0, 0, 1), 2));
+			particleToMouse.mult(map(mag, mouseForceRadius, 0, 0, -particles[i].maxforce));
 			particles[i].applyForce(particleToMouse);
 		}
 
