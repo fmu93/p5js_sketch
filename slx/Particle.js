@@ -5,14 +5,14 @@ function Particle() {
 	this.colors = ['#56b2af', // lightest
         '#008E8C',
 	'#008997', 
-	'#006283'] 
+	'#006283']; 
 // 	'#00495E']; // darkest
 	this.sizes = [7, 10, 15, 19];
 	this.color = this.colors[this.type1];
 	this.stroke = [0, 12];
 	this.size = this.sizes[this.type2]*random(0.8, 1.2)*scaler;	
 	this.maxspeed = map(this.sizes[this.type2], 6, 19, 4, 2)*random(0.8, 1.2)*scaler;
-	this.maxforce = map(this.type1, 0, 3, 6, 0.5)*scaler;
+	this.maxforce = map(this.type1, 0, 3, 5, 0.5)*scaler;
 	this.pos = createVector(random() * width, random() * height);
 	this.vel = createVector(this.maxspeed, 0);
 	this.acc = createVector(0, 0);
@@ -24,7 +24,6 @@ function Particle() {
 	}
 
 	this.applyForce = function(force) {
-        force.limit(this.maxforce); 
 		this.acc.add(force);
 	}
 
@@ -35,7 +34,7 @@ function Particle() {
 		this.acc.mult(0);
 	}
 
-	  // This function implements Craig Reynolds' path following algorithm
+	// This function implements Craig Reynolds' path following algorithm
     // http://www.red3d.com/cwr/steer/PathFollow.html
     this.follow = function(p) {
 
@@ -68,36 +67,43 @@ function Particle() {
 }
 
       // A function to get the normal point from a point (p) to a line segment (a-b)
-  // This function could be optimized to make fewer new Vector objects
-  this.getNormalPoint = function(p, a, b) {
-    // Vector from a to p
-    var ap = p5.Vector.sub(p, a);
-    // Vector from a to b
-    var ab = p5.Vector.sub(b, a);
-    ab.normalize(); // Normalize the line
-    // Project vector "diff" onto line by using the dot product
-    ab.mult(ap.dot(ab));
-    var normalPoint = p5.Vector.add(a, ab);
-    return normalPoint;
-  }
-    // A method that calculates and applies a steering force towards a target
-  // STEER = DESIRED MINUS VELOCITY
-  this.seek = function(target) {
-    var desired = p5.Vector.sub(target, this.pos);  // A vector pointing from the position to the target
+      // This function could be optimized to make fewer new Vector objects
+      this.getNormalPoint = function(p, a, b) {
+        // Vector from a to p
+        var ap = p5.Vector.sub(p, a);
+        // Vector from a to b
+        var ab = p5.Vector.sub(b, a);
+        ab.normalize(); // Normalize the line
+        // Project vector "diff" onto line by using the dot product
+        ab.mult(ap.dot(ab));
+        var normalPoint = p5.Vector.add(a, ab);
+        return normalPoint;
+      }
+        // A method that calculates and applies a steering force towards a target
+      // STEER = DESIRED MINUS VELOCITY
+      this.seek = function(target) {
+        var desired = p5.Vector.sub(target, this.pos);  // A vector pointing from the position to the target
 
-    // If the magnitude of desired equals 0, skip out of here
-    // (We could optimize this to check if x and y are 0 to avoid mag() square root
-    if (desired.mag() == 0) return;
+        // If the magnitude of desired equals 0, skip out of here
+        // (We could optimize this to check if x and y are 0 to avoid mag() square root
+        if (desired.mag() == 0) return;
 
-    // Normalize desired and scale to maximum speed
-    desired.normalize();
-    desired.mult(this.maxspeed);
-    // Steering = Desired minus Velocity
-    var steer = p5.Vector.sub(desired, this.vel);
-    // steer.limit(this.maxforce);  // Limit to maximum steering force
+        // Normalize desired and scale to maximum speed
+        desired.normalize();
+        desired.mult(this.maxspeed);
+        // Steering = Desired minus Velocity
+        var steer = p5.Vector.sub(desired, this.vel);
+        // steer.limit(this.maxforce);  // Limit to maximum steering force
 
-      this.applyForce(steer);
-  }
+        steer.limit(this.maxforce);
+        this.applyForce(steer);
+      }
+
+    this.randomForce = function() {
+        var force = createVector(random(-0.1, 0.1), random(-0.1, 0.1));
+        force.mult(this.type1+1);
+        this.applyForce(force);
+    }
 
 	this.display = function() {
 		fill(this.color);

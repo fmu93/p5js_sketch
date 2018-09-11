@@ -81,7 +81,7 @@ function draw() {
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
 		// random force
-		particles[i].applyForce(createVector(random(-0.15, 0.15), random(-0.15, 0.15)));
+		particles[i].randomForce();
 
 		// mouse force if within range
 		var particleToMouse = p5.Vector.sub(mousePos, particles[i].pos);
