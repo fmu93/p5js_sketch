@@ -38,37 +38,37 @@ function Particle() {
     // http://www.red3d.com/cwr/steer/PathFollow.html
     this.follow = function(p) {
 
-    // Predict position 50 (arbitrary choice) frames ahead
-    var predict = this.vel.copy();
-    predict.normalize();
-    predict.mult(50);
-    var predictpos = p5.Vector.add(this.pos, predict);
+        // Predict position some frames ahead
+        var predict = this.vel.copy();
+        predict.normalize();
+        predict.mult(this.maxspeed*4);
+        var predictpos = p5.Vector.add(this.pos, predict);
 
-    // Look at the line segment
-    var a = p.start;
-    var b = p.end;
+        // Look at the line segment
+        var a = p.start;
+        var b = p.end;
 
-    // Get the normal point to that line
-    var normalPoint = this.getNormalPoint(predictpos, a, b);
+        // Get the normal point to that line
+        var normalPoint = this.getNormalPoint(predictpos, a, b);
 
-    // Find target point further ahead of normal depending on distance to line
-    var normalVector = p5.Vector.sub(normalPoint, this.pos); 
-    var dir = p5.Vector.sub(b, a);
-    dir.normalize();
-    dir.mult(pow(normalVector.mag(), 0.2)*20); 
-    var target = p5.Vector.add(normalPoint, dir);
+        // Find target point further ahead of normal depending on distance to line
+        var normalVector = p5.Vector.sub(normalPoint, this.pos); 
+        var dir = p5.Vector.sub(b, a);
+        dir.normalize();
+        dir.mult(pow(normalVector.mag(), 0.4)*20); 
+        var target = p5.Vector.add(normalPoint, dir);
 
-    // How far away are we from the path?
-    var distance = p5.Vector.dist(predictpos, normalPoint);
-    // Only if the distance is greater than the path's radius do we bother to steer
-    if (distance > p.radius) {
-      this.seek(target);
+        // How far away are we from the path?
+        var distance = p5.Vector.dist(predictpos, normalPoint);
+        // Only if the distance is greater than the path's radius do we bother to steer
+        if (distance > p.radius) {
+          this.seek(target);
+        }
     }
-}
 
-      // A function to get the normal point from a point (p) to a line segment (a-b)
-      // This function could be optimized to make fewer new Vector objects
-      this.getNormalPoint = function(p, a, b) {
+    // A function to get the normal point from a point (p) to a line segment (a-b)
+    // This function could be optimized to make fewer new Vector objects
+    this.getNormalPoint = function(p, a, b) {
         // Vector from a to p
         var ap = p5.Vector.sub(p, a);
         // Vector from a to b
@@ -78,10 +78,11 @@ function Particle() {
         ab.mult(ap.dot(ab));
         var normalPoint = p5.Vector.add(a, ab);
         return normalPoint;
-      }
-        // A method that calculates and applies a steering force towards a target
-      // STEER = DESIRED MINUS VELOCITY
-      this.seek = function(target) {
+    }
+    
+    // A method that calculates and applies a steering force towards a target
+    // STEER = DESIRED MINUS VELOCITY
+    this.seek = function(target) {
         var desired = p5.Vector.sub(target, this.pos);  // A vector pointing from the position to the target
 
         // If the magnitude of desired equals 0, skip out of here
@@ -97,7 +98,7 @@ function Particle() {
 
         steer.limit(this.maxforce);
         this.applyForce(steer);
-      }
+    }
 
     this.randomForce = function() {
         var force = createVector(random(-0.1, 0.1), random(-0.1, 0.1));
