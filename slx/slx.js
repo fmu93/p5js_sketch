@@ -1,3 +1,5 @@
+p5.disableFriendlyErrors = true; // disables FES
+
 var particles = [];
 var nParticles = 1010;
 var flowField;
@@ -10,7 +12,7 @@ var isvSLX = false;
 var nclicks = 0;
 var debug = false;
 var mouseForceRadius;
-var originalScale = 2000;
+var originalScale = 1800;
 var scaler;
 
 function preload() {
@@ -21,7 +23,7 @@ function preload() {
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(225);
-	frameRate(60);
+	frameRate(50);
 	scaler = (2*width+height)/2/originalScale;
 	mouseForceRadius = 130*scaler;
 
@@ -32,6 +34,10 @@ function setup() {
 			particles[i].stroke = [0, 0];
 		}
 	}
+	// sort by color (type1)
+	particles.sort(function(a, b){
+	    return a.type1 - b.type1;
+	});
 
 	flowField = new FlowField();
 	flowField.init();
@@ -131,7 +137,7 @@ function mouseClicked() {
 	nclicks = (nclicks+ 1)%4
 
 	for (var i = particles.length - 1; i > 0; i--) {
-		particles[i].applyForce(createVector(random(-10, 10), random(-10, 10)));
+		particles[i].applyForce(createVector(Math.random(-10, 10), Math.random(-10, 10)));
 	}
 
 }

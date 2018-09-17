@@ -11,9 +11,9 @@ function Particle() {
 	this.color = this.colors[this.type1];
 	this.stroke = [0, 12];
 	this.size = this.sizes[this.type2]*random(0.8, 1.2)*scaler;	
-	this.maxspeed = map(this.sizes[this.type2], 6, 19, 4, 2)*random(0.8, 1.2)*scaler;
-	this.maxforce = map(this.type1, 0, 3, 3, 0.5)*scaler;
-	this.pos = createVector(random() * width, random() * height);
+	this.maxspeed = map(this.type2, 0, 3, 4, 2.5)*random(0.8, 1.2)*scaler;
+	this.maxforce = map(this.type1, 0, 3, 2, 0.5)*scaler;
+	this.pos = createVector(Math.random() * width, Math.random() * height);
 	this.vel = createVector(this.maxspeed, 0);
 	this.acc = createVector(0, 0);
 
@@ -101,15 +101,15 @@ function Particle() {
     }
 
     this.randomForce = function() {
-        var force = createVector(random(-0.1, 0.1), random(-0.1, 0.1));
-        force.mult(map(this.type1, 0, 3, 3, 1));
+        var force = createVector(Math.random()-0.5, Math.random()-0.5);
+        force.mult(0.2);
         this.applyForce(force);
     }
 
 	this.display = function() {
 		fill(this.color);
-		stroke(this.stroke);
-		strokeWeight(1);
+		//stroke(this.stroke);
+		//strokeWeight(1);
 		ellipse(this.pos.x, this.pos.y, this.size, this.size);
 	}
 
