@@ -8,11 +8,11 @@ function Particle() {
 	'#006283']; 
 // 	'#00495E']; // darkest
 	this.sizes = [7, 10, 15, 19];
-	this.color = this.colors[this.type1];
+	this.color = color(this.colors[this.type1]);
 	this.stroke = [0, 12];
 	this.size = this.sizes[this.type2]*random(0.8, 1.2)*scaler;	
-	this.maxspeed = map(this.type2, 0, 3, 4, 2.5)*random(0.8, 1.2)*scaler;
-	this.maxforce = map(this.type1, 0, 3, 2, 0.5)*scaler;
+	this.maxspeed = map(this.type2, 0, 3, 3.5, 1.5)*random(0.8, 1.2)*scaler;
+	this.maxforce = map(this.type1, 0, 3, 1.5, 0.5)*scaler;
 	this.pos = createVector(Math.random() * width, Math.random() * height);
 	this.vel = createVector(this.maxspeed, 0);
 	this.acc = createVector(0, 0);

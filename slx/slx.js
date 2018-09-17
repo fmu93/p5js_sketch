@@ -23,8 +23,8 @@ function preload() {
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(225);
-	frameRate(50);
-	scaler = (2*width+height)/2/originalScale;
+	// frameRate(40);
+	scaler = (width+height)/originalScale;
 	mouseForceRadius = 130*scaler;
 
 	for (var i = 0; i < nParticles; i++) {
@@ -81,6 +81,8 @@ function draw() {
 
 	// current mouse position
 	var mousePos = createVector(mouseX, mouseY);
+
+	// stroke(0, 12);
 
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
