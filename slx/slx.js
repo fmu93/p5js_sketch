@@ -82,7 +82,7 @@ function draw() {
 	// current mouse position
 	var mousePos = createVector(mouseX, mouseY);
 
-	// stroke(0, 12);
+	stroke(0, 12);
 
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
@@ -110,7 +110,7 @@ function draw() {
 		} else {
 			var target = createVector(vpaths[particles[i].type2].start.x, hpaths[particles[i].type1].start.y);
 			var toTarget = p5.Vector.sub(target, particles[i].pos);
-			if (toTarget.mag() > (30 + particles[i].size)*scaler) {
+			if (toTarget.magSq() > pow(30 + particles[i].size, 2)*scaler) {
 				particles[i].seek(target);	
 			}
 		}
