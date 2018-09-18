@@ -11,7 +11,7 @@ var ishSLX = false;
 var isvSLX = false;
 var nclicks = 0;
 var debug = false;
-var mouseForceRadius;
+var mouseForceRadiusSq;
 var originalScale = 1800;
 var scaler;
 
@@ -25,7 +25,7 @@ function setup() {
 	background(225);
 	// frameRate(40);
 	scaler = (width+height)/originalScale;
-	mouseForceRadius = 130*scaler;
+	mouseForceRadiusSq = pow(100*scaler, 2);
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
@@ -34,10 +34,10 @@ function setup() {
 			particles[i].stroke = [0, 0];
 		}
 	}
-	// sort by color (type1)
-	particles.sort(function(a, b){
-	    return a.type1 - b.type1;
-	});
+	// // sort by color (type1)
+	// particles.sort(function(a, b){
+	//     return a.type1 - b.type1;
+	// });
 
 	flowField = new FlowField();
 	flowField.init();
@@ -90,12 +90,12 @@ function draw() {
 		particles[i].randomForce();
 
 		// mouse force if within range
-		var particleToMouse = p5.Vector.sub(mousePos, particles[i].pos);
-		var mag = particleToMouse.mag();
-		if (mag < mouseForceRadius) {
-			particleToMouse.normalize();
-			particleToMouse.mult(map(mag, mouseForceRadius, 0, 0, -particles[i].maxforce));
-			particles[i].applyForce(particleToMouse);
+		var mouseToParticle = p5.Vector.sub(particles[i].pos, mousePos);
+		var magSq = mouseToParticle.magSq();
+		if (magSq < mouseForceRadiusSq) {
+			mouseToParticle.normalize();
+			mouseToParticle.mult(map(magSq, mouseForceRadiusSq, 0, 0, particles[i].maxforce));
+			particles[i].applyForce(mouseToParticle);
 		}
 
 		// flowfield, line or seek force
