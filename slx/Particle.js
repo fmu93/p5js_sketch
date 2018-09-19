@@ -12,7 +12,7 @@ function Particle() {
 	this.stroke = [0, 12];
 	this.size = this.sizes[this.type2]*random(0.8, 1.2)*scaler;	
 	this.maxspeed = map(this.type2, 0, 3, 3.5, 1.5)*random(0.8, 1.2)*scaler;
-	this.maxforce = map(this.type1, 0, 3, 1.5, 0.5)*scaler;
+	this.maxforce = map(this.type1, 0, 3, 1.5, 0.3)*scaler;
 	this.pos = createVector(Math.random() * width, Math.random() * height);
 	this.vel = createVector(this.maxspeed, 0);
 	this.acc = createVector(0, 0);
