@@ -26,6 +26,7 @@ function setup() {
 	// frameRate(40);
 	scaler = (width+height)/originalScale;
 	mouseForceRadiusSq = pow(100*scaler, 2);
+	nParticles = 1011;
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
