@@ -86,7 +86,7 @@ function draw() {
 	// current mouse position
 	var mousePos = createVector(mouseX, mouseY);
 
-	stroke(0, 12);
+	// stroke(0, 12);
 
 	// particles
 	for (var i = particles.length - 1; i > 0; i--) {
