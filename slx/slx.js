@@ -16,8 +16,8 @@ var originalScale = 1800;
 var scaler;
 
 function preload() {
-//   fontLight = loadFont('assets/Lato-Light.ttf');
-  fontBold = loadFont('assets/Lato-Bold.ttf');
+  fontLight = loadFont('assets/Lato-Light.ttf');
+  //fontBold = loadFont('assets/Lato-Bold.ttf');
 }
 
 function setup() {
@@ -79,7 +79,7 @@ function draw() {
 	rectMode(CENTER)
 	textSize(width/6);
 	textStyle(BOLD);
-	textFont(fontBold);
+	textFont(fontLight);
 	textAlign(CENTER);
 	text("SILEXICA", width/2, height*5/8);
 
