@@ -30,7 +30,7 @@ function setup() {
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
-		if (i%100 == 0) {
+		if (i%111 == 0) {
 			particles[i].color = [0, 0];
 			particles[i].stroke = [0, 0];
 		}
