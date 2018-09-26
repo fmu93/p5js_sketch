@@ -1,7 +1,7 @@
 p5.disableFriendlyErrors = true; // disables FES
 
 var particles = [];
-var nParticles = 1111;
+var nParticles = 1001;
 var flowField;
 var hpaths = [];
 var nhPaths = 4;
@@ -26,14 +26,14 @@ function setup() {
 	// frameRate(40);
 	scaler = (width+height)/originalScale;
 	mouseForceRadiusSq = pow(100*scaler, 2);
-	nParticles = 1011;
+	//nParticles = 1011;
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
-		if (i%111 == 0) {
-			particles[i].color = [0, 0];
-			particles[i].stroke = [0, 0];
-		}
+		//if (i%111 == 0) {
+			//particles[i].color = [0, 0];
+			//particles[i].stroke = [0, 0];
+		//}
 	}
 	// // sort by color (type1)
 	// particles.sort(function(a, b){
@@ -52,8 +52,8 @@ function setup() {
 		hpaths[k] = new Path(createVector(0, height/(nhPaths)*(k+0.5)), createVector(width, height/(nhPaths)*(k+0.5)));
 	}
 
-	particles[nParticles-1].color = [0, 0];
-	particles[nParticles-1].stroke = [0, 0];
+	//particles[nParticles-1].color = [0, 0];
+	//particles[nParticles-1].stroke = [0, 0];
 
 }
 
