@@ -50,7 +50,7 @@ class Floater {
         this.show();
         this.toff += this.alphadot;
         this.lifespan -= 1;
-        this.color.setAlpha(pow(this.lifespan, 1.2));
+        this.color.setAlpha(pow(this.lifespan, 1.1));
     }
 
     isDead() {
@@ -58,7 +58,7 @@ class Floater {
     }
 
     wander() {
-        var go = createVector(noise(this.spikes + this.toff), noise(this.alphadot + this.toff));
+        var go = createVector(noise(this.spikes + this.toff*0.5), noise(this.toff*0.5));
         go.sub(0.5, 0.5);
         go.mult(this.spikes*2);
         this.pos.add(go);
