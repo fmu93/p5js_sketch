@@ -14,3 +14,9 @@ function setup() {
 function step() {
 
 }
+
+function keyPressed() {
+    if (key == " ") {
+        player.jump();
+    }
+}

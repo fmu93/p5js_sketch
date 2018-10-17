@@ -1,7 +1,7 @@
 p5.disableFriendlyErrors = true; // disables FES
 
 var particles = [];
-var nParticles = 1111;
+var nParticles;
 var flowField;
 var hpaths = [];
 var nhPaths = 4;
@@ -16,8 +16,13 @@ var originalScale = 1800;
 var scaler;
 
 function preload() {
+<<<<<<< HEAD
 	//   fontLight = loadFont('assets/Lato-Light.ttf');
 	fontBold = loadFont('assets/Lato-Bold.ttf');
+=======
+  fontLight = loadFont('assets/Lato-Light.ttf');
+  //fontBold = loadFont('assets/Lato-Bold.ttf');
+>>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 }
 
 function setup() {
@@ -30,7 +35,11 @@ function setup() {
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
+<<<<<<< HEAD
 		if (i % 100 == 0) {
+=======
+		if (i%111 == 0) {
+>>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 			particles[i].color = [0, 0];
 			particles[i].stroke = [0, 0];
 		}
@@ -52,8 +61,13 @@ function setup() {
 		hpaths[k] = new Path(createVector(0, height / (nhPaths) * (k + 0.5)), createVector(width, height / (nhPaths) * (k + 0.5)));
 	}
 
+<<<<<<< HEAD
 	particles[nParticles - 1].color = [0, 0];
 	particles[nParticles - 1].stroke = [0, 0];
+=======
+	//particles[nParticles-1].color = [0, 0];
+	//particles[nParticles-1].stroke = [0, 0];
+>>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 
 }
 
@@ -79,7 +93,7 @@ function draw() {
 	rectMode(CENTER)
 	textSize(width / 6);
 	textStyle(BOLD);
-	textFont(fontBold);
+	textFont(fontLight);
 	textAlign(CENTER);
 	text("SILEXICA", width / 2, height * 5 / 8);
 
