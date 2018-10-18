@@ -34,11 +34,12 @@ class Floater {
         this.nodes = 100;
         this.pos = createVector(random(width), random(height));
         this.r = random(20, 80);
-        this.aplhaoff = 0;
         this.toff = random(100);
         this.spikiness = random(0.01, 0.2);
+        this.noisyness = random(0.2, 0.5);
+        this.roughness = random(1, 2);
         this.spikes = floor(random(4, 20));
-        this.alphadot = random(0.02, 0.2);
+        this.deltat = random(0.02, 0.2);
         this.lifespan = random(200, 300);
         this.color = color(random(200, 255), random(0, 40), random(100, 180));
     }
@@ -48,7 +49,7 @@ class Floater {
         this.wander();
         this.walls();
         this.show();
-        this.toff += this.alphadot;
+        this.toff += this.deltat;
         this.lifespan -= 1;
         this.color.setAlpha(pow(this.lifespan, 1.1));
     }
@@ -71,8 +72,8 @@ class Floater {
             this.pos.x = width + this.r;
         } else if (this.pos.y > height + this.r) {
             this.pos.y = - this.r;
-        } else if (this.pos.y < -this.r) {
-            this.pos.y = height +this.r;
+        } else if (this.pos.y <  -this.r) {
+            this.pos.y = height + this.r;
         }
     }
 
@@ -82,12 +83,14 @@ class Floater {
         push();
         translate(this.pos.x, this.pos.y);
         beginShape();
-        this.aplhaoff = 0;
         for (var i = 0; i < this.nodes; i++) {
-            var r1 = this.r * (1 + this.spikiness * sin(this.spikes * this.aplhaoff + this.toff) + 0.6 * noise(this.aplhaoff, this.toff));
+            var alphaoff = map(i, 0, this.nodes, 0, TWO_PI);
+            var r1 = this.r * (1
+                + this.spikiness * sin(this.spikes * alphaoff + this.toff)
+                + this.noisyness * (noise(alphaoff, this.toff) + noise(this.roughness*alphaoff, this.toff)) -0.5);
             // var r1 = this.r;
             vertex(r1 * cos(i * TWO_PI / this.nodes), r1 * sin(i * TWO_PI / this.nodes));
-            this.aplhaoff += TWO_PI / this.nodes;
+
         }
 
         endShape(CLOSE);
