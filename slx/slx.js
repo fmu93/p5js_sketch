@@ -16,21 +16,30 @@ var originalScale = 1800;
 var scaler;
 
 function preload() {
+<<<<<<< HEAD
+	//   fontLight = loadFont('assets/Lato-Light.ttf');
+	fontBold = loadFont('assets/Lato-Bold.ttf');
+=======
   fontLight = loadFont('assets/Lato-Light.ttf');
   //fontBold = loadFont('assets/Lato-Bold.ttf');
+>>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 }
 
 function setup() {
 	createCanvas(windowWidth, windowHeight);
 	background(225);
 	// frameRate(40);
-	scaler = (width+height)/originalScale;
-	mouseForceRadiusSq = pow(100*scaler, 2);
+	scaler = (width + height) / originalScale;
+	mouseForceRadiusSq = pow(100 * scaler, 2);
 	nParticles = 1011;
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
+<<<<<<< HEAD
+		if (i % 100 == 0) {
+=======
 		if (i%111 == 0) {
+>>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 			particles[i].color = [0, 0];
 			particles[i].stroke = [0, 0];
 		}
@@ -45,15 +54,20 @@ function setup() {
 
 	// create vertical lines
 	for (var j = 0; j < nvPaths; j++) {
-		vpaths[j] = new Path(createVector(width/(nvPaths)*(j+0.5), 0), createVector(width/(nvPaths)*(j+0.5), height));
+		vpaths[j] = new Path(createVector(width / (nvPaths) * (j + 0.5), 0), createVector(width / (nvPaths) * (j + 0.5), height));
 	}
 	// create horizontal lines
 	for (var k = 0; k < nhPaths; k++) {
-		hpaths[k] = new Path(createVector(0, height/(nhPaths)*(k+0.5)), createVector(width, height/(nhPaths)*(k+0.5)));
+		hpaths[k] = new Path(createVector(0, height / (nhPaths) * (k + 0.5)), createVector(width, height / (nhPaths) * (k + 0.5)));
 	}
 
+<<<<<<< HEAD
+	particles[nParticles - 1].color = [0, 0];
+	particles[nParticles - 1].stroke = [0, 0];
+=======
 	//particles[nParticles-1].color = [0, 0];
 	//particles[nParticles-1].stroke = [0, 0];
+>>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 
 }
 
@@ -72,16 +86,16 @@ function draw() {
 		noFill();
 		ellipse(mouseX, mouseY, mouseForceRadius, mouseForceRadius);
 	}
-	
+
 	// SLX text
 	fill(190);
 	noStroke();
 	rectMode(CENTER)
-	textSize(width/6);
+	textSize(width / 6);
 	textStyle(BOLD);
 	textFont(fontLight);
 	textAlign(CENTER);
-	text("SILEXICA", width/2, height*5/8);
+	text("SILEXICA", width / 2, height * 5 / 8);
 
 	// current mouse position
 	var mousePos = createVector(mouseX, mouseY);
@@ -114,8 +128,8 @@ function draw() {
 		} else {
 			var target = createVector(vpaths[particles[i].type2].start.x, hpaths[particles[i].type1].start.y);
 			var toTarget = p5.Vector.sub(target, particles[i].pos);
-			if (toTarget.magSq() > pow(30 + particles[i].size, 2)*scaler) {
-				particles[i].seek(target);	
+			if (toTarget.magSq() > pow(30 + particles[i].size, 2) * scaler) {
+				particles[i].seek(target);
 			}
 		}
 		particles[i].run();
@@ -134,17 +148,16 @@ function mouseClicked() {
 		isvSLX = true;
 	} else if (nclicks == 2) {
 		ishSLX = true;
-		isvSLX = true;	
+		isvSLX = true;
 	} else if (nclicks == 3) {
 		ishSLX = false;
-		isvSLX = false;	
+		isvSLX = false;
 	}
-	
-	nclicks = (nclicks+ 1)%4
+
+	nclicks = (nclicks + 1) % 4
 
 	for (var i = particles.length - 1; i > 0; i--) {
 		particles[i].applyForce(createVector(Math.random(-10, 10), Math.random(-10, 10)));
 	}
 
 }
-
