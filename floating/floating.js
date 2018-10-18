@@ -2,7 +2,7 @@ var floaters;
 var limit = 100;
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth-4, windowHeight-4);
     //colorMode(HSB, 255);
     floaters = [];
 }
@@ -33,7 +33,7 @@ class Floater {
     constructor() {
         this.nodes = 100;
         this.pos = createVector(random(width), random(height));
-        this.r0 = random(20, 80);
+        this.r0 = random(20, 70);
         this.r = 0;
         this.toff = random(100);
         this.spikiness = random(0.01, 0.2);
@@ -43,7 +43,7 @@ class Floater {
         this.deltat = random(0.02, 0.2);
         this.lifespan = random(200, 300);
         this.color = color(random(200, 255), random(0, 40), random(100, 180));
-        this.growspeed = random(5, 20);
+        this.growspeed = random(5, 50);
     }
 
     update() {
@@ -90,7 +90,7 @@ class Floater {
         beginShape();
         for (var i = 0; i < this.nodes; i++) {
             var alphaoff = map(i, 0, this.nodes, 0, TWO_PI);
-            var r1 = this.r * (1
+            var r1 = this.r * (1 + 0.2*sin(this.toff)
                 + this.spikiness * sin(this.spikes * alphaoff + this.toff)
                 + this.noisyness * (noise(alphaoff, this.toff) + noise(this.roughness*alphaoff, this.toff)) -0.5);
             // var r1 = this.r;
