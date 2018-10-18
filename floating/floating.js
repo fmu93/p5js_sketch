@@ -33,7 +33,8 @@ class Floater {
     constructor() {
         this.nodes = 100;
         this.pos = createVector(random(width), random(height));
-        this.r = random(20, 80);
+        this.r0 = random(20, 80);
+        this.r = 0;
         this.toff = random(100);
         this.spikiness = random(0.01, 0.2);
         this.noisyness = random(0.2, 0.5);
@@ -42,6 +43,7 @@ class Floater {
         this.deltat = random(0.02, 0.2);
         this.lifespan = random(200, 300);
         this.color = color(random(200, 255), random(0, 40), random(100, 180));
+        this.growspeed = random(5, 20);
     }
 
     update() {
@@ -52,6 +54,9 @@ class Floater {
         this.toff += this.deltat;
         this.lifespan -= 1;
         this.color.setAlpha(pow(this.lifespan, 1.1));
+        if (this.r < this.r0) {
+            this.r += this.growspeed;
+        }
     }
 
     isDead() {
