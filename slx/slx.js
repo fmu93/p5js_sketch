@@ -1,7 +1,7 @@
 p5.disableFriendlyErrors = true; // disables FES
 
 var particles = [];
-var nParticles;
+var nParticles; 
 var flowField;
 var hpaths = [];
 var nhPaths = 4;
