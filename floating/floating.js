@@ -34,6 +34,9 @@ function draw() {
             continue;
         }
         if (floaters[i].isHit()) {
+            if (score > 50) {
+                colorset = (colorset + 1) % 2;
+            }
             if (score > record) {
                 record = score;
             }
@@ -41,7 +44,7 @@ function draw() {
         }
     }
     if (floaters.length) score += 0.01 * floaters.length;
-    bottomText = score.toFixed().toString() + "(" + record.toFixed().toString() + ")";
+    bottomText = score.toFixed().toString() + " (" + record.toFixed().toString() + ")";
 
     if (mouseIsPressed) {
         addFloater();
