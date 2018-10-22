@@ -2,13 +2,19 @@ var floaters;
 var limit = 100;
 
 function setup() {
-    createCanvas(windowWidth-4, windowHeight-4);
+    createCanvas(windowWidth, windowHeight);
     //colorMode(HSB, 255);
     floaters = [];
+
 }
 
 function draw() {
     background(0);
+    fill(30);
+    textAlign(CENTER);
+    rectMode(CENTER);
+    textSize(70);
+    text("<click>", width/2, height/2);
 
     for (var i = floaters.length - 1; i > 0; i--) {
         floaters[i].update();
