@@ -1,7 +1,7 @@
 var mList = [];
 var count = 200;
 
-var hintText = "<click to add mushrooms>\n<spacebar to switch add mode>";
+var hintText = "<drag to add mushrooms>\n<spacebar to switch add mode>\n<double click to speed>";
 
 var mode = 0;
 var time = 0;
@@ -46,6 +46,7 @@ function mouseDragged() {
     if (mode == 0) {
         mList.push(myShroom);
         myShroom = new Mushroom();
+        hintText = ""
     }
 }
 
@@ -53,7 +54,14 @@ function mouseClicked() {
     if (mode == 1) {
         mList.push(myShroom);
         myShroom = new Mushroom();
+        hintText = "";
     }
+}
+
+function doubleClicked() {
+    timeDot += 0.02;
+    if (timeDot > 0.2) timeDot = 0.01;
+    hintText = "<speed " + timeDot.toPrecision(1) + ">";
 }
 
 function keyPressed() {
