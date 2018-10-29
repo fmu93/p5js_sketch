@@ -1,7 +1,7 @@
 var mList = [];
-var count = 200;
+var count = 300;
 
-var hintText = "<drag to add mushrooms>\n<spacebar to switch add mode>"; // \n<double click to speed>";
+var hintText = "<drag to add mushrooms>\n<spacebar to switch paint mode>"; // \n<double click to speed>";
 
 var mode = 0;
 var time = 0;
@@ -82,11 +82,12 @@ class Mushroom {
         this.maxBrightness = randomGaussian(255);
         this.minBrightness = 0;
         this.glowSpeed = randomGaussian(1, 1);
+        this.off = random(10);
     }
 
     display() {
         var f = this.minBrightness + this.maxBrightness * noise(time, this.pos.x*spatialNoiseFactor, this.pos.y*spatialNoiseFactor)
-        * (1 - sineFactor*sin(time * this.glowSpeed));
+        * (1 - sineFactor*sin(this.off + time * this.glowSpeed));
         fill(f);
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
     }
