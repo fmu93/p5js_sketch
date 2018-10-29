@@ -1,5 +1,5 @@
 var mList = [];
-var count = 10;
+var count = 16;
 
 function setup() {
     createCanvas(1000, 600);
@@ -19,16 +19,16 @@ function draw() {
 class Mushroom {
     constructor() {
         this.pos = createVector(random(width), random(height));
-        this.r = random(80, 200);
+        this.r = random(80, 120);
         this.maxBrightness = 255;
         this.time = 0;
-        this.glowSpeed = 1;
+        this.glowSpeed = 0.1;
         this.timeDot = 0.01;
 
     }
 
     display() {
-        var f = this.maxBrightness * noise(this.time, this.pos.x, this.pos.y) * sin(this.time * this.glowSpeed);
+        var f = this.maxBrightness * noise(this.time, this.pos.x, this.pos.y) * (0.2 + 0.8*sin(this.time * this.glowSpeed));
         fill(f);
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
         this.time += this.timeDot;
