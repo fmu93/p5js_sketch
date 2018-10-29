@@ -1,21 +1,57 @@
 var floaters;
 var limit = 100;
+var colorset = 0;
+var startDist = 200;
+var topText = "<click, spacebar>";
+var topText2 = "<Avoid bubbles to score>"
+var bottomText = '';
+var score = 0;
+var record = 0;
 
 function setup() {
-    createCanvas(windowWidth-4, windowHeight-4);
+    createCanvas(windowWidth, windowHeight);
     //colorMode(HSB, 255);
     floaters = [];
+
 }
 
 function draw() {
-    background(0);
+    if (colorset == 1) {
+        background(245);
+    } else {
+        background(0);
+    }
+    fill(120, 120);
+    textAlign(CENTER);
+    rectMode(CENTER);
+    textSize(50);
+    text(topText, width / 2, 50);
+    textSize(25);
+    text(topText2, width / 2, 80);
+    textSize(80);
+    text(bottomText, width / 2, height - 60);
 
-    for (var i = floaters.length - 1; i > 0; i--) {
+    for (var i = floaters.length - 1; i >= 0; i--) {
         floaters[i].update();
         if (floaters[i].isDead()) {
             floaters.splice(i, 1);
+            continue;
+        }
+        if (floaters[i].isHit()) {
+            if (score > record) {
+                record = score;
+            }
+            if (score > 50) {
+                colorset = (colorset + 1) % 2;
+                floaters = [];
+                score = 0;
+                break;
+            }
+            score = 0;
         }
     }
+    if (floaters.length) score += 0.01 * floaters.length;
+    bottomText = score.toFixed().toString() + " (" + record.toFixed().toString() + ")";
 
     if (mouseIsPressed) {
         addFloater();
@@ -29,76 +65,8 @@ function addFloater() {
     }
 }
 
-class Floater {
-    constructor() {
-        this.nodes = 100;
-        this.pos = createVector(random(width), random(height));
-        this.r0 = random(20, 70);
-        this.r = 0;
-        this.toff = random(100);
-        this.spikiness = random(0.01, 0.2);
-        this.noisyness = random(0.2, 0.5);
-        this.roughness = random(1, 2);
-        this.spikes = floor(random(4, 20));
-        this.deltat = random(0.02, 0.2);
-        this.lifespan = random(200, 300);
-        this.color = color(random(200, 255), random(0, 40), random(100, 180));
-        this.growspeed = random(5, 50);
-    }
-
-    update() {
-        //this.pos = createVector(mouseX, mouseY);
-        this.wander();
-        this.walls();
-        this.show();
-        this.toff += this.deltat;
-        this.lifespan -= 1;
-        this.color.setAlpha(pow(this.lifespan, 1.1));
-        if (this.r < this.r0) {
-            this.r += this.growspeed;
-        }
-    }
-
-    isDead() {
-        return this.lifespan < 0;
-    }
-
-    wander() {
-        var go = createVector(noise(this.spikes + this.toff*0.5), noise(this.toff*0.5));
-        go.sub(0.5, 0.5);
-        go.mult(this.spikes*2);
-        this.pos.add(go);
-    }
-
-    walls() {
-        if (this.pos.x > width + this.r) {
-            this.pos.x = -this.r;
-        } else if (this.pos.x < - this.r) {
-            this.pos.x = width + this.r;
-        } else if (this.pos.y > height + this.r) {
-            this.pos.y = - this.r;
-        } else if (this.pos.y <  -this.r) {
-            this.pos.y = height + this.r;
-        }
-    }
-
-    show() {
-        fill(this.color);
-        noStroke();
-        push();
-        translate(this.pos.x, this.pos.y);
-        beginShape();
-        for (var i = 0; i < this.nodes; i++) {
-            var alphaoff = map(i, 0, this.nodes, 0, TWO_PI);
-            var r1 = this.r * (1 + 0.2*sin(this.toff)
-                + this.spikiness * sin(this.spikes * alphaoff + this.toff)
-                + this.noisyness * (noise(alphaoff, this.toff) + noise(this.roughness*alphaoff, this.toff)) -0.5);
-            // var r1 = this.r;
-            vertex(r1 * cos(i * TWO_PI / this.nodes), r1 * sin(i * TWO_PI / this.nodes));
-
-        }
-
-        endShape(CLOSE);
-        pop();
+function keyPressed() {
+    if (key == ' ') {
+        colorset = (colorset + 1) % 2;
     }
 }
