@@ -10,7 +10,6 @@ var myShroom;
 var spatialNoiseFactor = 0.003;
 var std = 5;
 var mean = 20;
-var sineFactor = 0.35
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -56,7 +55,7 @@ function mouseClicked() {
 }
 
 function plantMushroom() {
-    mList.push(myShroom);
+    mList.push(new Mushroom(createVector(mouseX, mouseY)));
     myShroom = new Mushroom();
     hintText = "";
     timeDot = 0.6/frameRate();
@@ -76,18 +75,23 @@ function keyPressed() {
 }
 
 class Mushroom {
-    constructor() {
+    constructor(_pos) {
         this.r = randomGaussian(mean, std);
-        this.pos = createVector(random(this.r/2, width - this.r/2), random(this.r/2, height - this.r/2));
+        if (_pos) {
+            this.pos = _pos;
+        } else {
+            this.pos = createVector(random(this.r/2, width - this.r/2), random(this.r/2, height - this.r/2));
+        }
         this.maxBrightness = randomGaussian(255);
         this.minBrightness = 0;
-        this.glowSpeed = randomGaussian(1, 1);
+        this.glowSpeed = randomGaussian(pow(abs(width/2 - this.pos.x)/500, 2));
         this.off = random(10);
+        this.sineFactor = 0.3 + map(abs(height/2 - this.pos.y), 0, height/2, 0.3, 0);
     }
 
     display() {
         var f = this.minBrightness + this.maxBrightness * noise(time, this.pos.x*spatialNoiseFactor, this.pos.y*spatialNoiseFactor)
-        * (1 - sineFactor*sin(this.off + time * this.glowSpeed));
+        * (1 - this.sineFactor*sin(this.off + time * this.glowSpeed));
         fill(f);
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
     }
