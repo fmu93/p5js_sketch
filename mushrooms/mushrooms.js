@@ -1,7 +1,7 @@
 var mList = [];
 var count = 200;
 
-var hintText = "<drag to add mushrooms>\n<spacebar to switch add mode>\n<double click to speed>";
+var hintText = "<drag to add mushrooms>\n<spacebar to switch add mode>"; // \n<double click to speed>";
 
 var mode = 0;
 var time = 0;
@@ -14,6 +14,7 @@ var sineFactor = 0.35
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+
     for (var i = 0; i < count; i++) {
         mList.push(new Mushroom());
     }
@@ -44,25 +45,28 @@ function draw() {
 
 function mouseDragged() {
     if (mode == 0) {
-        mList.push(myShroom);
-        myShroom = new Mushroom();
-        hintText = ""
+        plantMushroom();
     }
 }
 
 function mouseClicked() {
     if (mode == 1) {
-        mList.push(myShroom);
-        myShroom = new Mushroom();
-        hintText = "";
+        plantMushroom();
     }
 }
 
-function doubleClicked() {
-    timeDot += 0.02;
-    if (timeDot > 0.2) timeDot = 0.01;
-    hintText = "<speed " + timeDot.toPrecision(1) + ">";
+function plantMushroom() {
+    mList.push(myShroom);
+    myShroom = new Mushroom();
+    hintText = "";
+    timeDot = 0.6/frameRate();
 }
+
+// function doubleClicked() {
+//     timeDot += 0.02;
+//     if (timeDot > 0.2) timeDot = 0.01;
+//     hintText = "<speed " + timeDot.toPrecision(1) + ">";
+// }
 
 function keyPressed() {
     if (key == ' ') {
