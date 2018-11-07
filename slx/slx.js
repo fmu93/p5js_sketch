@@ -14,15 +14,11 @@ var debug = false;
 var mouseForceRadiusSq;
 var originalScale = 1800;
 var scaler;
+var noClickYet = true;
 
 function preload() {
-<<<<<<< HEAD
-	//   fontLight = loadFont('assets/Lato-Light.ttf');
-	fontBold = loadFont('assets/Lato-Bold.ttf');
-=======
   fontLight = loadFont('assets/Lato-Light.ttf');
   //fontBold = loadFont('assets/Lato-Bold.ttf');
->>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 }
 
 function setup() {
@@ -35,11 +31,7 @@ function setup() {
 
 	for (var i = 0; i < nParticles; i++) {
 		particles[i] = new Particle();
-<<<<<<< HEAD
-		if (i % 100 == 0) {
-=======
 		if (i%111 == 0) {
->>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 			particles[i].color = [0, 0];
 			particles[i].stroke = [0, 0];
 		}
@@ -61,13 +53,8 @@ function setup() {
 		hpaths[k] = new Path(createVector(0, height / (nhPaths) * (k + 0.5)), createVector(width, height / (nhPaths) * (k + 0.5)));
 	}
 
-<<<<<<< HEAD
-	particles[nParticles - 1].color = [0, 0];
-	particles[nParticles - 1].stroke = [0, 0];
-=======
 	//particles[nParticles-1].color = [0, 0];
 	//particles[nParticles-1].stroke = [0, 0];
->>>>>>> 528e6c850086c7a63f1a70794035de62d2a8cf9a
 
 }
 
@@ -87,12 +74,30 @@ function draw() {
 		ellipse(mouseX, mouseY, mouseForceRadius, mouseForceRadius);
 	}
 
+	// Explanation text
+	rectMode(CENTER);
+	// show clearly once
+	if (noClickYet) {
+		rect(width / 2, height*0.05, width*0.82, height*0.4);
+		fill(50);
+	} else {
+		fill(190);
+	}
+	noStroke();
+	textSize(width / 45);
+	textFont(fontLight);
+	textAlign(CENTER);
+	text("This sketch represents the problem space Silexica is trying to taclke\n \
+	The goal is to help developers understand the behaviour of their code (these bubbles!) \n \
+	Dynamic interaction with the bubbles gives hints about their nature \n \
+	Every click on the sketch is a step forward in the SLX tool\n \
+	", width / 2, height*0.05);
+
 	// SLX text
 	fill(190);
 	noStroke();
 	rectMode(CENTER)
 	textSize(width / 6);
-	textStyle(BOLD);
 	textFont(fontLight);
 	textAlign(CENTER);
 	text("SILEXICA", width / 2, height * 5 / 8);
@@ -159,5 +164,7 @@ function mouseClicked() {
 	for (var i = particles.length - 1; i > 0; i--) {
 		particles[i].applyForce(createVector(Math.random(-10, 10), Math.random(-10, 10)));
 	}
+
+	if (noClickYet) noClickYet = false;
 
 }

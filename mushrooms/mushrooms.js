@@ -58,7 +58,7 @@ function plantMushroom() {
     mList.push(new Mushroom(createVector(mouseX, mouseY)));
     myShroom = new Mushroom();
     hintText = "";
-    timeDot = 0.6/frameRate();
+    timeDot = 0.4/frameRate();
 }
 
 // function doubleClicked() {
