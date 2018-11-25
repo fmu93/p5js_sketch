@@ -18,9 +18,10 @@ function draw() {
 
 class Mushroom {
     constructor() {
-        this.pos = createVector(random(width), random(height));
         this.r = random(80, 120);
+        this.pos = createVector(random(this.r, width-this.r), random(this.r, height-this.r));
         this.maxBrightness = 255;
+        this.minBrightness = 50;
         this.time = 0;
         this.glowSpeed = random(0.1, 0.3);
         this.timeDot = 0.01;
@@ -28,7 +29,7 @@ class Mushroom {
     }
 
     display() {
-        var f = this.maxBrightness * noise(this.time, this.pos.x, this.pos.y) * (0.2 + 0.8*sin(this.time * this.glowSpeed * noise(this.time)));
+        var f = this.maxBrightness * noise(this.time, this.pos.x, this.pos.y) * (1 - this.minBrightness/this.maxBrightness*sin(this.time * this.glowSpeed * noise(this.time)));
         fill(f);
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
         this.time += this.timeDot;
