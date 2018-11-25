@@ -1,37 +1,98 @@
 var mList = [];
-var count = 16;
+var count = 300;
+
+var hintText = "<drag to add mushrooms>\n<spacebar to switch paint mode>"; // \n<double click to speed>";
+
+var mode = 0;
+var time = 0;
+var timeDot = 0.01;
+var myShroom;
+var spatialNoiseFactor = 0.003;
+var std = 5;
+var mean = 20;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+
     for (var i = 0; i < count; i++) {
         mList.push(new Mushroom());
     }
+    myShroom = new Mushroom();
+    noCursor();
+
 }
 
 function draw() {
-    background(255);
+    background(0);
 
+    // hint text
+    fill(120, 120);
+    textAlign(CENTER);
+    rectMode(CENTER);
+    textSize(60);
+    text(hintText, width / 2, 50);
+
+    noStroke();
     for (var i = 0; i < mList.length; i++) {
         mList[i].display();
+    }
+    myShroom.pos = createVector(mouseX, mouseY);
+    myShroom.display();
+
+    time += timeDot;
+}
+
+function mouseDragged() {
+    if (mode == 0) {
+        plantMushroom();
+    }
+}
+
+function mouseClicked() {
+    if (mode == 1) {
+        plantMushroom();
+    }
+}
+
+function plantMushroom() {
+    mList.push(new Mushroom(createVector(mouseX, mouseY)));
+    myShroom = new Mushroom();
+    hintText = "";
+    timeDot = 0.4/frameRate();
+}
+
+// function doubleClicked() {
+//     timeDot += 0.02;
+//     if (timeDot > 0.2) timeDot = 0.01;
+//     hintText = "<speed " + timeDot.toPrecision(1) + ">";
+// }
+
+function keyPressed() {
+    if (key == ' ') {
+        mode = (mode + 1) % 2;
+        hintText = "<mode " + mode.toString() + ">";
     }
 }
 
 class Mushroom {
-    constructor() {
-        this.r = random(80, 120);
-        this.pos = createVector(random(this.r, width-this.r), random(this.r, height-this.r));
-        this.maxBrightness = 255;
-        this.minBrightness = 50;
-        this.time = 0;
-        this.glowSpeed = random(0.1, 0.3);
-        this.timeDot = 0.01;
-
+    constructor(_pos) {
+        this.r = randomGaussian(mean, std);
+        if (_pos) {
+            this.pos = _pos;
+        } else {
+            this.pos = createVector(random(this.r/2, width - this.r/2), random(this.r/2, height - this.r/2));
+        }
+        this.maxBrightness = randomGaussian(255);
+        this.minBrightness = 0;
+        this.glowSpeed = randomGaussian(pow(abs(width/2 - this.pos.x)/500, 2));
+        this.off = random(10);
+        this.sineFactor = 0.3 + map(abs(height/2 - this.pos.y), 0, height/2, 0.3, 0);
     }
 
     display() {
-        var f = this.maxBrightness * noise(this.time, this.pos.x, this.pos.y) * (1 - this.minBrightness/this.maxBrightness*sin(this.time * this.glowSpeed * noise(this.time)));
+        var f = this.minBrightness + this.maxBrightness * noise(time, this.pos.x*spatialNoiseFactor, this.pos.y*spatialNoiseFactor)
+        * (1 - this.sineFactor*sin(this.off + time * this.glowSpeed));
         fill(f);
         ellipse(this.pos.x, this.pos.y, this.r, this.r);
-        this.time += this.timeDot;
     }
 }
