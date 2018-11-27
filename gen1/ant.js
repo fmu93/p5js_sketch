@@ -18,11 +18,20 @@ function Ant(pos_, size_) {
     this.age = 0;
     this.maturity = random(100, 300);
     this.death = random(500, 700);
-    this.color = [150, 100*this.sex, 30];
+    this.color = [100 + 80*this.sex, 100 - 50*this.sex, 30, 255];
+    this.babies = [];
 
     this.show = function() {
+        stroke(0);
         fill(this.color);
+        rectMode(CENTER);
         rect(this.pos.x, this.pos.y, this.size, this.size);
+        // show link to parents if young
+        if (this.parents.length > 1) { //&& this.age < this.maturity) {
+            stroke(150);
+            line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
+            line(this.pos.x, this.pos.y, this.parents[1].pos.x, this.parents[1].pos.y);
+        }
     }
 
     this.update = function() {
@@ -40,11 +49,14 @@ function Ant(pos_, size_) {
     }
 
     this.mate = function(male, female) {
-        if (!(this.parents.includes(male) || this.parents.includes(female)) && this.age > this.maturity) {
+        if (this.babies.length == 0
+            && (this.parents.length == 0 || !this.parents.includes(male) || !this.parents.includes(female))
+            && this.age > this.maturity) {
+
             this.parents.push(male);
             this.parents.push(female);
             var babyAnt = new Ant(male.pos.copy(), (male.size + female.size)*0.6);
-            babyAnt.color = [180, 100*this.sex, 30];
+            this.babies.push(babyAnt);
             return babyAnt;
         }
     }
@@ -55,7 +67,7 @@ function Ant(pos_, size_) {
             return true
         }
         else if (this.age > this.maturity) {
-            this.color = [150*this.sex, 100, 200];
+            this.color = [100 + 80*this.sex, 50 + 100*this.sex, 230, map(this.age, this.maturity, this.death, 255, 50)];
         }
         return false
     }
