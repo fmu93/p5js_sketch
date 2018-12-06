@@ -15,26 +15,37 @@ class Population {
         this.age();
 
         for (var i = 0; i < this.ants.length; i++) {
-            // check each other ant and mate or eat
+            var thisAnt = this.ants[i];
+            // check each other ant and react
             for (var j = i; j < this.ants.length; j++) {
-                var relPos = p5.Vector.sub(this.ants[j].pos, this.ants[i].pos);
-                if (relPos.mag() < this.ants[i].size + this.ants[j].size) {
+                var otherAnt = this.ants[j];
+
+                var relPos = p5.Vector.sub(otherAnt.pos, thisAnt.pos);
+                var dist = relPos.mag();
+
+                // they touch
+                if (dist < thisAnt.size + otherAnt.size) {
                     // mate if different sex and mature
-                    if (this.ants[i].sex + this.ants[j].sex == 1 &&
-                        this.ants.length < this.maxPop &&
-                        this.ants[i].isMature() &&
-                        this.ants[j].isMature()) {
-
-                        var couple = [this.ants[i], this.ants[j]];
+                    if (this.canMate(thisAnt, otherAnt)) {
+                        var couple = [thisAnt, otherAnt];
                         var newAnt = this.mate(couple);
-
                         if (newAnt) this.ants.push(newAnt);
+
                     // eat if one is mature but not the other and same sex and not family
-                    } else if (this.ants[i].isMature() &&
-                        !this.ants[j].isMature() && 
-                        (this.ants[i].sex + this.ants[j].sex) % 2 == 0 &&
-                        !this.ants[i].isFamily(this.ants[j])) {
-                           this.eat(this.ants[i], this.ants[j]);
+                    } else if (this.canEat(thisAnt, otherAnt)) {
+                           this.eat(thisAnt, otherAnt);
+                    }
+
+                // this ant can see
+                } else if (dist < thisAnt.sight) {
+                    if (this.canMate(thisAnt, otherAnt)) {
+                        var force = relPos.copy();
+                        force.setMag(thisAnt.mateForce);
+                        thisAnt.applyForce(force);
+                    } else if (this.canEat(thisAnt, otherAnt)) {
+                        var force = relPos.copy();
+                        force.setMag(thisAnt.eatForce);
+                        thisAnt.applyForce(force); 
                     }
                 }
             }
@@ -45,6 +56,20 @@ class Population {
             this.ants[i].friction();
             this.ants[i].show();
         }
+    }
+
+    canMate(thisAnt, otherAnt) {
+        return thisAnt.sex + otherAnt.sex == 1 &&
+        this.ants.length < this.maxPop &&
+        thisAnt.isMature() &&
+        otherAnt.isMature();
+    }
+
+    canEat(thisAnt, otherAnt) {
+        return thisAnt.isMature() &&
+                !otherAnt.isMature() && 
+                (thisAnt.sex + otherAnt.sex) % 2 == 0 &&
+                !thisAnt.isFamily(otherAnt);
     }
 
     eat(eater, eated) {

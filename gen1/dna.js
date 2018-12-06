@@ -4,18 +4,22 @@ class DNA {
         if (genes_) {
             this.genes = genes_;
         } else {
-            this.genes = [random(0, 0.5)]; // TODO [wander force, size, ]
+            // TODO [wander force, mate force, eat force, escape force, sight]
+            this.genes = [random(0.5, 0.5), random(0.5, 0.5), random(0.5, 0.5), random(0.5, 0.5), random(20, 100)]; 
         }
     }
 
     crossover(otherDNA) {
-        var newGenes = [(this.genes[0] + otherDNA.genes[0])/2];
+        var newGenes = [];
+        for (var i = 0; i<this.genes.length; i++) {
+            newGenes[i] = (this.genes[i] + otherDNA.genes[i])/2;
+        }
 
         return new DNA(newGenes);
     }
 
     mutate() {
-
+        this.genes[floor(random(this.genes.length))] = random(0, 0.5);
         return this;
 
     }

@@ -24,6 +24,10 @@ class Ant {
 
         this.fitness = 0;
         this.wanderForce = this.dna.genes[0];
+        this.mateForce = this.dna.genes[1];
+        this.eatForce = this.dna.genes[2];
+        this.escapeForce = this.dna.genes[3];
+        this.sight = this.dna.genes[4];
 
         this.sex = floor(random(2)); // 0 male, 1 female
         this.parents = [];

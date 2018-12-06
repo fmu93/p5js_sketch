@@ -1,7 +1,7 @@
 var ants = [];
 var population;
 var n = 100;
-var mutationRate = 0.01;
+var mutationRate = 0.05;
 var backOn = true;
 
 function setup() {
