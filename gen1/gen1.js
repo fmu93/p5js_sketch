@@ -28,7 +28,7 @@ function showFood() {
     for (var i = 0; i < food.length; i++) {
         noFill();
         stroke(100, 100, 50);
-        ellipse(food[i].pos.x, food[i].pos.y, 8, 8);
+        ellipse(food[i].x, food[i].y, 8, 8);
     }
 }
 

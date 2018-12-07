@@ -29,11 +29,11 @@ class Population {
 
     lookForFood(thisAnt) {
         for (var i = food.length; i >= 0 ; i--) {
-            var relPos = p5.Vector.sub(food[i].pos, thisAnt.pos);
+            var relPos = p5.Vector.sub(food[i], thisAnt.pos);
             var dist = relPos.mag();
 
             if (dist < thisAnt.sight) {
-                thisAnt.seek(food[i].pos);
+                thisAnt.seek(food[i]);
                 food.splice(i, 1);
             }   
         }
