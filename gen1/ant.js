@@ -28,15 +28,18 @@ class Ant {
         this.eatForce = this.dna.genes[2];
         this.escapeForce = this.dna.genes[3];
         this.sight = this.dna.genes[4];
+        this.maxspeed = this.dna.genes[5];
+        this.maxforce = this.dna.genes[6];
 
         this.sex = floor(random(2)); // 0 male, 1 female
         this.parents = [];
         this.age = 0;
         this.maturity = random(100, 300);
-        this.death = random(500, 700);
+        this.life = random(500, 700);
         this.color = [100 + 80 * this.sex, 40, 25, 255];
         this.babies = [];
         this.ateCount = 0;
+        this.killed = false;
     }
 
     fitness() {
@@ -50,10 +53,13 @@ class Ant {
         fill(this.color);
         rectMode(CENTER);
         if (backOn) rect(this.pos.x, this.pos.y, this.size, this.size);
+        
+        colorMode(RGB);
+        stroke(240, 40);
+        noFill();
+        //ellipse(this.pos.x, this.pos.y, this.sight, this.sight)
         // show link to parents if young
         if (this.parents.length > 1 && this.age < this.maturity) {
-            colorMode(RGB);
-            stroke(255, 60);
             line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
             line(this.pos.x, this.pos.y, this.parents[1].pos.x, this.parents[1].pos.y);
         }
@@ -69,6 +75,37 @@ class Ant {
         this.acc.add(force);
     }
 
+    seek(target) {
+        var desired = p5.Vector.sub(target, this.pos);  // A vector pointing from the position to the target
+
+        // If the magnitude of desired equals 0, skip out of here
+        // (We could optimize this to check if x and y are 0 to avoid mag() square root
+        if (desired.mag() == 0) return;
+
+        // Normalize desired and scale to maximum speed
+        desired.normalize();
+        desired.mult(this.maxspeed);
+        // Steering = Desired minus Velocity
+        var steer = p5.Vector.sub(desired, this.vel);
+        steer.limit(this.maxforce);  // Limit to maximum steering force
+
+        this.applyForce(steer);
+    }
+
+    avoid(target) {
+        var desired = p5.Vector.sub(this.pos, target);  // A vector pointing from the position to the target
+        if (desired.mag() == 0) return;
+
+        // Normalize desired and scale to maximum speed
+        desired.normalize();
+        desired.mult(this.maxspeed);
+        // Steering = Desired minus Velocity
+        var steer = p5.Vector.sub(desired, this.vel);
+        steer.limit(this.maxforce);  // Limit to maximum steering force
+
+        this.applyForce(steer);
+    }
+
     wander() {
         this.applyForce(p5.Vector.random2D().mult(this.wanderForce));
     }
@@ -78,8 +115,8 @@ class Ant {
          if (this.age > this.maturity) {
             this.color[1] = 240;
            // this.color[2] = 60;
-            this.color[2] = pow(map(this.age, this.maturity, this.death, 220, 30), 0.8);
-           // this.color = [100 + 80 * this.sex, 50 + 100 * this.sex, 230, map(this.age, this.maturity, this.death, 255, 50)];
+            this.color[2] = pow(map(this.age, this.maturity, this.life, 220, 30), 0.8);
+           // this.color = [100 + 80 * this.sex, 50 + 100 * this.sex, 230, map(this.age, this.maturity, this.life, 255, 50)];
         }
     }
 
@@ -99,10 +136,6 @@ class Ant {
     }
 
     isDead() {
-        return this.age > this.death;
-    }
-
-    isFamily(other) {
-        return this.parents.includes(other) || this.babies.includes(other);
+        return this.age > this.life;
     }
 }

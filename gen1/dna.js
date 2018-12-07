@@ -4,8 +4,8 @@ class DNA {
         if (genes_) {
             this.genes = genes_;
         } else {
-            // TODO [wander force, mate force, eat force, escape force, sight]
-            this.genes = [random(0.5, 0.5), random(0.5, 0.5), random(0.5, 0.5), random(0.5, 0.5), random(20, 100)]; 
+            // TODO [wander force, mate force, eat force, escape force, sight, maxspeed, maxforce]
+            this.genes = [random(0.1, 0.1), random(0.1, 0.1), random(0.1, 0.1), random(0.1, 0.1), random(20, 300), random(0, 2), random(0, 2)]; 
         }
     }
 
@@ -19,7 +19,8 @@ class DNA {
     }
 
     mutate() {
-        this.genes[floor(random(this.genes.length))] = random(0, 0.5);
+        //this.genes[floor(random(this.genes.length))] = random(0.2, 0.2);
+        this.genes[floor(random(this.genes.length))] *= random(0.5, 2)
         return this;
 
     }
