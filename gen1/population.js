@@ -19,7 +19,7 @@ class Population {
         for (var i = 0; i < this.ants.length; i++) {
             this.interact(this.ants[i]);
             this.lookForFood(this.ants[i]);
-            this.ants[i].wander();
+            //this.ants[i].wander();
             this.ants[i].walls();
             this.ants[i].update();
             this.ants[i].friction();
@@ -28,13 +28,15 @@ class Population {
     }
 
     lookForFood(thisAnt) {
-        for (var i = food.length; i >= 0 ; i--) {
+        for (var i = food.length-1; i >=0; i--) {
             var relPos = p5.Vector.sub(food[i], thisAnt.pos);
             var dist = relPos.mag();
 
-            if (dist < thisAnt.sight) {
-                thisAnt.seek(food[i]);
+            if (dist < thisAnt.size*2) {
+                thisAnt.life += 20;
                 food.splice(i, 1);
+            } else if (dist < thisAnt.eatSight) {
+                thisAnt.seek(food[i]);
             }   
         }
     }
@@ -54,17 +56,17 @@ class Population {
                     if (newAnt) this.ants.push(newAnt);
 
                 // eat if one is mature but not the other and same sex and not family
-                } else if (this.canEat(thisAnt, otherAnt)) {
-                        this.eat(thisAnt, otherAnt);
+                // } else if (this.canEat(thisAnt, otherAnt)) {
+                //         this.eat(thisAnt, otherAnt);
                 }
 
             // this ant can see
-            } else if (dist < thisAnt.sight) {
-                if (this.canMate(thisAnt, otherAnt)) {
-                    thisAnt.seek(otherAnt.pos);
-                } else if (this.canEat(otherAnt, thisAnt)) {
-                    thisAnt.avoid(otherAnt.pos); 
-                }
+            } else if (dist < thisAnt.mateSight && this.canMate(thisAnt, otherAnt)) {
+             thisAnt.seek(otherAnt.pos);
+            // } else if (dist < thisAnt.escapeSight && this.canEat(otherAnt, thisAnt)) {
+            //     thisAnt.avoid(otherAnt.pos); 
+            // } else if (dist < thisAnt.eatSight && this.canEat(thisAnt, otherAnt)) {
+            //     thisAnt.seek(otherAnt.pos); 
             }
         }
     }
@@ -133,6 +135,7 @@ class Population {
     age() {
         for (var i = this.ants.length - 1; i >= 0; i--) {
             this.ants[i].mature(); // add age and return true if dead
+            if (this.ants[i].isDead()) food.push(createVector(this.ants[i].pos.x, this.ants[i].pos.y))
             if (this.ants[i].isDead() || this.ants[i].killed) {
                 this.deadAnts.push(this.ants[i]);
                 this.ants.splice(i, 1);
@@ -154,7 +157,7 @@ class Population {
                 stroke(map(i, 0, this.deadAnts.length, 0, 120));
             }
             //fill(150, 150, 100);
-            rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, 10, 10);
+            rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, this.deadAnts[i].size, this.deadAnts[i].size);
         }
     }
 

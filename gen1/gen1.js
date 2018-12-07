@@ -4,6 +4,7 @@ var n = 10;
 var mutationRate = 0.1;
 var backOn = true;
 var food = [];
+var maxFood = 50;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -16,7 +17,7 @@ function setup() {
 function draw() {
     if (backOn) background(0);
 
-    if (frames % 1 == 0) {
+    if (frameCount % 5 == 0 && food.length < maxFood) {
         food.push(createVector(random(width), random(height)));
     }
 
@@ -27,7 +28,7 @@ function draw() {
 function showFood() {
     for (var i = 0; i < food.length; i++) {
         noFill();
-        stroke(100, 100, 50);
+        stroke(200, 50, 5);
         ellipse(food[i].x, food[i].y, 8, 8);
     }
 }
