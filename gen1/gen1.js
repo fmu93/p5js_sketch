@@ -34,7 +34,8 @@ function showFood() {
 }
 
 function mouseDragged() {
-    population.addAnt(createVector(mouseX, mouseY));
+    var newAnt = new Ant(createVector(mouseX, mouseY));
+    population.addAnt(newAnt);
 }
 
 function keyPressed() {

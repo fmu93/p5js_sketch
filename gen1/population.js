@@ -7,7 +7,7 @@ class Population {
         this.generations = 0;
         this.maxPop = 500;
         for (var i = 0; i < n; i++) {
-            this.addAnt();
+            this.addAnt(new Ant());
         }
     }
 
@@ -53,7 +53,7 @@ class Population {
                 // mate if different sex and mature
                 if (this.canMate(thisAnt, otherAnt)) {
                     var newAnt = this.mate(thisAnt, otherAnt);
-                    if (newAnt) this.ants.push(newAnt);
+                    if (newAnt) this.addAnt(newAnt);
 
                 // eat if one is mature but not the other and same sex and not family
                 } else if (this.cannibalism() && this.canEat(thisAnt, otherAnt)) {
@@ -128,9 +128,9 @@ class Population {
         }
     }
 
-    addAnt(pos, size, dna) {
+    addAnt(newAnt) {
         if (this.ants.length < this.maxPop) {
-            this.ants.push(new Ant(pos, size, dna));
+            this.ants.push(newAnt);
         }
     }
 
