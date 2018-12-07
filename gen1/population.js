@@ -17,41 +17,55 @@ class Population {
         this.showDead();
 
         for (var i = 0; i < this.ants.length; i++) {
-            var thisAnt = this.ants[i];
-            // check each other ant and react
-            for (var j = i; j < this.ants.length; j++) {
-                var otherAnt = this.ants[j];
-
-                var relPos = p5.Vector.sub(otherAnt.pos, thisAnt.pos);
-                var dist = relPos.mag();
-
-                // they touch
-                if (dist < thisAnt.size + otherAnt.size) {
-                    // mate if different sex and mature
-                    if (this.canMate(thisAnt, otherAnt)) {
-                        var newAnt = this.mate(thisAnt, otherAnt);
-                        if (newAnt) this.ants.push(newAnt);
-
-                    // eat if one is mature but not the other and same sex and not family
-                    } else if (this.canEat(thisAnt, otherAnt)) {
-                           this.eat(thisAnt, otherAnt);
-                    }
-
-                // this ant can see
-                } else if (dist < thisAnt.sight) {
-                    if (this.canMate(thisAnt, otherAnt)) {
-                        thisAnt.seek(otherAnt.pos);
-                    } else if (this.canEat(thisAnt, otherAnt)) {
-                        thisAnt.avoid(otherAnt.pos); 
-                    }
-                }
-            }
-
+            this.interact(this.ants[i]);
+            this.lookForFood(this.ants[i]);
             this.ants[i].wander();
             this.ants[i].walls();
             this.ants[i].update();
             this.ants[i].friction();
             this.ants[i].show();
+        }
+    }
+
+    lookForFood(thisAnt) {
+        for (var i = food.length; i >= 0 ; i--) {
+            var relPos = p5.Vector.sub(food[i].pos, thisAnt.pos);
+            var dist = relPos.mag();
+
+            if (dist < thisAnt.sight) {
+                thisAnt.seek(food[i].pos);
+                food.splice(i, 1);
+            }   
+        }
+    }
+
+    interact(thisAnt) {
+        for (var j = this.ants.indexOf(thisAnt); j < this.ants.length; j++) {
+            var otherAnt = this.ants[j];
+
+            var relPos = p5.Vector.sub(otherAnt.pos, thisAnt.pos);
+            var dist = relPos.mag();
+
+            // they touch
+            if (dist < thisAnt.size + otherAnt.size) {
+                // mate if different sex and mature
+                if (this.canMate(thisAnt, otherAnt)) {
+                    var newAnt = this.mate(thisAnt, otherAnt);
+                    if (newAnt) this.ants.push(newAnt);
+
+                // eat if one is mature but not the other and same sex and not family
+                } else if (this.canEat(thisAnt, otherAnt)) {
+                        this.eat(thisAnt, otherAnt);
+                }
+
+            // this ant can see
+            } else if (dist < thisAnt.sight) {
+                if (this.canMate(thisAnt, otherAnt)) {
+                    thisAnt.seek(otherAnt.pos);
+                } else if (this.canEat(otherAnt, thisAnt)) {
+                    thisAnt.avoid(otherAnt.pos); 
+                }
+            }
         }
     }
 

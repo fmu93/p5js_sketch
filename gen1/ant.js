@@ -24,9 +24,9 @@ class Ant {
 
         this.fitness = 0;
         this.wanderForce = this.dna.genes[0];
-        this.mateForce = this.dna.genes[1];
-        this.eatForce = this.dna.genes[2];
-        this.escapeForce = this.dna.genes[3];
+        this.mateForce = this.dna.genes[1]; // remove
+        this.eatForce = this.dna.genes[2]; // remove
+        this.escapeForce = this.dna.genes[3]; // remove
         this.sight = this.dna.genes[4];
         this.maxspeed = this.dna.genes[5];
         this.maxforce = this.dna.genes[6];
