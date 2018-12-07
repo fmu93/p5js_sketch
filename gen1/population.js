@@ -56,17 +56,17 @@ class Population {
                     if (newAnt) this.ants.push(newAnt);
 
                 // eat if one is mature but not the other and same sex and not family
-                // } else if (this.canEat(thisAnt, otherAnt)) {
-                //         this.eat(thisAnt, otherAnt);
+                } else if (this.cannibalism() && this.canEat(thisAnt, otherAnt)) {
+                        this.eat(thisAnt, otherAnt);
                 }
 
             // this ant can see
             } else if (dist < thisAnt.mateSight && this.canMate(thisAnt, otherAnt)) {
-             thisAnt.seek(otherAnt.pos);
-            // } else if (dist < thisAnt.escapeSight && this.canEat(otherAnt, thisAnt)) {
-            //     thisAnt.avoid(otherAnt.pos); 
-            // } else if (dist < thisAnt.eatSight && this.canEat(thisAnt, otherAnt)) {
-            //     thisAnt.seek(otherAnt.pos); 
+                thisAnt.seek(otherAnt.pos);
+            } else if (this.cannibalism() && dist < thisAnt.escapeSight && this.canEat(otherAnt, thisAnt)) {
+                thisAnt.avoid(otherAnt.pos); 
+            } else if (this.cannibalism() && dist < thisAnt.eatSight && this.canEat(thisAnt, otherAnt)) {
+                thisAnt.seek(otherAnt.pos); 
             }
         }
     }
@@ -129,7 +129,9 @@ class Population {
     }
 
     addAnt(pos, size, dna) {
-        this.ants.push(new Ant(pos, size, dna));
+        if (this.ants.length < this.maxPop) {
+            this.ants.push(new Ant(pos, size, dna));
+        }
     }
 
     age() {
@@ -141,6 +143,10 @@ class Population {
                 this.ants.splice(i, 1);
             }
         }
+    }
+
+    cannibalism() {
+        return this.ants.length > this.maxPop / 2
     }
 
     showDead() {
