@@ -13,7 +13,7 @@ class Ant {
             this.size = size_;
             constrain(this.size, 0, 80);
         } else {
-            this.size = random(5, 10);
+            this.size = random(5, 30);
         }
 
         if (dna_) { 
@@ -29,6 +29,8 @@ class Ant {
         this.escapeSight = this.dna.genes[3]; 
         this.maxspeed = this.dna.genes[4];
         this.maxforce = this.dna.genes[5];
+        this.edges = this.dna.genes[6];
+        //this.size = this.dna.genes[7];
 
         this.sex = floor(random(2)); // 0 male, 1 female
         this.parents = [];
@@ -51,12 +53,28 @@ class Ant {
         noStroke();
         fill(this.color);
         rectMode(CENTER);
-        if (backOn) rect(this.pos.x, this.pos.y, this.size, this.size);
-        
-        colorMode(RGB);
-        stroke(240, 40);
+        if (backOn) {
+            //rect(this.pos.x, this.pos.y, this.size, this.size);
+            push();
+            translate(this.pos.x, this.pos.y);
+            beginShape();
+            for (var i = 0; i < this.edges; i++) {
+                var x = cos(i * TWO_PI/this.edges ) * this.size;
+                var y = sin(i * TWO_PI/this.edges ) * this.size;
+                vertex( x, y);    
+            }
+            endShape(CLOSE);
+            pop();
+            
+            
+        } 
+
         noFill();
-        //ellipse(this.pos.x, this.pos.y, this.sight, this.sight)
+        stroke(foodColorA);
+        ellipse(this.pos.x, this.pos.y, this.eatSight, this.eatSight);
+        stroke(mateColorA);
+        ellipse(this.pos.x, this.pos.y, this.mateSight, this.mateSight);
+
         // show link to parents if young
         if (this.parents.length > 1 && this.age < this.maturity) {
             line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
@@ -136,5 +154,16 @@ class Ant {
 
     isDead() {
         return this.age > this.life;
+    }
+
+    updateDna() {
+        // [wander force, mate sight, eat sight, escape sight, maxspeed, maxforce, edges, size]
+        this.dna.updateGenes([this.wanderForce, this.mateSight, this.eatSight, this.escapeSight, this.maxspeed, this.maxforce, this.edges, this.size]);
+    }
+
+    lifeCrossover(otherAnt) {
+        this.updateDna;
+        otherAnt.updateDna;
+        return this.dna.crossover(otherAnt.dna)
     }
 }

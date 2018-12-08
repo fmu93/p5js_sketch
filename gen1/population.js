@@ -5,7 +5,7 @@ class Population {
         this.ants = [];
         this.deadAnts = [];
         this.generations = 0;
-        this.maxPop = 500;
+        this.maxPop = 300;
         for (var i = 0; i < n; i++) {
             this.addAnt(new Ant());
         }
@@ -19,7 +19,7 @@ class Population {
         for (var i = 0; i < this.ants.length; i++) {
             this.interact(this.ants[i]);
             this.lookForFood(this.ants[i]);
-            //this.ants[i].wander();
+            this.ants[i].wander();
             this.ants[i].walls();
             this.ants[i].update();
             this.ants[i].friction();
@@ -103,7 +103,7 @@ class Population {
         // check that their partner is not family
         if (!this.isFamily(thisAnt, otherAnt)) {
 
-            var babyDNA = thisAnt.dna.crossover(otherAnt.dna);
+            var babyDNA = thisAnt.lifeCrossover(otherAnt);
             if (random() < this.mutationRate) {
                 babyDNA.mutate();
             }
@@ -137,7 +137,7 @@ class Population {
     age() {
         for (var i = this.ants.length - 1; i >= 0; i--) {
             this.ants[i].mature(); // add age and return true if dead
-            if (this.ants[i].isDead()) food.push(createVector(this.ants[i].pos.x, this.ants[i].pos.y))
+            if (this.ants[i].isDead() && food.length < maxFood) food.push(createVector(this.ants[i].pos.x, this.ants[i].pos.y))
             if (this.ants[i].isDead() || this.ants[i].killed) {
                 this.deadAnts.push(this.ants[i]);
                 this.ants.splice(i, 1);
@@ -146,7 +146,7 @@ class Population {
     }
 
     cannibalism() {
-        return this.ants.length > this.maxPop / 2
+        return this.ants.length > this.maxPop*0.7
     }
 
     showDead() {
@@ -160,7 +160,7 @@ class Population {
                 noStroke();
             } else {
                 noFill();
-                stroke(map(i, 0, this.deadAnts.length, 0, 120));
+                stroke(255, map(i, 0, this.deadAnts.length, 0, 255));
             }
             //fill(150, 150, 100);
             rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, this.deadAnts[i].size, this.deadAnts[i].size);
