@@ -37,7 +37,8 @@ class Ant {
         this.age = 0;
         this.maturity = random(100, 300);
         this.life = random(500, 700);
-        this.color = [100 + 80 * this.sex, 40, 25, 255];
+        this.color = [100 + 80 * this.sex, 80, 50, 255];
+        this.colorChild = [100 + 80 * this.sex, 60, 15, 255];
         this.babies = [];
         this.ateCount = 0;
         this.killed = false;
@@ -56,7 +57,11 @@ class Ant {
             } else {
                 noStroke();
             }
-            fill(this.color);
+            if (this.isMature()) {
+                fill(this.color);
+            } else {
+                fill(this.colorChild);
+            }
             rectMode(CENTER);
             strokeWeight(3);
 
@@ -80,9 +85,9 @@ class Ant {
         ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
 
         // show link to parents if young
-        if (this.parents.length > 1 && this.age < this.maturity) {
-            line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
-            line(this.pos.x, this.pos.y, this.parents[1].pos.x, this.parents[1].pos.y);
+        if (this.parents.length > 1) {
+            if (!this.parents[0].isDead()) line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
+            if (!this.parents[1].isDead()) line(this.pos.x, this.pos.y, this.parents[1].pos.x, this.parents[1].pos.y);
         }
     }
 
@@ -150,11 +155,8 @@ class Ant {
 
     mature() {
         this.age += 1;
-        if (this.age > this.maturity) {
-            this.color[1] = 240;
-            // this.color[2] = 60;
-            this.color[2] = pow(map(this.age, this.maturity, this.life, 220, 30), 0.8);
-            // this.color = [100 + 80 * this.sex, 50 + 100 * this.sex, 230, map(this.age, this.maturity, this.life, 255, 50)];
+        if (this.isMature()) {
+            this.color[2] = pow(map(this.age, 0, this.life, 300, 30), 0.75);
         }
     }
 
@@ -163,10 +165,10 @@ class Ant {
     }
 
     walls() {
-        if (this.pos.x < width * 0.02) this.applyForce(createVector(1, 0));
-        else if (this.pos.x > width * 0.98) this.applyForce(createVector(-1, 0));
-        if (this.pos.y < height * 0.02) this.applyForce(createVector(0, 1));
-        else if (this.pos.y > height * 0.98) this.applyForce(createVector(0, -1));
+        if (this.pos.x < width * wallRepelSize) this.applyForce(createVector(1, 0));
+        else if (this.pos.x > width * (1 - wallRepelSize)) this.applyForce(createVector(-1, 0));
+        if (this.pos.y < height * wallRepelSize) this.applyForce(createVector(0, 1));
+        else if (this.pos.y > height * (1 - wallRepelSize)) this.applyForce(createVector(0, -1));
     }
 
     isMature() {

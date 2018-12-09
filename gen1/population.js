@@ -33,90 +33,103 @@ class Population {
         var closest = null;
         var closestDist = Infinity;
 
-        for (var i = food.length-1; i >= 0; i--) {
+        for (var i = 0; i < food.length; i++) {
             var relPos = p5.Vector.sub(food[i], thisAnt.pos);
             var dist = relPos.mag();
-            
-            if (dist < thisAnt.size) {
-                thisAnt.life += foodLife;
-                food.splice(i, 1);
-            } else if (dist < thisAnt.eatSight && dist < closestDist) {
+
+            if (dist < closestDist) {
                 closest = food[i];
                 closestDist = dist;
-            }   
+            }
         }
 
         if (closest) {
-            thisAnt.seekFood(closest);
+            if (closestDist < thisAnt.size) {
+                thisAnt.life += foodLife;
+                food.splice(food.indexOf(closest), 1);
+            } else if (closestDist < thisAnt.eatSight) {
+                thisAnt.seekFood(closest);
+            }
         }
     }
 
     interact(thisAnt) {
+        var closestAnt = null;
+        var closestDist = Infinity;
+
         for (var j = 0; j < this.ants.length; j++) {
             var otherAnt = this.ants[j];
             if (thisAnt == otherAnt) continue;
 
             var relPos = p5.Vector.sub(otherAnt.pos, thisAnt.pos);
             var dist = relPos.mag();
+            if (dist < closestDist && this.interest(thisAnt, otherAnt)) {
+                closestAnt = otherAnt;
+                closestDist = dist;
+            }
+        }
 
+        if (closestAnt) {
             // they touch
-            if (dist < thisAnt.size + otherAnt.size) {
+            if (closestDist < thisAnt.size + closestAnt.size) {
                 // mate if different sex and mature
-                if (this.canMate(thisAnt, otherAnt)) {
-                    var newAnt = this.mate(thisAnt, otherAnt);
+                if (this.canMate(thisAnt, closestAnt)) {
+                    var newAnt = this.mate(thisAnt, closestAnt);
                     if (newAnt) this.addAnt(newAnt);
 
-                // eat if one is mature but not the other and same sex and not family
-                } else if (this.canEat(thisAnt, otherAnt)) {
-                        this.eat(thisAnt, otherAnt);
+                    // eat if one is mature but not the other and same sex and not family
+                } else if (this.canEat(thisAnt, closestAnt)) {
+                    this.eat(thisAnt, closestAnt);
                 } else {
-                    thisAnt.avoid(otherAnt.pos);
+                    thisAnt.avoid(closestAnt.pos);
                 }
 
-            // this ant can see
-            } else if (dist < thisAnt.mateSight && this.canMate(thisAnt, otherAnt)) {
-                thisAnt.seekSex(otherAnt.pos);
-            } else if (otherAnt.cannibal && dist < thisAnt.escapeSight && this.canEat(otherAnt, thisAnt)) {
-                thisAnt.avoid(otherAnt.pos); 
-            } else if (thisAnt.cannibal && dist < thisAnt.eatSight && this.canEat(thisAnt, otherAnt)) {
-                thisAnt.seekFood(otherAnt.pos); 
+                // this ant can see
+            } else if (closestDist < thisAnt.mateSight && this.canMate(thisAnt, closestAnt)) {
+                thisAnt.seekSex(closestAnt.pos);
+            } else if (closestAnt.cannibal && closestDist < thisAnt.escapeSight && this.canEat(closestAnt, thisAnt)) {
+                thisAnt.avoid(closestAnt.pos);
+            } else if (thisAnt.cannibal && closestDist < thisAnt.eatSight && this.canEat(thisAnt, closestAnt)) {
+                thisAnt.seekFood(closestAnt.pos);
             }
         }
     }
 
     cannibal(thisAnt) {
-        return this.ants.indexOf(thisAnt) > this.maxPop*0.8;
+        return this.ants.indexOf(thisAnt) > this.maxPop * 0.8;
     }
 
     canMate(thisAnt, otherAnt) {
         return thisAnt.sex + otherAnt.sex == 1 &&
-        this.ants.length < this.maxPop &&
-        !this.isFamily(thisAnt, otherAnt) &&
-        thisAnt.isMature() &&
-        otherAnt.isMature();
+            this.ants.length < this.maxPop &&
+            !this.isFamily(thisAnt, otherAnt) &&
+            thisAnt.isMature() &&
+            otherAnt.isMature();
     }
 
     canEat(thisAnt, otherAnt) {
         return thisAnt.cannibal &&
-                thisAnt.isMature() &&
-                !otherAnt.isMature() && 
-                (thisAnt.sex + otherAnt.sex) % 2 == 0 &&
-                !this.isFamily(thisAnt, otherAnt);
+            thisAnt.isMature() &&
+            !otherAnt.isMature() &&
+            //(thisAnt.sex + otherAnt.sex) % 2 == 0 &&
+            !this.isFamily(thisAnt, otherAnt);
     }
 
     isFamily(thisAnt, otherAnt) {
         return thisAnt.parents.includes(otherAnt) ||
-        thisAnt.babies.includes(otherAnt) ||
-        otherAnt.parents.includes(thisAnt.parents) ||
-        otherAnt.babies.includes(thisAnt);
+            thisAnt.babies.includes(otherAnt) ||
+            otherAnt.parents.includes(thisAnt.parents) ||
+            otherAnt.babies.includes(thisAnt);
+    }
+
+    interest(thisAnt, otherAnt) {
+        return (this.canMate(thisAnt, otherAnt) || this.canEat(thisAnt, otherAnt) || this.canEat(otherAnt, thisAnt));
     }
 
     eat(eater, eated) {
-        // eater takes age of eated and slows down
+        // eater takes age of eated
         eater.life += eated.age;
-        eater.wanderForce *= 0.9;
-        // eated gets life and size
-        eater.size = eated.size*0.5;
+        eater.size += eated.size * 0.5;
         eated.killed = true;
     }
 
@@ -132,8 +145,8 @@ class Population {
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
             if (this.cannibalism()) babyAnt.cannibal = true;
             // give some time between births
-            thisAnt.maturity = thisAnt.age + thisAnt.life*this.weakTime;
-            otherAnt.maturity = otherAnt.age + otherAnt.life*this.weakTime;
+            thisAnt.maturity = thisAnt.age + thisAnt.life * this.weakTime;
+            otherAnt.maturity = otherAnt.age + otherAnt.life * this.weakTime;
 
             // keep track of family tree
             babyAnt.parents.push(thisAnt, otherAnt);
@@ -158,8 +171,8 @@ class Population {
     age() {
         for (var i = this.ants.length - 1; i >= 0; i--) {
             this.ants[i].mature(); // add age and return true if dead
-            if (this.ants[i].isDead() && food.length < maxFood) food.push(createVector(this.ants[i].pos.x, this.ants[i].pos.y))
-            if (this.ants[i].isDead() || this.ants[i].killed) {
+            if (this.ants[i].isDead()) {
+                addFood(this.ants[i].pos);
                 this.deadAnts.push(this.ants[i]);
                 this.ants.splice(i, 1);
             }
@@ -167,14 +180,12 @@ class Population {
     }
 
     cannibalism() {
-        return this.ants.length > this.maxPop*this.cannibalFactor;
+        return this.ants.length > this.maxPop * this.cannibalFactor;
     }
 
     showDead() {
-        while (this.deadAnts.length > 100) {
-            this.deadAnts.splice(1, 1);
-        }
-        
+        if (frameCount % 20 == 0 || this.deadAnts.length > 100) this.deadAnts.splice(0, 1);
+
         strokeWeight(1);
         for (var i = 0; i < this.deadAnts.length; i++) {
             if (this.deadAnts[i].killed) {
@@ -182,7 +193,7 @@ class Population {
                 noStroke();
             } else {
                 noFill();
-                stroke(map(i, 0, this.deadAnts.length, 0, 255));
+                stroke(0, 0, map(i, 0, this.deadAnts.length, 0, 255));
             }
             //fill(150, 150, 100);
             rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, this.deadAnts[i].size, this.deadAnts[i].size);

@@ -7,7 +7,8 @@ var food = [];
 var maxFood = 50;
 var foodColor;
 var mateColor;
-var foodLife = 70;
+var foodLife = 30;
+var wallRepelSize = 0.01;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -29,7 +30,7 @@ function draw() {
     if (backOn) background(0);
 
     if (frameCount % 5 == 0 && food.length < maxFood) {
-        food.push(createVector(random(width), random(height)));
+        this.addFood(createVector(random(width), random(height)));
     }
 
     population.run();
@@ -56,4 +57,8 @@ function keyPressed() {
         background(0);
         backOn = !backOn;
     }
+}
+
+function addFood(pos_) {
+    this.food.push(pos_);
 }
