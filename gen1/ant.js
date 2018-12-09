@@ -1,6 +1,6 @@
 class Ant {
 
-    constructor(pos_, size_, dna_) {
+    constructor(pos_, dna_) {
         if (pos_) {
             this.pos = pos_;
         } else {
@@ -9,14 +9,7 @@ class Ant {
         this.vel = createVector();
         this.acc = createVector();
 
-        if (size_) {
-            this.size = size_;
-            constrain(this.size, 0, 80);
-        } else {
-            this.size = random(5, 30);
-        }
-
-        if (dna_) { 
+        if (dna_) {
             this.dna = dna_;
         } else {
             this.dna = new DNA();
@@ -26,11 +19,18 @@ class Ant {
         this.wanderForce = this.dna.genes[0];
         this.mateSight = this.dna.genes[1];
         this.eatSight = this.dna.genes[2];
-        this.escapeSight = this.dna.genes[3]; 
-        this.maxspeed = this.dna.genes[4];
-        this.maxforce = this.dna.genes[5];
-        this.edges = this.dna.genes[6];
-        //this.size = this.dna.genes[7];
+        this.escapeSight = this.dna.genes[3];
+
+        this.maxeatspeed = this.dna.genes[4];
+        this.maxeatforce = this.dna.genes[5];
+        this.maxmatespeed = this.dna.genes[6];
+        this.maxmateforce = this.dna.genes[7];
+        this.maxavoidspeed = this.dna.genes[8];
+        this.maxavoidforce = this.dna.genes[9];
+
+        this.edges = this.dna.genes[10];
+        this.size = this.dna.genes[11];
+        constrain(this.size, 4, 200);
 
         this.sex = floor(random(2)); // 0 male, 1 female
         this.parents = [];
@@ -41,6 +41,7 @@ class Ant {
         this.babies = [];
         this.ateCount = 0;
         this.killed = false;
+        this.cannibal = false;
     }
 
     fitness() {
@@ -49,31 +50,34 @@ class Ant {
     }
 
     show() {
-        colorMode(HSL);
-        noStroke();
-        fill(this.color);
-        rectMode(CENTER);
         if (backOn) {
+            if (this.cannibal) {
+                stroke('hsla(0, 80%, 50%, 0.5)')
+            } else {
+                noStroke();
+            }
+            fill(this.color);
+            rectMode(CENTER);
+            strokeWeight(3);
+
             //rect(this.pos.x, this.pos.y, this.size, this.size);
             push();
             translate(this.pos.x, this.pos.y);
             beginShape();
             for (var i = 0; i < this.edges; i++) {
-                var x = cos(i * TWO_PI/this.edges ) * this.size;
-                var y = sin(i * TWO_PI/this.edges ) * this.size;
-                vertex( x, y);    
+                var x = cos(i * TWO_PI / this.edges) * this.size;
+                var y = sin(i * TWO_PI / this.edges) * this.size;
+                vertex(x, y);
             }
             endShape(CLOSE);
             pop();
-            
-            
-        } 
+        }
 
         noFill();
         stroke(foodColorA);
-        ellipse(this.pos.x, this.pos.y, this.eatSight, this.eatSight);
+        ellipse(this.pos.x, this.pos.y, this.eatSight*2, this.eatSight*2);
         stroke(mateColorA);
-        ellipse(this.pos.x, this.pos.y, this.mateSight, this.mateSight);
+        ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
 
         // show link to parents if young
         if (this.parents.length > 1 && this.age < this.maturity) {
@@ -92,8 +96,8 @@ class Ant {
         this.acc.add(force);
     }
 
-    seek(target) {
-        var desired = p5.Vector.sub(target, this.pos);  // A vector pointing from the position to the target
+    seekFood(target) {
+        var desired = p5.Vector.sub(target, this.pos); // A vector pointing from the position to the target
 
         // If the magnitude of desired equals 0, skip out of here
         // (We could optimize this to check if x and y are 0 to avoid mag() square root
@@ -101,24 +105,41 @@ class Ant {
 
         // Normalize desired and scale to maximum speed
         desired.normalize();
-        desired.mult(this.maxspeed);
+        desired.mult(this.maxeatspeed);
         // Steering = Desired minus Velocity
         var steer = p5.Vector.sub(desired, this.vel);
-        steer.limit(this.maxforce);  // Limit to maximum steering force
+        steer.limit(this.maxeatforce); // Limit to maximum steering force
+
+        this.applyForce(steer);
+    }
+
+    seekSex(target) {
+        var desired = p5.Vector.sub(target, this.pos); // A vector pointing from the position to the target
+
+        // If the magnitude of desired equals 0, skip out of here
+        // (We could optimize this to check if x and y are 0 to avoid mag() square root
+        if (desired.mag() == 0) return;
+
+        // Normalize desired and scale to maximum speed
+        desired.normalize();
+        desired.mult(this.maxmatespeed);
+        // Steering = Desired minus Velocity
+        var steer = p5.Vector.sub(desired, this.vel);
+        steer.limit(this.maxmateforce); // Limit to maximum steering force
 
         this.applyForce(steer);
     }
 
     avoid(target) {
-        var desired = p5.Vector.sub(this.pos, target);  // A vector pointing from the position to the target
+        var desired = p5.Vector.sub(this.pos, target);
         if (desired.mag() == 0) return;
 
         // Normalize desired and scale to maximum speed
         desired.normalize();
-        desired.mult(this.maxspeed);
+        desired.mult(this.maxavoidspeed);
         // Steering = Desired minus Velocity
         var steer = p5.Vector.sub(desired, this.vel);
-        steer.limit(this.maxforce);  // Limit to maximum steering force
+        steer.limit(this.maxavoidforce); // Limit to maximum steering force
 
         this.applyForce(steer);
     }
@@ -129,11 +150,11 @@ class Ant {
 
     mature() {
         this.age += 1;
-         if (this.age > this.maturity) {
+        if (this.age > this.maturity) {
             this.color[1] = 240;
-           // this.color[2] = 60;
+            // this.color[2] = 60;
             this.color[2] = pow(map(this.age, this.maturity, this.life, 220, 30), 0.8);
-           // this.color = [100 + 80 * this.sex, 50 + 100 * this.sex, 230, map(this.age, this.maturity, this.life, 255, 50)];
+            // this.color = [100 + 80 * this.sex, 50 + 100 * this.sex, 230, map(this.age, this.maturity, this.life, 255, 50)];
         }
     }
 
@@ -158,7 +179,9 @@ class Ant {
 
     updateDna() {
         // [wander force, mate sight, eat sight, escape sight, maxspeed, maxforce, edges, size]
-        this.dna.updateGenes([this.wanderForce, this.mateSight, this.eatSight, this.escapeSight, this.maxspeed, this.maxforce, this.edges, this.size]);
+        this.dna.updateGenes([this.wanderForce, this.mateSight, this.eatSight, this.escapeSight,
+            this.maxeatspeed,this.maxeatforce, this.maxmatespeed,this.maxmateforce, this.maxavoidspeed,this.maxavoidforce, 
+            this.edges, this.size]);
     }
 
     lifeCrossover(otherAnt) {

@@ -5,7 +5,9 @@ class Population {
         this.ants = [];
         this.deadAnts = [];
         this.generations = 0;
-        this.maxPop = 300;
+        this.maxPop = 200;
+        this.cannibalFactor = 0.9;
+        this.weakTime = 0.2;
         for (var i = 0; i < n; i++) {
             this.addAnt(new Ant());
         }
@@ -17,33 +19,42 @@ class Population {
         this.showDead();
 
         for (var i = 0; i < this.ants.length; i++) {
-            this.interact(this.ants[i]);
-            this.lookForFood(this.ants[i]);
             this.ants[i].wander();
             this.ants[i].walls();
-            this.ants[i].update();
             this.ants[i].friction();
+            this.interact(this.ants[i]);
+            this.lookForFood(this.ants[i]);
+            this.ants[i].update();
             this.ants[i].show();
         }
     }
 
     lookForFood(thisAnt) {
-        for (var i = food.length-1; i >=0; i--) {
+        var closest = null;
+        var closestDist = Infinity;
+
+        for (var i = food.length-1; i >= 0; i--) {
             var relPos = p5.Vector.sub(food[i], thisAnt.pos);
             var dist = relPos.mag();
-
-            if (dist < thisAnt.size*2) {
-                thisAnt.life += 20;
+            
+            if (dist < thisAnt.size) {
+                thisAnt.life += foodLife;
                 food.splice(i, 1);
-            } else if (dist < thisAnt.eatSight) {
-                thisAnt.seek(food[i]);
+            } else if (dist < thisAnt.eatSight && dist < closestDist) {
+                closest = food[i];
+                closestDist = dist;
             }   
+        }
+
+        if (closest) {
+            thisAnt.seekFood(closest);
         }
     }
 
     interact(thisAnt) {
-        for (var j = this.ants.indexOf(thisAnt); j < this.ants.length; j++) {
+        for (var j = 0; j < this.ants.length; j++) {
             var otherAnt = this.ants[j];
+            if (thisAnt == otherAnt) continue;
 
             var relPos = p5.Vector.sub(otherAnt.pos, thisAnt.pos);
             var dist = relPos.mag();
@@ -56,19 +67,25 @@ class Population {
                     if (newAnt) this.addAnt(newAnt);
 
                 // eat if one is mature but not the other and same sex and not family
-                } else if (this.cannibalism() && this.canEat(thisAnt, otherAnt)) {
+                } else if (this.canEat(thisAnt, otherAnt)) {
                         this.eat(thisAnt, otherAnt);
+                } else {
+                    thisAnt.avoid(otherAnt.pos);
                 }
 
             // this ant can see
             } else if (dist < thisAnt.mateSight && this.canMate(thisAnt, otherAnt)) {
-                thisAnt.seek(otherAnt.pos);
-            } else if (this.cannibalism() && dist < thisAnt.escapeSight && this.canEat(otherAnt, thisAnt)) {
+                thisAnt.seekSex(otherAnt.pos);
+            } else if (otherAnt.cannibal && dist < thisAnt.escapeSight && this.canEat(otherAnt, thisAnt)) {
                 thisAnt.avoid(otherAnt.pos); 
-            } else if (this.cannibalism() && dist < thisAnt.eatSight && this.canEat(thisAnt, otherAnt)) {
-                thisAnt.seek(otherAnt.pos); 
+            } else if (thisAnt.cannibal && dist < thisAnt.eatSight && this.canEat(thisAnt, otherAnt)) {
+                thisAnt.seekFood(otherAnt.pos); 
             }
         }
+    }
+
+    cannibal(thisAnt) {
+        return this.ants.indexOf(thisAnt) > this.maxPop*0.8;
     }
 
     canMate(thisAnt, otherAnt) {
@@ -80,14 +97,18 @@ class Population {
     }
 
     canEat(thisAnt, otherAnt) {
-        return thisAnt.isMature() &&
+        return thisAnt.cannibal &&
+                thisAnt.isMature() &&
                 !otherAnt.isMature() && 
                 (thisAnt.sex + otherAnt.sex) % 2 == 0 &&
                 !this.isFamily(thisAnt, otherAnt);
     }
 
     isFamily(thisAnt, otherAnt) {
-        return thisAnt.parents.includes(otherAnt) || thisAnt.babies.includes(otherAnt) || thisAnt.parents.includes(otherAnt.parents);
+        return thisAnt.parents.includes(otherAnt) ||
+        thisAnt.babies.includes(otherAnt) ||
+        otherAnt.parents.includes(thisAnt.parents) ||
+        otherAnt.babies.includes(thisAnt);
     }
 
     eat(eater, eated) {
@@ -108,14 +129,14 @@ class Population {
                 babyDNA.mutate();
             }
 
-            var babyAnt = new Ant(thisAnt.pos.copy(), (thisAnt.size + otherAnt.size) * 0.6, babyDNA);
+            var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
+            if (this.cannibalism()) babyAnt.cannibal = true;
             // give some time between births
-            thisAnt.maturity = thisAnt.age + thisAnt.life*0.1;
-            otherAnt.maturity = otherAnt.age + otherAnt.life*0.1;
+            thisAnt.maturity = thisAnt.age + thisAnt.life*this.weakTime;
+            otherAnt.maturity = otherAnt.age + otherAnt.life*this.weakTime;
 
             // keep track of family tree
-            babyAnt.parents.push(thisAnt);
-            babyAnt.parents.push(otherAnt);
+            babyAnt.parents.push(thisAnt, otherAnt);
             thisAnt.babies.push(babyAnt);
             otherAnt.babies.push(babyAnt);
             return babyAnt;
@@ -146,21 +167,22 @@ class Population {
     }
 
     cannibalism() {
-        return this.ants.length > this.maxPop*0.7
+        return this.ants.length > this.maxPop*this.cannibalFactor;
     }
 
     showDead() {
         while (this.deadAnts.length > 100) {
             this.deadAnts.splice(1, 1);
         }
-        colorMode(HSL);
+        
+        strokeWeight(1);
         for (var i = 0; i < this.deadAnts.length; i++) {
             if (this.deadAnts[i].killed) {
                 fill(0, 100, map(i, 0, this.deadAnts.length, 0, 35));
                 noStroke();
             } else {
                 noFill();
-                stroke(255, map(i, 0, this.deadAnts.length, 0, 255));
+                stroke(map(i, 0, this.deadAnts.length, 0, 255));
             }
             //fill(150, 150, 100);
             rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, this.deadAnts[i].size, this.deadAnts[i].size);
