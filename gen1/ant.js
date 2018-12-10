@@ -38,7 +38,7 @@ class Ant {
         this.maturity = random(100, 300);
         this.life = random(500, 700);
         this.color = [100 + 80 * this.sex, 80, 50, 255];
-        this.colorChild = [100 + 80 * this.sex, 60, 15, 255];
+        this.colorChild = [100 + 80 * this.sex, 80, 15, 255];
         this.babies = [];
         this.ateCount = 0;
         this.killed = false;

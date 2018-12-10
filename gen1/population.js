@@ -6,7 +6,8 @@ class Population {
         this.deadAnts = [];
         this.generations = 0;
         this.maxPop = 200;
-        this.cannibalFactor = 0.9;
+        this.cannibalFactor = 0.8;
+        this.cannibalChance = 0.2;
         this.weakTime = 0.1;
         for (var i = 0; i < n; i++) {
             this.addAnt(new Ant());
@@ -54,6 +55,7 @@ class Population {
     }
 
     interact(thisAnt) {
+        // get the 3 closest
         var closestAnt = null;
         var closestDist = Infinity;
 
@@ -80,8 +82,8 @@ class Population {
                     // eat if one is mature but not the other and same sex and not family
                 } else if (this.canKill(thisAnt, closestAnt)) {
                     this.kill(thisAnt, closestAnt);
-                } else {
-                    thisAnt.avoid(closestAnt.pos);
+                } else if (this.sameSex(thisAnt, closestAnt)) {
+                    thisAnt.avoid(closestAnt.pos); // maintain distance
                 }
 
                 // this ant can see
@@ -111,10 +113,14 @@ class Population {
         var cond = thisAnt.cannibal && (
             //thisAnt.isMature() &&
             //!otherAnt.isMature() &&
-            (thisAnt.sex + otherAnt.sex) % 2 == 0 &&
+            this.sameSex(thisAnt, otherAnt) &&
             !this.isFamily(thisAnt, otherAnt) || 
             otherAnt.cannibal);
         return cond;
+    }
+
+    sameSex(thisAnt, otherAnt) {
+        return (thisAnt.sex + otherAnt.sex) % 2 == 0;
     }
 
     isFamily(thisAnt, otherAnt) {
@@ -142,8 +148,9 @@ class Population {
             }
 
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
-            if (this.cannibalism() && !floor(random(3))) {
+            if (this.cannibalism() && !floor(random(this.cannibalChance*10))) {
                 babyAnt.cannibal = true;
+                babyAnt.maturity *= 0.2;
                 babyAnt.life *= 0.5;
             }
             // give some time between births

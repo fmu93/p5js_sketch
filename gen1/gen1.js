@@ -8,6 +8,7 @@ var maxFood = 50;
 var foodColor;
 var mateColor;
 var foodLife = 30;
+var foodRate = 20;
 var wallRepelSize = 0.01;
 
 function setup() {
@@ -29,7 +30,7 @@ function setup() {
 function draw() {
     if (backOn) background(0);
 
-    if (frameCount % 5 == 0 && food.length < maxFood) {
+    if (frameCount % foodRate == 0 && food.length < maxFood) {
         this.addFood(createVector(random(width), random(height)));
     }
 
