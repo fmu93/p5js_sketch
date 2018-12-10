@@ -5,7 +5,7 @@ class Population {
         this.ants = [];
         this.deadAnts = [];
         this.generations = 0;
-        this.maxPop = 200;
+        this.maxPop = 100;
         this.cannibalFactor = 0.8;
         this.cannibalChance = 0.2;
         this.weakTime = 0.1;
@@ -55,7 +55,6 @@ class Population {
     }
 
     interact(thisAnt) {
-        // get the 3 closest
         var closestAnt = null;
         var closestDist = Infinity;
 
@@ -106,15 +105,17 @@ class Population {
             this.ants.length < this.maxPop &&
             !this.isFamily(thisAnt, otherAnt) &&
             thisAnt.isMature() &&
-            otherAnt.isMature();
+            otherAnt.isMature() &&
+            !thisAnt.cannibal &&
+            !otherAnt.cannibal;
     }
 
     canKill(thisAnt, otherAnt) {
         var cond = thisAnt.cannibal && (
-            //thisAnt.isMature() &&
+            //!thisAnt.isMature() &&
             //!otherAnt.isMature() &&
-            this.sameSex(thisAnt, otherAnt) &&
-            !this.isFamily(thisAnt, otherAnt) || 
+            (this.sameSex(thisAnt, otherAnt) &&
+            !this.isFamily(thisAnt, otherAnt)) || 
             otherAnt.cannibal);
         return cond;
     }
@@ -135,7 +136,7 @@ class Population {
     }
 
     kill(eater, eated) {
-        eated.killed = true;
+        eated.kill();
     }
 
     mate(thisAnt, otherAnt) {
@@ -150,8 +151,6 @@ class Population {
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
             if (this.cannibalism() && !floor(random(this.cannibalChance*10))) {
                 babyAnt.cannibal = true;
-                babyAnt.maturity *= 0.2;
-                babyAnt.life *= 0.5;
             }
             // give some time between births
             this.weaken(thisAnt);

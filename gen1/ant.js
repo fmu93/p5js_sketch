@@ -50,6 +50,10 @@ class Ant {
         this.fitness = this.babies.length + this.ateCount;
     }
 
+    kill() {
+        this.killed = true;
+    }
+
     show() {
         if (backOn) {
             if (this.cannibal) {
@@ -176,7 +180,7 @@ class Ant {
     }
 
     isDead() {
-        return this.age > this.life;
+        return (this.age > this.life) || this.killed;
     }
 
     updateDna() {
