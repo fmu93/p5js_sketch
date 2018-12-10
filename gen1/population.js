@@ -7,7 +7,7 @@ class Population {
         this.generations = 0;
         this.maxPop = 200;
         this.cannibalFactor = 0.9;
-        this.weakTime = 0.2;
+        this.weakTime = 0.1;
         for (var i = 0; i < n; i++) {
             this.addAnt(new Ant());
         }
@@ -23,7 +23,7 @@ class Population {
             this.ants[i].walls();
             this.ants[i].friction();
             this.interact(this.ants[i]);
-            this.lookForFood(this.ants[i]);
+            if (!this.ants[i].cannibal) this.lookForFood(this.ants[i]);
             this.ants[i].update();
             this.ants[i].show();
         }
@@ -78,8 +78,8 @@ class Population {
                     if (newAnt) this.addAnt(newAnt);
 
                     // eat if one is mature but not the other and same sex and not family
-                } else if (this.canEat(thisAnt, closestAnt)) {
-                    this.eat(thisAnt, closestAnt);
+                } else if (this.canKill(thisAnt, closestAnt)) {
+                    this.kill(thisAnt, closestAnt);
                 } else {
                     thisAnt.avoid(closestAnt.pos);
                 }
@@ -87,9 +87,9 @@ class Population {
                 // this ant can see
             } else if (closestDist < thisAnt.mateSight && this.canMate(thisAnt, closestAnt)) {
                 thisAnt.seekSex(closestAnt.pos);
-            } else if (closestAnt.cannibal && closestDist < thisAnt.escapeSight && this.canEat(closestAnt, thisAnt)) {
+            } else if (closestAnt.cannibal && closestDist < thisAnt.escapeSight && this.canKill(closestAnt, thisAnt)) {
                 thisAnt.avoid(closestAnt.pos);
-            } else if (thisAnt.cannibal && closestDist < thisAnt.eatSight && this.canEat(thisAnt, closestAnt)) {
+            } else if (thisAnt.cannibal && closestDist < thisAnt.eatSight && this.canKill(thisAnt, closestAnt)) {
                 thisAnt.seekFood(closestAnt.pos);
             }
         }
@@ -107,12 +107,14 @@ class Population {
             otherAnt.isMature();
     }
 
-    canEat(thisAnt, otherAnt) {
-        return thisAnt.cannibal &&
-            thisAnt.isMature() &&
-            !otherAnt.isMature() &&
-            //(thisAnt.sex + otherAnt.sex) % 2 == 0 &&
-            !this.isFamily(thisAnt, otherAnt);
+    canKill(thisAnt, otherAnt) {
+        var cond = thisAnt.cannibal && (
+            //thisAnt.isMature() &&
+            //!otherAnt.isMature() &&
+            (thisAnt.sex + otherAnt.sex) % 2 == 0 &&
+            !this.isFamily(thisAnt, otherAnt) || 
+            otherAnt.cannibal);
+        return cond;
     }
 
     isFamily(thisAnt, otherAnt) {
@@ -123,13 +125,10 @@ class Population {
     }
 
     interest(thisAnt, otherAnt) {
-        return (this.canMate(thisAnt, otherAnt) || this.canEat(thisAnt, otherAnt) || this.canEat(otherAnt, thisAnt));
+        return (this.canMate(thisAnt, otherAnt) || this.canKill(thisAnt, otherAnt) || this.canKill(otherAnt, thisAnt));
     }
 
-    eat(eater, eated) {
-        // eater takes age of eated
-        eater.life += eated.age;
-        eater.size += eated.size * 0.5;
+    kill(eater, eated) {
         eated.killed = true;
     }
 
@@ -143,10 +142,13 @@ class Population {
             }
 
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
-            if (this.cannibalism()) babyAnt.cannibal = true;
+            if (this.cannibalism() && !floor(random(3))) {
+                babyAnt.cannibal = true;
+                babyAnt.life *= 0.5;
+            }
             // give some time between births
-            thisAnt.maturity = thisAnt.age + thisAnt.life * this.weakTime;
-            otherAnt.maturity = otherAnt.age + otherAnt.life * this.weakTime;
+            this.weaken(thisAnt);
+            this.weaken(otherAnt);
 
             // keep track of family tree
             babyAnt.parents.push(thisAnt, otherAnt);
@@ -160,6 +162,10 @@ class Population {
         for (var i = 0; i < this.ants.length; i++) {
             this.ants[i].fitness();
         }
+    }
+
+    weaken(thisAnt) {
+        thisAnt.maturity = thisAnt.age + thisAnt.life * this.weakTime;
     }
 
     addAnt(newAnt) {
