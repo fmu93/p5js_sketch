@@ -37,8 +37,8 @@ class Ant {
         this.age = 0;
         this.maturity = random(100, 300);
         this.life = random(500, 700);
-        this.color = [100 + 80 * this.sex, 80, 50, 255];
-        this.colorChild = [100 + 80 * this.sex, 80, 15, 255];
+        this.color = [100 + 80 * this.sex, 255, 100, 255];
+        this.colorChild = [100 + 80 * this.sex, 255, 50 , 255];
         this.babies = [];
         this.ateCount = 0;
         this.killed = false;
@@ -55,9 +55,18 @@ class Ant {
     }
 
     show() {
-        if (backOn) {
+        // noFill();
+        // stroke(foodColorA);
+        // ellipse(this.pos.x, this.pos.y, this.eatSight*2, this.eatSight*2);
+        // stroke(mateColorA);
+        // ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
+
+
+
+        if (backOn || true) {
             if (this.cannibal) {
-                stroke('hsla(0, 80%, 50%, 0.5)')
+                strokeWeight(4);
+                stroke('hsla(0, 80%, 50%, 0.9)')
             } else {
                 noStroke();
             }
@@ -81,24 +90,21 @@ class Ant {
             endShape(CLOSE);
             pop();
         }
-
-        noFill();
-        stroke(foodColorA);
-        ellipse(this.pos.x, this.pos.y, this.eatSight*2, this.eatSight*2);
-        stroke(mateColorA);
-        ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
-
         // show link to parents if young
         if (this.parents.length > 1) {
+            stroke(mateColorA);
             if (!this.parents[0].isDead()) line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
             if (!this.parents[1].isDead()) line(this.pos.x, this.pos.y, this.parents[1].pos.x, this.parents[1].pos.y);
         }
+ 
     }
 
     update() {
         this.vel.add(this.acc);
         this.pos.add(this.vel);
         this.acc.mult(0);
+        this.color[0] = (this.color[0] + 1) % 400;
+        this.colorChild[0] = (this.colorChild[0] + 1) % 400;
     }
 
     applyForce(force) {
@@ -160,7 +166,7 @@ class Ant {
     mature() {
         this.age += 1;
         if (this.isMature()) {
-            this.color[2] = pow(map(this.age, 0, this.life, 300, 30), 0.75);
+            this.color[2] = pow(map(this.age, 0, this.life, 300, 100), 0.75);
         }
     }
 

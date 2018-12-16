@@ -5,9 +5,9 @@ class Population {
         this.ants = [];
         this.deadAnts = [];
         this.generations = 0;
-        this.maxPop = 100;
-        this.cannibalFactor = 0.8;
-        this.cannibalChance = 0.2;
+        this.maxPop = 200;
+        this.cannibalFactor = 0.5;
+        this.cannibalChance = 0.1;
         this.weakTime = 0.1;
         for (var i = 0; i < n; i++) {
             this.addAnt(new Ant());
@@ -28,6 +28,13 @@ class Population {
             this.ants[i].update();
             this.ants[i].show();
         }
+
+        if (this.ants.length == 0) {
+            for (var i = 0; i < n; i++) {
+                this.addAnt(new Ant());
+            }
+        }
+
     }
 
     lookForFood(thisAnt) {
@@ -64,7 +71,7 @@ class Population {
 
             var relPos = p5.Vector.sub(otherAnt.pos, thisAnt.pos);
             var dist = relPos.mag();
-            if (dist < closestDist && this.interest(thisAnt, otherAnt)) {
+            if (dist - otherAnt.size < closestDist && this.interest(thisAnt, otherAnt)) {
                 closestAnt = otherAnt;
                 closestDist = dist;
             }
@@ -81,7 +88,7 @@ class Population {
                     // eat if one is mature but not the other and same sex and not family
                 } else if (this.canKill(thisAnt, closestAnt)) {
                     this.kill(thisAnt, closestAnt);
-                } else if (this.sameSex(thisAnt, closestAnt)) {
+                } else {
                     thisAnt.avoid(closestAnt.pos); // maintain distance
                 }
 
@@ -126,8 +133,8 @@ class Population {
 
     isFamily(thisAnt, otherAnt) {
         return thisAnt.parents.includes(otherAnt) ||
+            otherAnt.parents.includes(thisAnt) ||
             thisAnt.babies.includes(otherAnt) ||
-            otherAnt.parents.includes(thisAnt.parents) ||
             otherAnt.babies.includes(thisAnt);
     }
 
@@ -149,7 +156,7 @@ class Population {
             }
 
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
-            if (this.cannibalism() && !floor(random(this.cannibalChance*10))) {
+            if (this.cannibalism() && random() < this.cannibalChance) {
                 babyAnt.cannibal = true;
             }
             // give some time between births
