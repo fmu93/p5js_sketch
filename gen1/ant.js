@@ -61,11 +61,9 @@ class Ant {
         // stroke(mateColorA);
         // ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
 
-
-
-        if (backOn || true) {
+        if (backOn) {
             if (this.cannibal) {
-                strokeWeight(4);
+                strokeWeight(5);
                 stroke('hsla(0, 80%, 50%, 0.9)')
             } else {
                 noStroke();
@@ -73,7 +71,7 @@ class Ant {
             if (this.isMature()) {
                 fill(this.color);
             } else {
-                fill(this.colorChild);
+                fill(this.color);
             }
             rectMode(CENTER);
             strokeWeight(3);
@@ -166,7 +164,7 @@ class Ant {
     mature() {
         this.age += 1;
         if (this.isMature()) {
-            this.color[2] = pow(map(this.age, 0, this.life, 300, 100), 0.75);
+            this.color[2] = pow(map(this.age, 0, this.life, 400, 20), 0.75);
         }
     }
 

@@ -1,14 +1,14 @@
 var ants = [];
 var population;
 var n = 20;
-var mutationRate = 0.1;
+var mutationRate = 0.15;
 var backOn = true;
 var food = [];
 var maxFood = 60;
 var foodColor;
 var mateColor;
-var foodLife = 20;
-var foodRate = 30;
+var foodLife = 50;
+var foodRate = 20;
 var wallRepelSize = 0.01;
 
 var Mic, Fft, colorA, colorB;
@@ -16,8 +16,8 @@ var FftEnabled = true;
 var xSound;
 
 function setupFft() {
-    colorA = color('hsla(0, 80%, 50%, 0.4)');
-    colorB = color('hsla(255, 80%, 50%, 0.4)');
+    colorA = color('hsla(0, 80%, 50%, 0.2)');
+    colorB = color('hsla(255, 80%, 50%, 0.2)');
     Mic = new p5.AudioIn();
     Mic.start();
     Fft = new p5.FFT();
@@ -27,7 +27,7 @@ function setupFft() {
 function visualizeFft() {    
     var spectrum = Fft.analyze();
     var rand = random(0.9, 1.1);
-    for (var i=0; i < spectrum.length; i += 1) {
+    for (var i=0; i < spectrum.length; i += 5) {
       var amt = map(i, 0, spectrum.length, 0, 1);
       var color = lerpColor(colorA, colorB, amt);
       var diam = map(spectrum[i], 0, 255, 0, windowHeight);
@@ -47,7 +47,7 @@ function setup() {
     foodColorA = color('hsla(20, 80%, 50%, 0.05)');
 
     mateColor = color('hsla(350, 80%, 80%, 0.6)');
-    mateColorA = color('hsla(160, 80%, 80%, 0.3)');
+    mateColorA = color('hsla(250, 100%, 50%, 0.3)');
 
     // personalColorA = color('hsla(320, 80%, 60%, 0.2)')
 
@@ -55,7 +55,7 @@ function setup() {
 
     setupFft();
 
-    while (food.length < 100) {
+    while (food.length < maxFood) {
         this.addFood(createVector(random(width), random(height)));
     }
 }

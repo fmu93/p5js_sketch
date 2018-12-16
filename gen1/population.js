@@ -20,11 +20,14 @@ class Population {
         this.showDead();
 
         for (var i = 0; i < this.ants.length; i++) {
-            this.ants[i].wander();
             this.ants[i].walls();
             this.ants[i].friction();
             this.interact(this.ants[i]);
             if (!this.ants[i].cannibal) this.lookForFood(this.ants[i]);
+            // only wander if nothing else to do
+            if (this.ants[i].acc.magSq() == 0) {
+                this.ants[i].wander();
+            }
             this.ants[i].update();
             this.ants[i].show();
         }
@@ -122,7 +125,7 @@ class Population {
             //!thisAnt.isMature() &&
             //!otherAnt.isMature() &&
             (this.sameSex(thisAnt, otherAnt) &&
-            !this.isFamily(thisAnt, otherAnt)) || 
+                !this.isFamily(thisAnt, otherAnt)) ||
             otherAnt.cannibal);
         return cond;
     }
@@ -156,6 +159,12 @@ class Population {
             }
 
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
+            // same color than parent of same sex
+            if (babyAnt.sex == thisAnt.sex) {
+                babyAnt.color = thisAnt.color;
+            } else {
+                babyAnt.color = otherAnt.color;
+            }
             if (this.cannibalism() && random() < this.cannibalChance) {
                 babyAnt.cannibal = true;
             }
@@ -203,7 +212,7 @@ class Population {
     }
 
     showDead() {
-        if (frameCount % 20 == 0 || this.deadAnts.length > 100) this.deadAnts.splice(0, 1);
+        if (this.deadAnts.length > 50) this.deadAnts.splice(0, 1);
 
         strokeWeight(1);
         for (var i = 0; i < this.deadAnts.length; i++) {
@@ -212,7 +221,7 @@ class Population {
                 noStroke();
             } else {
                 noFill();
-                stroke(0, 0, map(i, 0, this.deadAnts.length, 0, 255));
+                stroke(0, 0, map(i, 0, this.deadAnts.length, 0, 120), 35);
             }
             //fill(150, 150, 100);
             rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, this.deadAnts[i].size, this.deadAnts[i].size);
