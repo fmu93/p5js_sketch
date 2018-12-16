@@ -47,7 +47,7 @@ function setup() {
     foodColorA = color('hsla(20, 80%, 50%, 0.05)');
 
     mateColor = color('hsla(350, 80%, 80%, 0.6)');
-    mateColorA = color('hsla(250, 100%, 50%, 0.3)');
+    mateColorA = color('hsla(250, 95%, 60%, 0.3)');
 
     // personalColorA = color('hsla(320, 80%, 60%, 0.2)')
 

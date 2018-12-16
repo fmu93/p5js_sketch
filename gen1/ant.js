@@ -1,6 +1,6 @@
 class Ant {
 
-    constructor(pos_, dna_) {
+    constructor(pos_, dna_, color_) {
         if (pos_) {
             this.pos = pos_;
         } else {
@@ -27,18 +27,21 @@ class Ant {
         this.maxmateforce = this.dna.genes[7];
         this.maxavoidspeed = this.dna.genes[8];
         this.maxavoidforce = this.dna.genes[9];
-
-        this.edges = this.dna.genes[10];
+        this.edges = floor(this.dna.genes[10]);
         this.size = this.dna.genes[11];
-        constrain(this.size, 4, 200);
+        this.sex = floor(this.dna.genes[12]) % 2;
+        this.maturity = this.dna.genes[13];
+        this.life = this.dna.genes[14];
 
-        this.sex = floor(random(2)); // 0 male, 1 female
         this.parents = [];
         this.age = 0;
-        this.maturity = random(100, 300);
-        this.life = random(500, 700);
-        this.color = [100 + 80 * this.sex, 255, 100, 255];
-        this.colorChild = [100 + 80 * this.sex, 255, 50 , 255];
+        if (color_) {
+            this.color = color_;
+            this.colorChild = [color_[0], color_[1], 50];
+        } else {
+            this.color = [100 + 100 * this.sex, 255, 100, 255];
+            this.colorChild = [100 + 100 * this.sex, 255, 50, 255];
+        }
         this.babies = [];
         this.ateCount = 0;
         this.killed = false;
@@ -63,20 +66,18 @@ class Ant {
 
         if (backOn) {
             if (this.cannibal) {
-                strokeWeight(5);
-                stroke('hsla(0, 80%, 50%, 0.9)')
+                strokeWeight(4);
+                stroke('hsla(0, 80%, 50%, 0.8)')
             } else {
                 noStroke();
             }
             if (this.isMature()) {
                 fill(this.color);
             } else {
-                fill(this.color);
+                fill(this.colorChild);
             }
             rectMode(CENTER);
-            strokeWeight(3);
 
-            //rect(this.pos.x, this.pos.y, this.size, this.size);
             push();
             translate(this.pos.x, this.pos.y);
             beginShape();
@@ -94,7 +95,7 @@ class Ant {
             if (!this.parents[0].isDead()) line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
             if (!this.parents[1].isDead()) line(this.pos.x, this.pos.y, this.parents[1].pos.x, this.parents[1].pos.y);
         }
- 
+
     }
 
     update() {
@@ -190,8 +191,9 @@ class Ant {
     updateDna() {
         // [wander force, mate sight, eat sight, escape sight, maxspeed, maxforce, edges, size]
         this.dna.updateGenes([this.wanderForce, this.mateSight, this.eatSight, this.escapeSight,
-            this.maxeatspeed,this.maxeatforce, this.maxmatespeed,this.maxmateforce, this.maxavoidspeed,this.maxavoidforce, 
-            this.edges, this.size]);
+            this.maxeatspeed, this.maxeatforce, this.maxmatespeed, this.maxmateforce, this.maxavoidspeed, this.maxavoidforce,
+            this.edges, this.size
+        ]);
     }
 
     lifeCrossover(otherAnt) {

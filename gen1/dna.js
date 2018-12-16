@@ -16,7 +16,11 @@ class DNA {
                 random(2), // avoid max speed
                 random(0.05), // avoid max force
                 floor(random(3, 8)), // edges
-                random(4, 50)]; // size
+                random(4, 50), // size
+                random(2), // sex
+                random(100, 300), // maturity
+                random(500, 700) // life
+            ]; 
         }
     }
 
@@ -26,9 +30,9 @@ class DNA {
 
     crossover(otherDNA) {
         var newGenes = [];
-        for (var i = 0; i<this.genes.length; i++) {
+        for (var i = 0; i < this.genes.length; i++) {
             var pick = random();
-            newGenes[i] = this.genes[i]*pick + otherDNA.genes[i]*(1-pick);
+            newGenes[i] = this.genes[i] * pick + otherDNA.genes[i] * (1 - pick);
         }
 
         return new DNA(newGenes);

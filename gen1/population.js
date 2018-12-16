@@ -157,14 +157,16 @@ class Population {
             if (random() < this.mutationRate) {
                 babyDNA.mutate();
             }
+            // var copyColor = null;
+            // // same color than parent of same sex
+            // if (babyAnt.sex == thisAnt.sex) {
+            //     copyColor = color(thisAnt.color);
+            // } else {
+            //     copyColor = color(otherAnt.color);
+            // }
 
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
-            // same color than parent of same sex
-            if (babyAnt.sex == thisAnt.sex) {
-                babyAnt.color = thisAnt.color;
-            } else {
-                babyAnt.color = otherAnt.color;
-            }
+
             if (this.cannibalism() && random() < this.cannibalChance) {
                 babyAnt.cannibal = true;
             }
