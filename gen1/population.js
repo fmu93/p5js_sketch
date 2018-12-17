@@ -157,13 +157,6 @@ class Population {
             if (random() < this.mutationRate) {
                 babyDNA.mutate();
             }
-            // var copyColor = null;
-            // // same color than parent of same sex
-            // if (babyAnt.sex == thisAnt.sex) {
-            //     copyColor = color(thisAnt.color);
-            // } else {
-            //     copyColor = color(otherAnt.color);
-            // }
 
             var babyAnt = new Ant(thisAnt.pos.copy(), babyDNA);
 

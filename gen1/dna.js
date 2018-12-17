@@ -18,8 +18,9 @@ class DNA {
                 floor(random(3, 8)), // edges
                 random(4, 50), // size
                 random(2), // sex
-                random(100, 300), // maturity
-                random(500, 700) // life
+                random(100, 200), // maturity
+                random(500, 600), // life
+                random(360) // hue
             ]; 
         }
     }

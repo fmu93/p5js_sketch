@@ -1,6 +1,6 @@
 class Ant {
 
-    constructor(pos_, dna_, color_) {
+    constructor(pos_, dna_) {
         if (pos_) {
             this.pos = pos_;
         } else {
@@ -30,18 +30,18 @@ class Ant {
         this.edges = floor(this.dna.genes[10]);
         this.size = this.dna.genes[11];
         this.sex = floor(this.dna.genes[12]) % 2;
-        this.maturity = this.dna.genes[13];
-        this.life = this.dna.genes[14];
+        this.maturity0 = this.dna.genes[13];
+        this.life0 = this.dna.genes[14];
+        this.hue = this.dna.genes[15] % 360;
 
         this.parents = [];
         this.age = 0;
-        if (color_) {
-            this.color = color_;
-            this.colorChild = [color_[0], color_[1], 50];
-        } else {
-            this.color = [100 + 100 * this.sex, 255, 100, 255];
-            this.colorChild = [100 + 100 * this.sex, 255, 50, 255];
-        }
+        this.maturity = this.maturity0;
+        this.life = this.life0;
+
+        this.color = [this.hue, 100, 60];
+        this.colorChild = [this.hue, 75, 40];
+
         this.babies = [];
         this.ateCount = 0;
         this.killed = false;
@@ -87,6 +87,13 @@ class Ant {
                 vertex(x, y);
             }
             endShape(CLOSE);
+            fill(0);
+            noStroke();
+            if (this.sex) {
+                text('-', 0, 0);
+            } else {
+                text('+', 0, 0);
+            }
             pop();
         }
         // show link to parents if young
@@ -102,8 +109,8 @@ class Ant {
         this.vel.add(this.acc);
         this.pos.add(this.vel);
         this.acc.mult(0);
-        this.color[0] = (this.color[0] + 1) % 400;
-        this.colorChild[0] = (this.colorChild[0] + 1) % 400;
+        this.color[0] = (this.color[0] + 0.2) % 360;
+        this.colorChild[0] = (this.colorChild[0] + 0.2) % 360;
     }
 
     applyForce(force) {
@@ -164,8 +171,8 @@ class Ant {
 
     mature() {
         this.age += 1;
-        if (this.isMature()) {
-            this.color[2] = pow(map(this.age, 0, this.life, 400, 20), 0.75);
+        if (this.life * 0.8 < this.age) {
+            this.color[2] = map(this.age, this.life * 0.8, this.life, 60, 20);
         }
     }
 
@@ -192,7 +199,7 @@ class Ant {
         // [wander force, mate sight, eat sight, escape sight, maxspeed, maxforce, edges, size]
         this.dna.updateGenes([this.wanderForce, this.mateSight, this.eatSight, this.escapeSight,
             this.maxeatspeed, this.maxeatforce, this.maxmatespeed, this.maxmateforce, this.maxavoidspeed, this.maxavoidforce,
-            this.edges, this.size
+            this.edges, this.size, this.sex, this.maturity0, this.life0, this.hue
         ]);
     }
 

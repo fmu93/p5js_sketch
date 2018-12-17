@@ -7,41 +7,45 @@ var food = [];
 var maxFood = 60;
 var foodColor;
 var mateColor;
-var foodLife = 50;
+var foodLife = 70;
 var foodRate = 20;
 var wallRepelSize = 0.01;
 
-var Mic, Fft, colorA, colorB;
+var mic, Fft, colorA, colorB;
 var FftEnabled = true;
 var xSound;
 
 function setupFft() {
     colorA = color('hsla(0, 80%, 50%, 0.2)');
     colorB = color('hsla(255, 80%, 50%, 0.2)');
-    Mic = new p5.AudioIn();
-    Mic.start();
+    mic = new p5.AudioIn();
+    mic.start();
     Fft = new p5.FFT();
-    Fft.setInput(Mic);
+    Fft.setInput(mic);
 }
 
-function visualizeFft() {    
+function visualizeFft() {
     var spectrum = Fft.analyze();
     var rand = random(0.9, 1.1);
-    for (var i=0; i < spectrum.length; i += 5) {
-      var amt = map(i, 0, spectrum.length, 0, 1);
-      var color = lerpColor(colorA, colorB, amt);
-      var diam = map(spectrum[i], 0, 255, 0, windowHeight);
-      noFill();
-      stroke(color);
-      ellipseMode(CENTER);
-      ellipse(width/2, height/2, diam*rand, diam*rand);
+    for (var i = 0; i < spectrum.length; i += 5) {
+        var amt = map(i, 0, spectrum.length, 0, 1);
+        var color = lerpColor(colorA, colorB, amt);
+        var diam = map(spectrum[i], 0, 255, 0, windowHeight);
+        noFill();
+        stroke(color);
+        ellipseMode(CENTER);
+        ellipse(width / 2, height / 2, diam * rand, diam * rand);
     }
 }
 
 function setup() {
+    setupFft();
+
     createCanvas(windowWidth, windowHeight);
     background(0);
     colorMode(HSL);
+    textSize(18);
+    textAlign(CENTER, CENTER);
 
     foodColor = color('hsla(20, 80%, 50%, 0.6)');
     foodColorA = color('hsla(20, 80%, 50%, 0.05)');
@@ -53,7 +57,7 @@ function setup() {
 
     population = new Population(mutationRate, n);
 
-    setupFft();
+
 
     while (food.length < maxFood) {
         this.addFood(createVector(random(width), random(height)));
@@ -65,7 +69,7 @@ function draw() {
         // background(0);
         noStroke();
         fill('hsla(160, 80%, 0%, 0.03)');
-        rect(0, 0, width*2, height*2);
+        rect(0, 0, width * 2, height * 2);
     }
 
     if (FftEnabled) {
@@ -78,6 +82,8 @@ function draw() {
 
     population.run();
     showFood();
+
+    getAudioContext().resume();
 }
 
 function showFood() {
