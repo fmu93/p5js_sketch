@@ -46,6 +46,9 @@ class Ant {
         this.ateCount = 0;
         this.killed = false;
         this.cannibal = false;
+
+        this.perlinForce = p5.Vector.random2D().setMag(this.wanderForce);
+        this.futurePos = this.pos.copy();
     }
 
     fitness() {
