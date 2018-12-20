@@ -6,7 +6,7 @@ class Ant {
         } else {
             this.pos = createVector(random(width), random(height));
         }
-        this.vel = createVector();
+        this.vel = p5.Vector.random2D();
         this.acc = createVector();
 
         if (dna_) {
@@ -47,8 +47,8 @@ class Ant {
         this.killed = false;
         this.cannibal = false;
 
-        this.perlinForce = p5.Vector.random2D().setMag(this.wanderForce);
         this.futurePos = this.pos.copy();
+        this.futurePosFactor = 25;
     }
 
     fitness() {
@@ -60,12 +60,32 @@ class Ant {
         this.killed = true;
     }
 
+    makeShape() {
+        push();
+        translate(this.pos.x, this.pos.y);
+        rotate(this.vel.heading());
+        beginShape();
+        for (var i = 0; i < this.edges; i++) {
+            var x = cos(i * TWO_PI / this.edges) * this.size;
+            var y = sin(i * TWO_PI / this.edges) * this.size;
+            vertex(x, y);
+        }
+
+        endShape(CLOSE);
+        if (!this.isDead()) {
+            stroke(this.color);
+            strokeWeight(2);
+            line(0, 0, this.size, 0);
+        }
+        pop();
+    }
+
     show() {
-        // noFill();
-        // stroke(foodColorA);
-        // ellipse(this.pos.x, this.pos.y, this.eatSight*2, this.eatSight*2);
-        // stroke(mateColorA);
-        // ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
+        noFill();
+        stroke(foodColorA);
+        ellipse(this.futurePos.x, this.futurePos.y, this.eatSight*2, this.eatSight*2);
+        stroke(mateColorA);
+        ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
 
         if (backOn) {
             if (this.cannibal) {
@@ -80,24 +100,15 @@ class Ant {
                 fill(this.colorChild);
             }
             rectMode(CENTER);
+            this.makeShape();
 
-            push();
-            translate(this.pos.x, this.pos.y);
-            beginShape();
-            for (var i = 0; i < this.edges; i++) {
-                var x = cos(i * TWO_PI / this.edges) * this.size;
-                var y = sin(i * TWO_PI / this.edges) * this.size;
-                vertex(x, y);
-            }
-            endShape(CLOSE);
             fill(0);
             noStroke();
             if (this.sex) {
-                text('-', 0, 0);
+                text('-', this.pos.x, this.pos.y);
             } else {
-                text('+', 0, 0);
+                text('+', this.pos.x, this.pos.y);
             }
-            pop();
         }
         // show link to parents if young
         if (this.parents.length > 1) {
@@ -112,6 +123,11 @@ class Ant {
         this.vel.add(this.acc);
         this.pos.add(this.vel);
         this.acc.mult(0);
+
+        this.futurePos = this.vel.copy();
+        this.futurePos.mult(this.futurePosFactor);
+        this.futurePos.add(this.pos);
+
         this.color[0] = (this.color[0] + 0.2) % 360;
         this.colorChild[0] = (this.colorChild[0] + 0.2) % 360;
     }
@@ -169,13 +185,13 @@ class Ant {
     }
 
     wander() {
-        this.applyForce(p5.Vector.random2D().mult(this.wanderForce));
+        this.vel.setMag(this.wanderForce);
     }
 
     mature() {
         this.age += 1;
         if (this.life * 0.8 < this.age) {
-            this.color[2] = map(this.age, this.life * 0.8, this.life, 60, 20);
+            this.color[2] = map(this.age, this.life * 0.7, this.life, 60, 20);
         }
     }
 
@@ -184,10 +200,10 @@ class Ant {
     }
 
     walls() {
-        if (this.pos.x < width * wallRepelSize) this.applyForce(createVector(1, 0));
-        else if (this.pos.x > width * (1 - wallRepelSize)) this.applyForce(createVector(-1, 0));
-        if (this.pos.y < height * wallRepelSize) this.applyForce(createVector(0, 1));
-        else if (this.pos.y > height * (1 - wallRepelSize)) this.applyForce(createVector(0, -1));
+        if (this.pos.x < 0) this.applyForce(createVector(0.1, 0));
+        else if (this.pos.x > width) this.applyForce(createVector(-0.1, 0));
+        if (this.pos.y < 0) this.applyForce(createVector(0, 0.1));
+        else if (this.pos.y > height) this.applyForce(createVector(0, -0.1));
     }
 
     isMature() {

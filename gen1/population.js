@@ -5,9 +5,9 @@ class Population {
         this.ants = [];
         this.deadAnts = [];
         this.generations = 0;
-        this.maxPop = 200;
+        this.maxPop = 250;
         this.cannibalFactor = 0.5;
-        this.cannibalChance = 0.1;
+        this.cannibalChance = 0.05;
         this.weakTime = 0.1;
         for (var i = 0; i < n; i++) {
             this.addAnt(new Ant());
@@ -23,10 +23,14 @@ class Population {
             this.ants[i].walls();
             this.ants[i].friction();
             this.interact(this.ants[i]);
-            if (!this.ants[i].cannibal) this.lookForFood(this.ants[i]);
+            if (!this.ants[i].cannibal) {
+                this.seekFood(this.ants[i]);
+                this.eatFood(this.ants[i]);
+            }
             // only wander if nothing else to do
             if (this.ants[i].acc.magSq() == 0) {
                 this.ants[i].wander();
+                //this.ants[i].seekFood(this.ants[0].pos);
             }
             this.ants[i].update();
             this.ants[i].show();
@@ -40,29 +44,37 @@ class Population {
 
     }
 
-    lookForFood(thisAnt) {
-        var closest = null;
-        var closestDist = Infinity;
-
+    eatFood(thisAnt) {
         for (var i = 0; i < food.length; i++) {
             var relPos = p5.Vector.sub(food[i], thisAnt.pos);
             var dist = relPos.mag();
 
-            if (dist < closestDist) {
+            if (dist < thisAnt.size) {
+                thisAnt.life += foodLife;
+                food.splice(i, 1);
+            }
+        }
+    }
+
+    seekFood(thisAnt) {
+        var closest = null;
+        var closestDist = Infinity;
+
+        for (var i = 0; i < food.length; i++) {
+            var relPos = p5.Vector.sub(food[i], thisAnt.futurePos);
+            var dist = relPos.mag();
+
+            if (dist < closestDist && dist < thisAnt.eatSight) {
                 closest = food[i];
                 closestDist = dist;
             }
         }
 
         if (closest) {
-            if (closestDist < thisAnt.size) {
-                thisAnt.life += foodLife;
-                food.splice(food.indexOf(closest), 1);
-            } else if (closestDist < thisAnt.eatSight) {
-                thisAnt.seekFood(closest);
-            }
+            thisAnt.seekFood(closest);
         }
     }
+
 
     interact(thisAnt) {
         var closestAnt = null;
@@ -95,7 +107,7 @@ class Population {
                     thisAnt.avoid(closestAnt.pos); // maintain distance
                 }
 
-                // this ant can see
+                // this ant can see other
             } else if (closestDist < thisAnt.mateSight && this.canMate(thisAnt, closestAnt)) {
                 thisAnt.seekSex(closestAnt.pos);
             } else if (closestAnt.cannibal && closestDist < thisAnt.escapeSight && this.canKill(closestAnt, thisAnt)) {
@@ -138,7 +150,21 @@ class Population {
         return thisAnt.parents.includes(otherAnt) ||
             otherAnt.parents.includes(thisAnt) ||
             thisAnt.babies.includes(otherAnt) ||
-            otherAnt.babies.includes(thisAnt);
+            otherAnt.babies.includes(thisAnt) ||
+            this.sameParent(thisAnt, otherAnt);
+    }
+
+    sameParent(thisAnt, otherAnt) {
+        var cond = false;
+        for (var i = 0; i < thisAnt.parents.length; i++) {
+            for (var j = 0; j < otherAnt.parents.length; j++) {
+                if (thisAnt.parents[i] == otherAnt.parents[j]) {
+                    cond = true;
+                    return cond;
+                }
+            }
+        }
+        return cond;
     }
 
     interest(thisAnt, otherAnt) {
@@ -218,8 +244,8 @@ class Population {
                 noFill();
                 stroke(0, 0, map(i, 0, this.deadAnts.length, 0, 120), 35);
             }
-            //fill(150, 150, 100);
-            rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, this.deadAnts[i].size, this.deadAnts[i].size);
+            this.deadAnts[i].makeShape();
+            // rect(this.deadAnts[i].pos.x, this.deadAnts[i].pos.y, this.deadAnts[i].size, this.deadAnts[i].size);
         }
     }
 

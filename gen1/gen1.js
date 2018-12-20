@@ -9,10 +9,9 @@ var foodColor;
 var mateColor;
 var foodLife = 70;
 var foodRate = 20;
-var wallRepelSize = 0.01;
 
 var mic, Fft, colorA, colorB;
-var FftEnabled = true;
+var FftEnabled = false;
 var xSound;
 
 function setupFft() {
@@ -43,21 +42,17 @@ function setup() {
 
     createCanvas(windowWidth, windowHeight);
     background(0);
-    colorMode(HSL);
+    colorMode(HSL, 360, 100, 100);
     textSize(18);
     textAlign(CENTER, CENTER);
 
     foodColor = color('hsla(20, 80%, 50%, 0.6)');
-    foodColorA = color('hsla(20, 80%, 50%, 0.05)');
+    foodColorA = color('hsla(20, 80%, 50%, 0.15)');
 
     mateColor = color('hsla(350, 80%, 80%, 0.6)');
-    mateColorA = color('hsla(250, 95%, 60%, 0.3)');
-
-    // personalColorA = color('hsla(320, 80%, 60%, 0.2)')
+    mateColorA = color('hsla(260, 95%, 60%, 0.15)');
 
     population = new Population(mutationRate, n);
-
-
 
     while (food.length < maxFood) {
         this.addFood(createVector(random(width), random(height)));
