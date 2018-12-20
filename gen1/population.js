@@ -7,7 +7,7 @@ class Population {
         this.generations = 0;
         this.maxPop = 250;
         this.cannibalFactor = 0.5;
-        this.cannibalChance = 0.05;
+        this.cannibalChance = 0.1;
         this.weakTime = 0.1;
         for (var i = 0; i < n; i++) {
             this.addAnt(new Ant());

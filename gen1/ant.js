@@ -81,11 +81,14 @@ class Ant {
     }
 
     show() {
-        noFill();
-        stroke(foodColorA);
-        ellipse(this.futurePos.x, this.futurePos.y, this.eatSight*2, this.eatSight*2);
-        stroke(mateColorA);
-        ellipse(this.pos.x, this.pos.y, this.mateSight*2, this.mateSight*2);
+        if (isCircles) {
+            noFill();
+            strokeWeight(2);
+            stroke(foodColorA);
+            ellipse(this.futurePos.x, this.futurePos.y, this.eatSight * 2, this.eatSight * 2);
+            stroke(mateColorA);
+            ellipse(this.pos.x, this.pos.y, this.mateSight * 2, this.mateSight * 2);
+        }
 
         if (backOn) {
             if (this.cannibal) {

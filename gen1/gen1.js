@@ -10,9 +10,13 @@ var mateColor;
 var foodLife = 70;
 var foodRate = 20;
 
+var buttonFft;
 var mic, Fft, colorA, colorB;
 var FftEnabled = false;
 var xSound;
+
+var buttonCircles;
+var isCircles = false;
 
 function setupFft() {
     colorA = color('hsla(0, 80%, 50%, 0.2)');
@@ -57,6 +61,13 @@ function setup() {
     while (food.length < maxFood) {
         this.addFood(createVector(random(width), random(height)));
     }
+
+    buttonCircles = createButton('Show circles');
+    buttonCircles.position(16, 8);
+    buttonCircles.mousePressed(showCircles);
+    buttonFft = createButton('Show spectrogram');
+    buttonFft.position(16, 32);
+    buttonFft.mousePressed(showSpectrogram);
 }
 
 function draw() {
@@ -79,6 +90,14 @@ function draw() {
     showFood();
 
     getAudioContext().resume();
+}
+
+function showCircles() {
+    isCircles = !isCircles;
+}
+
+function showSpectrogram() {
+    FftEnabled = !FftEnabled;
 }
 
 function showFood() {
