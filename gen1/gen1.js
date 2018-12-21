@@ -3,7 +3,7 @@ var population;
 var n = 20;
 var mutationRate = 0.15;
 var backOn = true;
-var food = [];
+var foodArray = [];
 var maxFood = 60;
 var foodColor;
 var mateColor;
@@ -17,10 +17,14 @@ var xSound;
 
 var buttonCircles;
 var isCircles = false;
+var butonFade;
+var isFade = true;
+var slider;
+var sliderVal;
 
 function setupFft() {
-    colorA = color('hsla(0, 80%, 50%, 0.2)');
-    colorB = color('hsla(255, 80%, 50%, 0.2)');
+    colorA = color('hsla(0, 80%, 50%, 0.3)');
+    colorB = color('hsla(255, 80%, 50%, 0.3)');
     mic = new p5.AudioIn();
     mic.start();
     Fft = new p5.FFT();
@@ -50,46 +54,61 @@ function setup() {
     textSize(18);
     textAlign(CENTER, CENTER);
 
-    foodColor = color('hsla(20, 80%, 50%, 0.6)');
+    foodColor = color('hsla(20, 80%, 50%, 0.8)');
     foodColorA = color('hsla(20, 80%, 50%, 0.15)');
 
-    mateColor = color('hsla(350, 80%, 80%, 0.6)');
+    mateColor = color('hsla(260, 95%, 60%, 0.6)');
     mateColorA = color('hsla(260, 95%, 60%, 0.15)');
 
     population = new Population(mutationRate, n);
 
-    while (food.length < maxFood) {
-        this.addFood(createVector(random(width), random(height)));
+    while (foodArray.length < maxFood) {
+        this.addFood(new Food());
     }
 
+    // dom control
     buttonCircles = createButton('Show circles');
     buttonCircles.position(16, 8);
+    buttonCircles.style('width', '130px');
     buttonCircles.mousePressed(showCircles);
+    buttonFade = createButton('Show fade');
+    buttonFade.position(16, 32);
+    buttonFade.style('width', '130px');
+    buttonFade.mousePressed(showFade);
     buttonFft = createButton('Show spectrogram');
-    buttonFft.position(16, 32);
+    buttonFft.position(16, 56);
+    buttonFft.style('width', '130px');
     buttonFft.mousePressed(showSpectrogram);
+    slider = createSlider(0, 255, 100);
+    slider.position(16, 80);
+    slider.style('width', '130px');
+
 }
 
 function draw() {
     if (backOn) {
-        // background(0);
-        noStroke();
-        fill('hsla(160, 80%, 0%, 0.03)');
-        rect(0, 0, width * 2, height * 2);
+        if (isFade) {
+            noStroke();
+            fill('hsla(160, 80%, 0%, 0.03)');
+            rect(0, 0, width * 2, height * 2);
+        } else {
+            background(0);
+        }
     }
 
     if (FftEnabled) {
         visualizeFft();
     }
 
-    if (frameCount % foodRate == 0 && food.length < maxFood) {
-        this.addFood(createVector(random(width), random(height)));
+    if (frameCount % foodRate == 0 && foodArray.length < maxFood) {
+        this.addFood();
     }
 
     population.run();
     showFood();
 
     getAudioContext().resume();
+    sliderVal = slider.value();
 }
 
 function showCircles() {
@@ -100,19 +119,25 @@ function showSpectrogram() {
     FftEnabled = !FftEnabled;
 }
 
+function showFade() {
+    isFade = !isFade;
+}
+
 function showFood() {
     strokeWeight(1);
     noFill();
     stroke(foodColor);
 
-    for (var i = 0; i < food.length; i++) {
-        ellipse(food[i].x, food[i].y, 8, 8);
+    for (var i = 0; i < foodArray.length; i++) {
+        ellipse(foodArray[i].pos.x, foodArray[i].pos.y, 8, 8);
     }
 }
 
 function mouseDragged() {
-    var newAnt = new Ant(createVector(mouseX, mouseY));
-    population.addAnt(newAnt);
+    if (mouseX > 250 || mouseY > 150) {
+        var newAnt = new Ant(createVector(mouseX, mouseY));
+        population.addAnt(newAnt);
+    }
 }
 
 function keyPressed() {
@@ -124,6 +149,6 @@ function keyPressed() {
     }
 }
 
-function addFood(pos_) {
-    this.food.push(pos_);
+function addFood() {
+    this.foodArray.push(new Food());
 }

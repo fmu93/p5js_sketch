@@ -83,10 +83,17 @@ class Ant {
     show() {
         if (isCircles) {
             noFill();
-            strokeWeight(2);
-            stroke(foodColorA);
+            if (isFade) {
+                stroke(foodColorA);
+            } else {
+                stroke(foodColor);
+            }
             ellipse(this.futurePos.x, this.futurePos.y, this.eatSight * 2, this.eatSight * 2);
-            stroke(mateColorA);
+            if (isFade) {
+                stroke(mateColorA);
+            } else {
+                stroke(mateColor);
+            }
             ellipse(this.pos.x, this.pos.y, this.mateSight * 2, this.mateSight * 2);
         }
 
@@ -115,7 +122,11 @@ class Ant {
         }
         // show link to parents if young
         if (this.parents.length > 1) {
-            stroke(mateColorA);
+            if (isFade) {
+                stroke(mateColorA);
+            } else {
+                stroke(mateColor);
+            }
             if (!this.parents[0].isDead()) line(this.pos.x, this.pos.y, this.parents[0].pos.x, this.parents[0].pos.y);
             if (!this.parents[1].isDead()) line(this.pos.x, this.pos.y, this.parents[1].pos.x, this.parents[1].pos.y);
         }
