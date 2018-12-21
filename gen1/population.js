@@ -5,7 +5,7 @@ class Population {
         this.ants = [];
         this.deadAnts = [];
         this.generations = 0;
-        this.maxPop = 250;
+        this.maxPop = 200;
         this.cannibalFactor = 0.5;
         this.cannibalChance = 0.1;
         this.weakTime = 0.1;
@@ -44,7 +44,7 @@ class Population {
             thisAnt.show();
         }
 
-        if (this.ants.length == 0) {
+        if (this.ants.length == 1) {
             for (var i = 0; i < n; i++) {
                 this.addAnt(new Ant());
             }
@@ -153,12 +153,11 @@ class Population {
     }
 
     canKill(thisAnt, otherAnt) {
-        var cond = thisAnt.cannibal && (
+        var cond = thisAnt.cannibal && 
             //!thisAnt.isMature() &&
             //!otherAnt.isMature() &&
             (this.sameSex(thisAnt, otherAnt) &&
-                !this.isFamily(thisAnt, otherAnt)) ||
-            otherAnt.cannibal);
+            !this.isFamily(thisAnt, otherAnt));
         return cond;
     }
 
