@@ -83,6 +83,7 @@ class Ant {
     show() {
         if (isCircles) {
             noFill();
+            strokeWeight(2);
             if (isFade) {
                 stroke(foodColorA);
             } else {
@@ -122,6 +123,7 @@ class Ant {
         }
         // show link to parents if young
         if (this.parents.length > 1) {
+            strokeWeight(2);
             if (isFade) {
                 stroke(mateColorA);
             } else {

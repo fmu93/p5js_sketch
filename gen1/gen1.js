@@ -18,7 +18,7 @@ var xSound;
 var buttonCircles;
 var isCircles = false;
 var butonFade;
-var isFade = true;
+var isFade = false;
 var slider;
 var sliderVal;
 
@@ -54,10 +54,10 @@ function setup() {
     textSize(18);
     textAlign(CENTER, CENTER);
 
-    foodColor = color('hsla(20, 80%, 50%, 0.8)');
+    foodColor = color('hsla(20, 80%, 50%, 0.7)');
     foodColorA = color('hsla(20, 80%, 50%, 0.15)');
 
-    mateColor = color('hsla(260, 95%, 60%, 0.6)');
+    mateColor = color('hsla(260, 95%, 60%, 0.5)');
     mateColorA = color('hsla(260, 95%, 60%, 0.15)');
 
     population = new Population(mutationRate, n);
@@ -124,9 +124,13 @@ function showFade() {
 }
 
 function showFood() {
-    strokeWeight(1);
+    strokeWeight(2);
     noFill();
-    stroke(foodColor);
+    if (isFade) {
+        stroke(foodColorA);
+    } else {
+        stroke(foodColor);
+    }
 
     for (var i = 0; i < foodArray.length; i++) {
         ellipse(foodArray[i].pos.x, foodArray[i].pos.y, 8, 8);

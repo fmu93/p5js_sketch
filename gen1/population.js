@@ -158,8 +158,8 @@ class Population {
         return thisAnt.parents.includes(otherAnt) ||
             otherAnt.parents.includes(thisAnt) ||
             thisAnt.babies.includes(otherAnt) ||
-            otherAnt.babies.includes(thisAnt) ||
-            this.sameParent(thisAnt, otherAnt);
+            otherAnt.babies.includes(thisAnt)
+            //|| this.sameParent(thisAnt, otherAnt);
     }
 
     sameParent(thisAnt, otherAnt) {
