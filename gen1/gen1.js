@@ -8,7 +8,7 @@ var maxFood = 60;
 var foodColor;
 var mateColor;
 var foodLife = 70;
-var foodRate = 20;
+var foodRate = 10;
 
 var buttonFft;
 var mic, Fft, colorA, colorB;

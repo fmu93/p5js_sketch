@@ -95,7 +95,7 @@ class Ant {
             } else {
                 stroke(mateColor);
             }
-            ellipse(this.pos.x, this.pos.y, this.mateSight * 2, this.mateSight * 2);
+            ellipse(this.futurePos.x, this.futurePos.y, this.mateSight * 2, this.mateSight * 2);
         }
 
         if (backOn) {
@@ -206,7 +206,7 @@ class Ant {
 
     mature() {
         this.age += 1;
-        if (this.life * 0.8 < this.age) {
+        if (this.life * 0.7 < this.age) {
             this.color[2] = map(this.age, this.life * 0.7, this.life, 60, 20);
         }
     }
@@ -216,10 +216,10 @@ class Ant {
     }
 
     walls() {
-        if (this.pos.x < 0) this.applyForce(createVector(0.1, 0));
-        else if (this.pos.x > width) this.applyForce(createVector(-0.1, 0));
-        if (this.pos.y < 0) this.applyForce(createVector(0, 0.1));
-        else if (this.pos.y > height) this.applyForce(createVector(0, -0.1));
+        if (this.pos.x < 0) this.applyForce(createVector(0.5, 0));
+        else if (this.pos.x > width) this.applyForce(createVector(-0.5, 0));
+        if (this.pos.y < 0) this.applyForce(createVector(0, 0.5));
+        else if (this.pos.y > height) this.applyForce(createVector(0, -0.5));
     }
 
     isMature() {

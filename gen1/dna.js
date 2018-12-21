@@ -5,7 +5,7 @@ class DNA {
             this.genes = genes_;
         } else {
             // [wander force, mate sight, eat sight, escape sight, maxspeed, maxforce, edges, size, avoidMaxSpeed, avoidForce]
-            this.genes = [randomGaussian(1), // wander speed
+            this.genes = [randomGaussian(1, 0.5), // wander speed
                 randomGaussian(180, 50), // mate sight
                 randomGaussian(180, 50), // eat sight
                 randomGaussian(180, 50), // escape sight
