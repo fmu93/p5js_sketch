@@ -1,6 +1,10 @@
 class Food {
-    constructor() {
-        this.pos = createVector(random(width), random(height));
+    constructor(pos_) {
+        if (pos_) {
+            this.pos = pos_;
+        } else {
+            this.pos = createVector(random(width), random(height));
+        }
         this.nutrition = foodLife;
     }
 }

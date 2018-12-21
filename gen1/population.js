@@ -61,7 +61,7 @@ class Population {
             var relPos = p5.Vector.sub(foodArray[i].pos, thisAnt.futurePos);
             var dist = relPos.mag();
 
-            if (dist < closestDist && dist < thisAnt.eatSight) {
+            if (dist - thisAnt.size < closestDist && dist < thisAnt.eatSight) {
                 closest = foodArray[i];
                 closestDist = dist;
             }
@@ -208,6 +208,7 @@ class Population {
             if (this.cannibalism() && random() < this.cannibalChance) {
                 babyAnt.cannibal = true;
             }
+
             // give some time between births
             this.weaken(thisAnt);
             this.weaken(otherAnt);

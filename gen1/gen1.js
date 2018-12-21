@@ -1,14 +1,13 @@
 var ants = [];
 var population;
-var n = 20;
+var n = 25;
 var mutationRate = 0.15;
-var backOn = true;
 var foodArray = [];
-var maxFood = 60;
+var maxFood = 50;
 var foodColor;
 var mateColor;
-var foodLife = 70;
-var foodRate = 10;
+var foodLife = 60;
+var foodRate = 15;
 
 var buttonFft;
 var mic, Fft, colorA, colorB;
@@ -17,10 +16,11 @@ var xSound;
 
 var buttonCircles;
 var isCircles = false;
-var butonFade;
+var buttonFade;
 var isFade = false;
+var buttonBack;
+var backOn = true;
 var slider;
-var sliderVal;
 
 function setupFft() {
     colorA = color('hsla(0, 80%, 50%, 0.3)');
@@ -54,34 +54,20 @@ function setup() {
     textSize(18);
     textAlign(CENTER, CENTER);
 
-    foodColor = color('hsla(20, 80%, 50%, 0.7)');
+    foodColor = color('hsla(20, 80%, 50%, 0.6)');
     foodColorA = color('hsla(20, 80%, 50%, 0.15)');
 
-    mateColor = color('hsla(260, 95%, 60%, 0.5)');
-    mateColorA = color('hsla(260, 95%, 60%, 0.15)');
+    mateColor = color('hsla(240, 100%, 40%, 0.5)');
+    mateColorA = color('hsla(240, 100%, 40%, 0.15)');
 
     population = new Population(mutationRate, n);
 
     while (foodArray.length < maxFood) {
-        this.addFood(new Food());
+        this.addFood();
     }
 
     // dom control
-    buttonCircles = createButton('Show circles');
-    buttonCircles.position(16, 8);
-    buttonCircles.style('width', '130px');
-    buttonCircles.mousePressed(showCircles);
-    buttonFade = createButton('Show fade');
-    buttonFade.position(16, 32);
-    buttonFade.style('width', '130px');
-    buttonFade.mousePressed(showFade);
-    buttonFft = createButton('Show spectrogram');
-    buttonFft.position(16, 56);
-    buttonFft.style('width', '130px');
-    buttonFft.mousePressed(showSpectrogram);
-    slider = createSlider(0, 255, 100);
-    slider.position(16, 80);
-    slider.style('width', '130px');
+    setButtons();
 
 }
 
@@ -89,11 +75,13 @@ function draw() {
     if (backOn) {
         if (isFade) {
             noStroke();
-            fill('hsla(160, 80%, 0%, 0.03)');
+            fill('hsla(160, 80%, 0%, 0.05)');
             rect(0, 0, width * 2, height * 2);
         } else {
             background(0);
         }
+        
+        showFood();
     }
 
     if (FftEnabled) {
@@ -105,22 +93,9 @@ function draw() {
     }
 
     population.run();
-    showFood();
 
     getAudioContext().resume();
-    sliderVal = slider.value();
-}
-
-function showCircles() {
-    isCircles = !isCircles;
-}
-
-function showSpectrogram() {
-    FftEnabled = !FftEnabled;
-}
-
-function showFade() {
-    isFade = !isFade;
+    // foodRate = slider.value();
 }
 
 function showFood() {
@@ -148,11 +123,54 @@ function keyPressed() {
     if (key == ' ') {
         background(0);
         backOn = !backOn;
-    } else {
-        FftEnabled = !FftEnabled;
     }
 }
 
-function addFood() {
-    this.foodArray.push(new Food());
+function addFood(pos_) {
+    var newFood = new Food(pos_)
+    this.foodArray.push(newFood);
+}
+
+function setButtons() {
+    // sight circles
+    buttonCircles = createButton('Show sight');
+    buttonCircles.position(16, 8);
+    buttonCircles.style('width', '130px');
+    buttonCircles.mousePressed(showCircles);
+    // fade button
+    buttonFade = createButton('Fade footprint');
+    buttonFade.position(16, 32);
+    buttonFade.style('width', '130px');
+    buttonFade.mousePressed(showFade);
+    // spectrogram 
+    buttonFft = createButton('Show spectrogram');
+    buttonFft.position(16, 56);
+    buttonFft.style('width', '130px');
+    buttonFft.mousePressed(showSpectrogram);
+    // background
+    buttonBack = createButton('Only relations');
+    buttonBack.position(16, 80);
+    buttonBack.style('width', '130px');
+    buttonBack.mousePressed(showBackground);
+    // slider
+    // slider = createSlider(0, 50, foodRate);
+    // slider.position(16, 102);
+    // slider.style('width', '130px');
+}
+
+function showBackground() {
+    background(0);
+    backOn = !backOn;
+}
+
+function showCircles() {
+    isCircles = !isCircles;
+}
+
+function showSpectrogram() {
+    FftEnabled = !FftEnabled;
+}
+
+function showFade() {
+    isFade = !isFade;
 }

@@ -124,7 +124,7 @@ class Ant {
         // show link to parents if young
         if (this.parents.length > 1) {
             strokeWeight(2);
-            if (isFade) {
+            if (isFade || !backOn) {
                 stroke(mateColorA);
             } else {
                 stroke(mateColor);
