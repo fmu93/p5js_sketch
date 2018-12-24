@@ -80,7 +80,7 @@ function draw() {
         } else {
             background(0);
         }
-        
+
         showFood();
     }
 
@@ -88,14 +88,17 @@ function draw() {
         visualizeFft();
     }
 
-    if (frameCount % foodRate == 0 && foodArray.length < maxFood) {
+    if (frameCount % foodRate == 0) {
         this.addFood();
     }
 
     population.run();
 
     getAudioContext().resume();
-    // foodRate = slider.value();
+    if (slider.value() / 100 != mutationRate) {
+        mutationRate = slider.value() / 100;
+        // sliderLabel = createP("Mutation rate: " + mutationRate.toString());
+    }
 }
 
 function showFood() {
@@ -127,8 +130,10 @@ function keyPressed() {
 }
 
 function addFood(pos_) {
-    var newFood = new Food(pos_)
-    this.foodArray.push(newFood);
+    if (foodArray.length < maxFood) {
+        var newFood = new Food(pos_)
+        this.foodArray.push(newFood);
+    }
 }
 
 function setButtons() {
@@ -153,9 +158,12 @@ function setButtons() {
     buttonBack.style('width', '130px');
     buttonBack.mousePressed(showBackground);
     // slider
-    // slider = createSlider(0, 50, foodRate);
-    // slider.position(16, 102);
-    // slider.style('width', '130px');
+    sliderLabel = createP("Mutation rate: ");
+    sliderLabel.position(16, 88);
+    sliderLabel.style('color', '#ffffff');
+    slider = createSlider(0, 100, mutationRate * 100);
+    slider.position(16, 118);
+    slider.style('width', '130px');
 }
 
 function showBackground() {

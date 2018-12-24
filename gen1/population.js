@@ -6,7 +6,7 @@ class Population {
         this.deadAnts = [];
         this.generations = 0;
         this.maxPop = 200;
-        this.cannibalFactor = 0.5;
+        this.cannibalFactor = 0.7;
         this.cannibalChance = 0.1;
         this.weakTime = 0.1;
         for (var i = 0; i < n; i++) {
@@ -26,11 +26,13 @@ class Population {
             var [closest, closestDist] = this.findClosest(thisAnt);
             if (closest instanceof Ant) {
                 this.interactFar(thisAnt, closest, closestDist);
-            } else if (closest instanceof Food) {
+            } else if (closest instanceof Food && !thisAnt.cannibal) {
                 this.seekFood(thisAnt, closest, closestDist);
             }
             // eat if food very close
-            this.eatFood(thisAnt);
+            if (!thisAnt.cannibal) {
+                this.eatFood(thisAnt);
+            }
             // 
             this.interactNear(thisAnt)
 
@@ -154,10 +156,11 @@ class Population {
 
     canKill(thisAnt, otherAnt) {
         var cond = thisAnt.cannibal && 
-            //!thisAnt.isMature() &&
+            !otherAnt.cannibal &&
+            thisAnt.isMature() &&
             //!otherAnt.isMature() &&
-            (this.sameSex(thisAnt, otherAnt) &&
-            !this.isFamily(thisAnt, otherAnt));
+            // this.sameSex(thisAnt, otherAnt) &&
+            !this.isFamily(thisAnt, otherAnt);
         return cond;
     }
 
