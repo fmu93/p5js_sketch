@@ -1,7 +1,7 @@
 var ants = [];
 var population;
 var n = 25;
-var mutationRate = 0.15;
+var mutationRate = 0.2;
 var foodArray = [];
 var maxFood = 50;
 var foodColor;
@@ -33,7 +33,6 @@ function setupFft() {
 
 function visualizeFft() {
     var spectrum = Fft.analyze();
-    var rand = random(0.9, 1.1);
     for (var i = 0; i < spectrum.length; i += 5) {
         var amt = map(i, 0, spectrum.length, 0, 1);
         var color = lerpColor(colorA, colorB, amt);
