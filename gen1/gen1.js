@@ -40,7 +40,8 @@ function visualizeFft() {
         noFill();
         stroke(color);
         ellipseMode(CENTER);
-        ellipse(width / 2, height / 2, diam * rand, diam * rand);
+        
+        ellipse(width / 2, height / 2, diam, diam);
     }
 }
 
@@ -49,7 +50,7 @@ function setup() {
 
     createCanvas(windowWidth, windowHeight);
     background(0);
-    colorMode(HSL, 360, 100, 100);
+    colorMode(HSL, 360, 100, 100, 100);
     textSize(18);
     textAlign(CENTER, CENTER);
 
@@ -81,6 +82,10 @@ function draw() {
         }
 
         showFood();
+    } else {
+        fill(0, 1);
+        noStroke();
+        rect(0, 0, width * 2, height * 2);
     }
 
     if (FftEnabled) {
