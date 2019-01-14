@@ -39,7 +39,7 @@ function draw() {
     noStroke();
     for (var i = mList.length - 1; i > 0; i--) {
         mList[i].update();
-        if (mList[i].isDead()) {
+        if (mList.length > 100 && mList[i].isDead()) {
             mList.splice(i, 1);
         }
     }
@@ -100,7 +100,7 @@ class Mushroom {
         this.sineFactor = 0.3 + map(abs(height/2 - this.pos.y), 0, height/2, 0.3, 0);
         this.color = color(random(0, 360), 90, 80);
         this.f = 0;
-        this.life = random(800, 2000);
+        this.life = randomGaussian(2700, 800);
     }
 
     update() {
