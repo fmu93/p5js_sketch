@@ -56,6 +56,13 @@ function mouseDragged() {
         for (var i = 0; i < sprayCount; i++) {
             plantMushroom(createVector(mouseX + random(-sprayR, sprayR), mouseY + random(-sprayR, sprayR)));
         }
+    } else if (mode == 3) {
+        var mouse = createVector(mouseX, mouseY);
+        for (var i = mList.length - 1; i > 0; i--) {
+            if (p5.Vector.dist(mList[i].pos, mouse) < sprayR/3) {
+                mList.splice(i, 1);
+            }
+        }
     }
 }
 
@@ -69,7 +76,7 @@ function plantMushroom(newPos) {
     mList.push(new Mushroom(newPos));
     myShroom = new Mushroom();
     hintText = "";
-    timeDot = 0.4/frameRate();
+    timeDot = 0.4 / frameRate();
 }
 
 // function doubleClicked() {
@@ -80,7 +87,7 @@ function plantMushroom(newPos) {
 
 function keyPressed() {
     if (key == ' ') {
-        mode = (mode + 1) % 3;
+        mode = (mode + 1) % 4;
         hintText = "<mode " + mode.toString() + ">";
     }
 }
@@ -91,13 +98,13 @@ class Mushroom {
         if (_pos) {
             this.pos = _pos;
         } else {
-            this.pos = createVector(random(this.r/2, width - this.r/2), random(this.r/2, height - this.r/2));
+            this.pos = createVector(random(this.r / 2, width - this.r / 2), random(this.r / 2, height - this.r / 2));
         }
         this.maxBrightness = randomGaussian(120);
         this.minBrightness = -50;
-        this.glowSpeed = randomGaussian(pow(abs(width/2 - this.pos.x)/500, 2));
+        this.glowSpeed = randomGaussian(pow(abs(width / 2 - this.pos.x) / 500, 2));
         this.off = random(10);
-        this.sineFactor = 0.3 + map(abs(height/2 - this.pos.y), 0, height/2, 0.3, 0);
+        this.sineFactor = 0.3 + map(abs(height / 2 - this.pos.y), 0, height / 2, 0.3, 0);
         this.color = color(random(0, 360), 90, 80);
         this.f = 0;
         this.life = randomGaussian(2700, 800);
@@ -110,8 +117,8 @@ class Mushroom {
     }
 
     display() {
-        var factor = noise(time, this.pos.x*spatialNoiseFactor, this.pos.y*spatialNoiseFactor)
-        * (1 - this.sineFactor*sin(this.off + time * this.glowSpeed));
+        var factor = noise(time, this.pos.x * spatialNoiseFactor, this.pos.y * spatialNoiseFactor) *
+            (1 - this.sineFactor * sin(this.off + time * this.glowSpeed));
         this.f = map(factor, 0, 1, this.minBrightness, this.maxBrightness);
         this.color.setAlpha(this.f);
         this.color.setGreen(map(factor, 0, 1, 30, 240));
