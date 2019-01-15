@@ -22,33 +22,10 @@ var buttonBack;
 var backOn = true;
 var slider;
 
-function setupFft() {
-    colorA = color('hsla(0, 80%, 50%, 0.3)');
-    colorB = color('hsla(255, 80%, 50%, 0.3)');
-    mic = new p5.AudioIn();
-    mic.start();
-    Fft = new p5.FFT();
-    Fft.setInput(mic);
-}
-
-function visualizeFft() {
-    var spectrum = Fft.analyze();
-    for (var i = 0; i < spectrum.length; i += 5) {
-        var amt = map(i, 0, spectrum.length, 0, 1);
-        var color = lerpColor(colorA, colorB, amt);
-        var diam = map(spectrum[i], 0, 255, 0, windowHeight);
-        noFill();
-        stroke(color);
-        ellipseMode(CENTER);
-        
-        ellipse(width / 2, height / 2, diam, diam);
-    }
-}
-
 function setup() {
     setupFft();
 
-    createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight, P2D);
     background(0);
     colorMode(HSL, 360, 100, 100, 100);
     textSize(18);
@@ -102,6 +79,29 @@ function draw() {
     if (slider.value() / 100 != mutationRate) {
         mutationRate = slider.value() / 100;
         // sliderLabel = createP("Mutation rate: " + mutationRate.toString());
+    }
+}
+
+function setupFft() {
+    colorA = color('hsla(0, 80%, 50%, 0.3)');
+    colorB = color('hsla(255, 80%, 50%, 0.3)');
+    mic = new p5.AudioIn();
+    mic.start();
+    Fft = new p5.FFT();
+    Fft.setInput(mic);
+}
+
+function visualizeFft() {
+    var spectrum = Fft.analyze();
+    for (var i = 0; i < spectrum.length; i += 5) {
+        var amt = map(i, 0, spectrum.length, 0, 1);
+        var color = lerpColor(colorA, colorB, amt);
+        var diam = map(spectrum[i], 0, 255, 0, windowHeight);
+        noFill();
+        stroke(color);
+        ellipseMode(CENTER);
+
+        ellipse(width / 2, height / 2, diam, diam);
     }
 }
 
