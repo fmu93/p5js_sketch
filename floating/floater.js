@@ -49,7 +49,7 @@ class Floater {
     wander() {
         var go = createVector(noise(this.spikes + this.toff * 0.5), noise(this.toff * 0.5));
         go.sub(0.5, 0.5);
-        go.mult(this.spikes * 2);
+        go.mult(this.spikes * 1.5);
         this.pos.add(go);
     }
 
@@ -73,11 +73,14 @@ class Floater {
         beginShape();
         for (var i = 0; i < this.nodes; i++) {
             var alphaoff = map(i, 0, this.nodes, 0, TWO_PI);
+            var x_ = cos(alphaoff)
+            var y_ = sin(alphaoff);
+
             var r1 = this.r * (1 + 0.12 * sin(this.toff) +
                 this.spikiness * sin(this.spikes * alphaoff + this.toff) +
-                this.noisyness * (noise(alphaoff, this.toff) + noise(this.roughness * alphaoff, this.toff)) - 0.5);
+                this.noisyness * (noise(x_ + 0.5, y_ + 0.5, this.toff)) - 0.5);
             // var r1 = this.r;
-            vertex(r1 * cos(alphaoff), r1 * sin(alphaoff));
+            vertex(r1 * x_, r1 * y_);
 
         }
 
