@@ -5,8 +5,11 @@ var h0;
 var s0;
 var res = 3
 var limL = 35;
+var r = 80;
 var mouse;
 var mousePrev;
+var slider1;
+var slider2;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -24,6 +27,8 @@ function setup() {
       ];
     }
   }
+
+  setDom();
 
 }
 
@@ -46,6 +51,10 @@ function draw() {
       nodes[i][j][1].show();
     }
   }
+
+  noFill();
+  stroke(0);
+  ellipse(mouseX, mouseY, slider2.value(), slider2.value())
 }
 
 class Triangle {
@@ -54,7 +63,7 @@ class Triangle {
     this.pos = pos;
     this.s = s;
     this.ori = ori;
-    this.color = color(80, 10 + random(120), 250 - random(200));
+    this.color = color(80 + random(60), 50 + random(120), 300 - random(200));
     this.showFactor = [floor(random(2)), floor(random(2)), floor(random(2)), floor(random(2))];
     this.children = [];
     if (this.s > limL) {
@@ -64,7 +73,8 @@ class Triangle {
 
   // first triangle
   show() {
-    fill(this.color)
+    fill(this.color);
+    noStroke();
 
     push();
     translate(this.pos.x, this.pos.y);
@@ -97,17 +107,25 @@ class Triangle {
   }
 
   updateShowFactor() {
-    if (mouse.dist(this.pos) < 80) {
-      this.showFactor = [floor(random(2)), floor(random(2)), floor(random(2)), floor(random(2))];
+    if (mouse.dist(this.pos) <= slider2.value()/2) {
+      this.showFactor = [floor(random(slider1.value())), floor(random(slider1.value())), floor(random(slider1.value())), floor(random(slider1.value()))];
     }
     
     for (var i = 0; i < this.children.length; i++) {
       this.children[i].updateShowFactor();
     }
-
   }
+}
 
+function setDom() {
+  slider1 = createSlider(1, 5, 2);
+  slider1.position(16, 20);
+  slider1.style('width', '130px');
 
+  slider2 = createSlider(20, 400, r);
+  slider2.position(16, 48);
+  slider2.style('width', '130px');
+  
 }
 
 function pos2boolean() {
