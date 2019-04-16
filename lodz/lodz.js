@@ -5,7 +5,7 @@ var h0;
 var s0;
 var res = 3
 var limL = 35;
-var r = 80;
+var r = 100;
 var mouse;
 var mousePrev;
 var slider1;
@@ -87,7 +87,7 @@ class Triangle {
     pop();
 
     for (var i = 0; i < this.children.length; i++) {
-      if (this.children[i] && this.showFactor[i]) this.children[i].show();
+      if (this.children[i] && !this.showFactor[i]) this.children[i].show();
     }
   }
 
@@ -118,7 +118,7 @@ class Triangle {
 }
 
 function setDom() {
-  slider1 = createSlider(1, 5, 2);
+  slider1 = createSlider(0, 10, 4);
   slider1.position(16, 20);
   slider1.style('width', '130px');
 
