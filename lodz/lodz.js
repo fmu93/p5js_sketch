@@ -5,11 +5,12 @@ var h0;
 var s0;
 var res = 3
 var limL = 35;
-var r = 100;
+var r = 200;
 var mouse;
 var mousePrev;
 var slider1;
 var slider2;
+var isDraw = true;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -44,8 +45,10 @@ function draw() {
 
   for (var i = 0; i < nodes.length; i++) {
     for (var j = 0; j < nodes[0].length; j++) {
-      nodes[i][j][0].updateShowFactor();
-      nodes[i][j][1].updateShowFactor();
+      if (isDraw && frameCount % 15 == 0) {
+        nodes[i][j][0].updateShowFactor();
+        nodes[i][j][1].updateShowFactor();
+      }
       
       nodes[i][j][0].show();
       nodes[i][j][1].show();
@@ -122,10 +125,14 @@ function setDom() {
   slider1.position(16, 20);
   slider1.style('width', '130px');
 
-  slider2 = createSlider(20, 400, r);
+  slider2 = createSlider(20, 600, r);
   slider2.position(16, 48);
   slider2.style('width', '130px');
   
+}
+
+function mouseClicked() {
+  isDraw = !isDraw;
 }
 
 function pos2boolean() {
