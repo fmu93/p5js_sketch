@@ -60,8 +60,3 @@ function draw() {
 function mousePressed() {
 	forceCoeff *= -1;
 }
-
-function mouseDragged() {
-	// var bubble = new Bubble(mouseX, mouseY);
- //  	bubbles.push(bubble);
-}
