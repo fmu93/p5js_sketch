@@ -5,13 +5,18 @@ class Particle {
     this.pos = createVector(mouseX, mouseY);
     this.vel = createVector(0, 0);
     this.acc = createVector(0, 0);
+
+    this.aAcc = 0;
+    this.aVel = 0;
+    this.angle = 0;
     
+    this.zoom = (width+height)*0.0001;
     this.explosion = 2;
     this.c = color(255, 100 + 120*random(), 150 + random(20, 80));
-    this.spikes = 4 + Math.floor(random(4));
-    this.lifeSpan = randomGaussian()*30 + 250;
-    this.size = this.lifeSpan*0.1;
-    this.mass = this.size/50;
+    this.spikes = 4 + Math.floor(random(7));
+    this.lifeSpan = randomGaussian(60, 70) + 210;
+    this.size = this.lifeSpan*this.zoom;
+    this.mass = this.lifeSpan*0.002; 
   }
   
   isDead() {
@@ -21,6 +26,10 @@ class Particle {
       return false;
     }
   }
+
+  applyTorque(torque) {
+  	this.aAcc += torque/this.mass;
+  }
   
   applyForce(force) {
     var f = p5.Vector.div(force, this.mass);
@@ -29,22 +38,33 @@ class Particle {
   
   update() {
     this.fade();
+
     this.vel.add(this.acc);
     this.pos.add(this.vel);
     this.acc.mult(0);
-    this.lifeSpan -= 2;
+
+    this.aVel += this.aAcc;
+    this.angle += this.aVel;
+    this.aAcc = 0;
+
+    this.lifeSpan -= 0.5 + 2*noise(this.lifeSpan*this.spikes);
   }
   
   fade() {
-    this.size = this.lifeSpan*0.2;
-    this.c = color(red(this.c), green(this.c), blue(this.c), alpha(this.c)-0.5);
+    this.size = this.lifeSpan*this.zoom;
+    this.c = color(red(this.c), green(this.c), blue(this.c), alpha(this.c) - randomGaussian());
+
     //mass = size/200; // actually more realistic but small bits fly too fast
   }
   
   display() {
     noStroke();
     fill(this.c);
-    this.star(this.pos.x, this.pos.y, this.size, this.size/3, this.spikes);
+    push();
+    translate(this.pos.x, this.pos.y);
+    rotate(this.angle);
+    this.star(0, 0, randomGaussian(0.5, 0.05)*this.size, randomGaussian(0.1, 0.05)*this.size/3, this.spikes);
+    pop();
   }
   
   star(x, y, radius1, radius2, npoints) {

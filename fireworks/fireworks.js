@@ -2,7 +2,7 @@
 
 var systems;
 var back = 0;
-var backOn = true;
+var backOn = false;
 
 var k = 0;
 var sound1;
@@ -22,6 +22,10 @@ function draw() {
 
   if (backOn) {
     background(back);
+  } else {
+    noStroke();
+    fill(0, 10);
+    rect(0, 0, width*2, height*2);
   }
   // glitter is what follows the mouse
   
@@ -36,11 +40,14 @@ function draw() {
   }
 
   // display current key
-  textSize(18);
-  fill(255);
+
   textAlign(CENTER);
   rectMode(CENTER);
-  text("space bar and double click!", width/2, 30, 400, 30); 
+  fill(back);
+  rect(width/2, 25, 300, 30);
+    textSize(18);               
+  fill(255);
+  text("space bar and double click!", width/2, 30, 350, 30); 
 }
 
 function keyPressed() {
@@ -56,9 +63,8 @@ function mousePressed() {
 
 function doubleClicked() {
   backOn = !backOn;
-  print("dsadas");
 }
 
 function explosion() {
-  systems.push(new ParticleSystem(randomGaussian() + 25));
+  systems.push(new ParticleSystem(randomGaussian() + 40));
 }

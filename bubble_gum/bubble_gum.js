@@ -1,18 +1,26 @@
-p5.disableFriendlyErrors = true; // performance
 
-var n; 
-var k;
-var back;
-var particles;
+// module aliases
+var Engine = Matter.Engine,
+// Render = Matter.Render, // don't need it
+World = Matter.World,
+Bodies = Matter.Bodies;
+
+// create an engine			
+var engine;
+var world;
+
+var n = 150; 
+var bubbles = [];
+var forceCoeff = 2
+var back = 0;
+
 
 function setup() {
 
-	k = 0;
-	n = 420;
-	back = 0;	
+	engine = Engine.create();
+	world = engine.world;
+	world.gravity.y = 0;
 	particles = [];
-	pixelate = 8;
-	pixelateOn = false;
 
   createCanvas(windowWidth, windowHeight);           // set size to that of the image
   colorMode(HSB, 255);               // allows us to access the brightness of a color
@@ -20,60 +28,35 @@ function setup() {
 
   // Start particles
   for (var i = 0; i < n; i++) {
-  	particles.push(new Particle());
+  	var bubble = new Bubble(random(width), random(height));
+  	bubbles.push(bubble);
   }
+
+  // add all of the bodies to the world
+  World.add(world, bubbles);
+  Engine.run(engine);
 }
 
 function draw() {
+	// blendMode(ADD);
 	background(back);
 
-	// deal with each particle
-	for (var i=0; i < particles.length; i++) {
-		particles[i].wobble();
-		particles[i].pointer();
-   		// reaction among particles
-	    for (var j=i+1; j < particles.length; j++) {
-	   		particles[i].checkCollisionOther(particles[j]);
-	    }
-		particles[i].move();
-	    particles[i].walls();
-	   	particles[i].display(); 
+	var from = Matter.Vector.create(mouseX, mouseY);		
+	// draw circles
+	for (var i=0; i < bubbles.length; i++) {
+		var bubble = bubbles[i];
+		var force = Matter.Vector.sub(bubble.body.position, from);
+		if (Matter.Vector.magnitude(force) > bubble.r) {
+			var forceMag = 1/Matter.Vector.magnitudeSquared(force);
+			force = Matter.Vector.normalise(force);
+			force = Matter.Vector.mult(force, -forceCoeff*forceMag*bubble.body.mass);
+			Matter.Body.applyForce(bubble.body, from, force);
+		}
+		bubble.show();	
 	}
-
-  // influence area
-  noFill();
-  stroke(back, 80);
-  ellipse(mouseX, mouseY, height/2, height/2);
-  
-  // frame
-  strokeWeight(30);
-  stroke(back);
-  noFill();
-  rect(0,0,width,height);
-  strokeWeight(1);
-
-  // show framerate
-  if ((k+1) % 50 == 0){
-  	var fps = frameRate();
-  	fill(255);
-  	stroke(0);
-  	textSize(12);
-  	text("FPS: " + fps.toFixed(0), 10, height - 10);
-  }
-  k++;
-
-  	// clicl me! text
-	fill(255);
-  	stroke(0);
-  	textSize(16);
-  	text("Click around!", 20, 12);
   
 }
-
 
 function mousePressed() {
-	for (var i=0; i < particles.length; i++) {
-		particles[i].s = particles[i].s * -1;
-	}
+	forceCoeff *= -1;
 }
-
